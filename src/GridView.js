@@ -94,7 +94,7 @@ const App = observer(() => {
       <div className="colors">
         <div className="row-labels">
           {state.colors[0].shades.map((color, i) => (
-            <div className="row-label">{i}</div>
+            <div className="row-label">{i + 1}</div>
           ))}
         </div>
         {state.colors.map(color => (
