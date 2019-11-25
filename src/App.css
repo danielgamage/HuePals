@@ -13,49 +13,49 @@
   --size-0: 1rem;
   --size--1: 0.8rem;
 
+  --red-1: #ffcecc;
+  --red-2: #f6a8a5;
+  --red-3: #e87a79;
+  --red-4: #d54b4d;
+  --red-5: #b03135;
+  --red-6: #82282c;
+  --red-7: #601e22;
+  --red-8: #481619;
+  --red-9: #381013;
+  --red-10: #310c0e;
+
+  --green-1: #e0ffcc;
+  --green-2: #a8f084;
+  --green-3: #6fd74d;
+  --green-4: #43ac34;
+  --green-5: #2c7a2d;
+  --green-6: #22552b;
+  --green-7: #183b24;
+  --green-8: #10291d;
+  --green-9: #0b1e19;
+  --green-10: #081a18;
+
+  --blue-1: #cceeff;
+  --blue-2: #9ed6ff;
+  --blue-3: #69b3fc;
+  --blue-4: #3385f5;
+  --blue-5: #1257da;
+  --blue-6: #153ba0;
+  --blue-7: #142872;
+  --blue-8: #111c50;
+  --blue-9: #0e143b;
+  --blue-10: #0c1131;
+
   --gray-1: #e4e5e7;
-  --gray-2: #9a9eab;
-  --gray-3: #696f87;
-  --gray-4: #4e5268;
-  --gray-5: #3c3e53;
-  --gray-6: #2f3043;
-  --gray-7: #272637;
-  --gray-8: #21202d;
-  --gray-9: #1c1b25;
-  --gray-10: #18161e;
-
-  --green-1: #fffacc;
-  --green-2: #edf293;
-  --green-3: #b8db5a;
-  --green-4: #6db234;
-  --green-5: #35792a;
-  --green-6: #1f5229;
-  --green-7: #163828;
-  --green-8: #102924;
-  --green-9: #0c1f20;
-  --green-10: #09171c;
-
-  --red-1: #fff6cb;
-  --red-2: #f7e09c;
-  --red-3: #e9ba6d;
-  --red-4: #d78340;
-  --red-5: #ac482c;
-  --red-6: #7b2327;
-  --red-7: #561a2d;
-  --red-8: #3c122a;
-  --red-9: #2c0c26;
-  --red-10: #230923;
-
-  --blue-1: #d8fdef;
-  --blue-2: #a8f2df;
-  --blue-3: #79e3da;
-  --blue-4: #4ac4d5;
-  --blue-5: #2e85b9;
-  --blue-6: #254c90;
-  --blue-7: #1c256e;
-  --blue-8: #1b1552;
-  --blue-9: #1a0f3a;
-  --blue-10: #140a26;
+  --gray-2: #a2a5ad;
+  --gray-3: #7a7d8b;
+  --gray-4: #5f616f;
+  --gray-5: #4a4b58;
+  --gray-6: #393945;
+  --gray-7: #2b2b36;
+  --gray-8: #21212a;
+  --gray-9: #1a1921;
+  --gray-10: #16151c;
 
   --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
   --shadow-color: rgba(0,0,0,0.2);
@@ -64,7 +64,7 @@
 }
 html {
   font-size: 16px;
-  background-color: var(--gray-7);
+  background-color: var(--body-background);
   color: var(--gray-1);
   user-select: none;
   font-family: 'Source Sans Pro', sans-serif;
@@ -82,6 +82,44 @@ html, body, #root {
   height: 40vmin;
 }
 
+select {
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1.3;
+  padding: .5rem 2rem .5rem 1rem;
+  max-width: 100%;
+  margin: 0;
+  border: 0;
+  box-shadow:
+    0.5px 1px 0 var(--gray-6) inset,
+    -0.5px -1px 0 var(--gray-8) inset,
+    0 2px 0 var(--gray-8),
+    0 3px 8px var(--shadow-color);
+  border-radius: 4px;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--gray-7);
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 12 12"><polygon fill="gray" points="0,4 6,12 12,4" /></svg>');
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: .5rem auto;
+}
+select::-ms-expand {
+  display: none;
+}
+select:hover {
+  border-color: #888;
+}
+select:focus {
+  border-color: #aaa;
+  outline: none;
+}
+select option {
+  font-weight:normal;
+}
+
 input[type=text],
 input[type=number] {
   color: inherit;
@@ -90,16 +128,21 @@ input[type=number] {
   background: var(--body-background);
   border-radius: 4px;
   line-height: 1rem;
+  padding: 0.5rem;
 }
 
 button.primary           { --color: var(--blue-2);  --background: var(--blue-7);  --highlight: var(--blue-6);  --shading: var(--blue-8); }
-button, button.secondary { --color: var(--gray-1);  --background: var(--gray-7);  --highlight: var(--gray-6); --shading: var(--gray-8); }
+button, button.secondary { --color: var(--gray-1);  --background: var(--gray-7);  --highlight: var(--gray-6);  --shading: var(--gray-8); }
 button.success           { --color: var(--green-2); --background: var(--green-7); --highlight: var(--green-6); --shading: var(--green-8); }
-button.danger            { --color: var(--red-2);  --background: var(--red-7); --highlight: var(--red-6); --shading: var(--red-8); }
+button.danger            { --color: var(--red-4);  --background:  var(--gray-7);  --highlight: var(--gray-6);  --shading: var(--gray-8); }
 button.warning           { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
 button.info              { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
 
 button {
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--background);
   border: 0;
   border-radius: 4px;
@@ -115,6 +158,12 @@ button {
   padding: 0.5rem 1rem;
   transition: all 0.2s var(--ease-out);
   transform: translateY(-2px);
+}
+button.text {
+  box-shadow: none;
+}
+button svg:not(:last-child) {
+  margin-right: 0.5em;
 }
 button:hover, button:focus {
   /* background: var(--highlight); */

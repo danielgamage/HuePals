@@ -7,6 +7,12 @@ import { applyPatch } from 'mobx-state-tree';
 import EditorView from './EditorView'
 import GridView from './GridView'
 import ExportView from './ExportView'
+import { Icon } from '@iconify/react';
+import tuneIcon from '@iconify/icons-ic/baseline-tune';
+import styleIcon from '@iconify/icons-ic/outline-style';
+import importExportIcon from '@iconify/icons-ic/baseline-import-export';
+import restoreIcon from '@iconify/icons-ic/baseline-restore';
+
 const Styles = styled.div`
 display: flex;
 height: 100%;
@@ -22,15 +28,20 @@ padding-bottom: 3rem;
   z-index: 100;
 }
 .tab-item {
+  display: flex;
+  align-items: center;
   line-height: 3rem;
   font-size: var(--size-1);
   padding: 0 0.5rem;
   font-weight: 700;
   &.inactive {
     color: var(--gray-3);
+    svg {
+      color: var(--gray-4);
+    }
   }
   &.active {
-    border-bottom: 0.15em solid var(--gray-1);
+    box-shadow: 0 -0.15em var(--gray-1) inset;
   }
   &:active {
     background: var(--gray-7);
@@ -40,6 +51,12 @@ padding-bottom: 3rem;
     position: absolute;
     width: 0;
     height: 0;
+  }
+  svg {
+    color: var(--gray-2);
+    /* height: 1.25em; */
+    /* width: 1.25em; */
+    margin-right: 0.5rem;
   }
 }
 .swatch {
@@ -73,6 +90,7 @@ padding-bottom: 3rem;
 }
 .shade-count {
   width: 3rem;
+  margin-left: 0.5rem;
 }
 .messages {
   margin-left: auto;
@@ -94,8 +112,12 @@ const App = observer(() => {
   return (
     <Styles className="App">
       <div className="tabs">
-        {['Editor', 'Grid', 'Export'].map(label => {
-          const value = label.toLowerCase()
+        {[
+          { label: 'Editor', icon: tuneIcon },
+          { label: 'Grid', icon: styleIcon },
+          { label: 'Export', icon: importExportIcon }
+        ].map(tab => {
+          const value = tab.label.toLowerCase()
           return (
             <label className={`tab-item ${state.ui.tab === value ? 'active' : 'inactive'}`}>
               <input
@@ -106,7 +128,7 @@ const App = observer(() => {
                   state.ui.setTab(e.target.value)
                 }}}
               />
-              {label}
+              <Icon icon={tab.icon} /> {tab.label}
             </label>
           )
         })}
@@ -135,7 +157,10 @@ const App = observer(() => {
             value={state.interpolationCount}
           />
         </label>
-        <button onClick={() => {state.resetStore()}}>Reset All</button>
+        <button className="danger" onClick={() => {state.resetStore()}}>
+          <Icon height={`${1.25 ** 2}em`} icon={restoreIcon} />
+          <span>Reset All</span>
+        </button>
         <div className="messages">
           {state.ui.visibleMessages.map(message => (
             <div className={`message ${message.status}`}>{message.body}</div>

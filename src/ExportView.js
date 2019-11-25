@@ -2,6 +2,9 @@ import React, {useRef} from 'react';
 import { observer } from 'mobx-react';
 import state from './state'
 import styled from 'styled-components'
+import { Icon } from '@iconify/react';
+import copyIcon from '@iconify/icons-ic/outline-content-copy';
+
 const Styles = styled.div`
   height: 100%;
   padding-bottom: 3rem;
@@ -52,6 +55,9 @@ const Styles = styled.div`
   }
   .options {
     margin-bottom: 1rem;
+    & > * {
+      margin-right: 1rem;
+    }
   }
 `
 
@@ -62,12 +68,12 @@ const ExportView = observer(() => {
       <div className="options">
         <select onChange={e => state.ui.setExportLanguage(e.target.value)} value={state.ui.exportLanguage}>
           {["css", "sass", "csv"].map(el => (
-            <option value={el}>{el}</option>
-            ))}
+            <option value={el}>{el.toUpperCase()}</option>
+          ))}
         </select>
         <select onChange={e => state.ui.setColorspace(e.target.value)} value={state.ui.colorspace}>
           {["hex", "rgb", "hsl",].map(el => (
-            <option value={el}>{el}</option>
+            <option value={el}>{el.toUpperCase()}</option>
           ))}
         </select>
       </div>
@@ -79,7 +85,10 @@ const ExportView = observer(() => {
           body: 'Copied to clipboard',
           status: 'success'
         })
-      }}>Copy to clipboard</button>
+      }}>
+        <Icon height={`${1.25 ** 2}em`} icon={copyIcon}/>
+        <span>Copy to clipboard</span>
+      </button>
       <textarea ref={outputEl}>{state.exportText}</textarea>
       <pre>
         {state.exportText}

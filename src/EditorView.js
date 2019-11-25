@@ -10,6 +10,8 @@ import {
 import SplineGraph from './SplineGraph'
 import { applyPatch } from 'mobx-state-tree';
 import ColorInput from './ColorInput'
+import { Icon } from '@iconify/react';
+import deleteIcon from '@iconify/icons-ic/outline-delete';
 
 const Styles = styled.div`
 display: flex;
@@ -54,7 +56,8 @@ h3 {
 .colors {
   display: flex;
   flex: 1 1 auto;
-  padding: 0 2rem 2rem;
+  padding: 0 2rem 3rem;
+  width: min-content;
 }
 .color {
   padding: 1rem 0 0;
@@ -88,12 +91,12 @@ h3 {
     .viz {
       width: 1rem;
       height: 1rem;
-      border: 2px solid var(--gray-7);
+      border: 2px solid var(--gray-6);
       border-radius: 1rem;
     }
     input:checked + .viz {
       border-color: var(--red-4);
-      background: var(--gray-7);
+      background: var(--gray-6);
     }
   }
 }
@@ -150,7 +153,7 @@ h3 {
 .add-button-container {
   flex: 0 0 auto;
   width: 256px;
-  margin: 1rem;
+  margin: 1rem 0 1rem 2rem;
 }
 .add-button {
   width: 100%;
@@ -161,7 +164,6 @@ h3 {
   top: 1rem;
 }
 .remove-button {
-  width: 3rem;
   line-height: 0.5;
   z-index: 11;
 }
@@ -189,9 +191,11 @@ const App = observer(() => {
                 onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
               />
               <button
-                className="remove-button"
+                className="remove-button text danger"
                 onClick={(e) => color.remove()}
-              >-</button>
+              >
+                <Icon icon={deleteIcon} />
+              </button>
             </h2>
             {state.ui.isGraphVisible && (
               <div className="graphs">
