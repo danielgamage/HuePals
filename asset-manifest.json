@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/hue-pals/static/css/main.7f3e3c89.chunk.css",
+    "main.js": "/hue-pals/static/js/main.f2a284ba.chunk.js",
+    "main.js.map": "/hue-pals/static/js/main.f2a284ba.chunk.js.map",
+    "runtime-main.js": "/hue-pals/static/js/runtime-main.5282c4f3.js",
+    "runtime-main.js.map": "/hue-pals/static/js/runtime-main.5282c4f3.js.map",
+    "static/js/2.78d9465c.chunk.js": "/hue-pals/static/js/2.78d9465c.chunk.js",
+    "static/js/2.78d9465c.chunk.js.map": "/hue-pals/static/js/2.78d9465c.chunk.js.map",
+    "index.html": "/hue-pals/index.html",
+    "precache-manifest.0aa9519baeff29a3b466a61112329180.js": "/hue-pals/precache-manifest.0aa9519baeff29a3b466a61112329180.js",
+    "service-worker.js": "/hue-pals/service-worker.js",
+    "static/css/main.7f3e3c89.chunk.css.map": "/hue-pals/static/css/main.7f3e3c89.chunk.css.map",
+    "static/media/logo.svg": "/hue-pals/static/media/logo.25bf045c.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5282c4f3.js",
+    "static/js/2.78d9465c.chunk.js",
+    "static/css/main.7f3e3c89.chunk.css",
+    "static/js/main.f2a284ba.chunk.js"
+  ]
+}
