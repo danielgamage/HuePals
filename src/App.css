@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap');
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+:root {
+  --size-5: 3.052rem;
+  --size-4: 2.441rem;
+  --size-3: 1.953rem;
+  --size-2: 1.563rem;
+  --size-1: 1.25rem;
+  --size-0: 1rem;
+  --size--1: 0.8rem;
+
+  --gray-1: #e4e5e7;
+  --gray-2: #9a9eab;
+  --gray-3: #696f87;
+  --gray-4: #4e5268;
+  --gray-5: #3c3e53;
+  --gray-6: #2f3043;
+  --gray-7: #272637;
+  --gray-8: #21202d;
+  --gray-9: #1c1b25;
+  --gray-10: #18161e;
+
+  --green-1: #fffacc;
+  --green-2: #edf293;
+  --green-3: #b8db5a;
+  --green-4: #6db234;
+  --green-5: #35792a;
+  --green-6: #1f5229;
+  --green-7: #163828;
+  --green-8: #102924;
+  --green-9: #0c1f20;
+  --green-10: #09171c;
+
+  --red-1: #fff6cb;
+  --red-2: #f7e09c;
+  --red-3: #e9ba6d;
+  --red-4: #d78340;
+  --red-5: #ac482c;
+  --red-6: #7b2327;
+  --red-7: #561a2d;
+  --red-8: #3c122a;
+  --red-9: #2c0c26;
+  --red-10: #230923;
+
+  --blue-1: #d8fdef;
+  --blue-2: #a8f2df;
+  --blue-3: #79e3da;
+  --blue-4: #4ac4d5;
+  --blue-5: #2e85b9;
+  --blue-6: #254c90;
+  --blue-7: #1c256e;
+  --blue-8: #1b1552;
+  --blue-9: #1a0f3a;
+  --blue-10: #140a26;
+
+  --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
+  --shadow-color: rgba(0,0,0,0.2);
+  --box-shadow: 0 2px 8px var(--shadow-color);
+  --body-background: var(--gray-7);
+}
+html {
+  font-size: 16px;
+  background-color: var(--gray-7);
+  color: var(--gray-1);
+  user-select: none;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+html, body, #root {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+}
+.App {
+  font-size: var(--size-0);
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+input[type=text],
+input[type=number] {
+  color: inherit;
+  font: inherit;
+  border: 0;
+  background: var(--body-background);
+  border-radius: 4px;
+  line-height: 1rem;
+}
+
+button.primary           { --color: var(--blue-2);  --background: var(--blue-7);  --highlight: var(--blue-6);  --shading: var(--blue-8); }
+button, button.secondary { --color: var(--gray-1);  --background: var(--gray-7);  --highlight: var(--gray-6); --shading: var(--gray-8); }
+button.success           { --color: var(--green-2); --background: var(--green-7); --highlight: var(--green-6); --shading: var(--green-8); }
+button.danger            { --color: var(--red-2);  --background: var(--red-7); --highlight: var(--red-6); --shading: var(--red-8); }
+button.warning           { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
+button.info              { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
+
+button {
+  background: var(--background);
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  box-shadow:
+    0.5px 1px 0 var(--highlight) inset,
+    -0.5px -1px 0 var(--shading) inset,
+    0 2px 0 var(--shading),
+    0 3px 8px var(--shadow-color);
+  color: var(--color);
+  padding: 0.5rem 1rem;
+  transition: all 0.2s var(--ease-out);
+  transform: translateY(-2px);
+}
+button:hover, button:focus {
+  /* background: var(--highlight); */
+  outline: 0;
+}
+button:active {
+  transition: all 0.1s var(--ease-out);
+  transform: translateY(0px);
+  background: var(--background);
+  box-shadow:
+    0.5px 1px var(--highlight) inset,
+    -0.5px -1px var(--shading) inset,
+    0 0 var(--shading),
+    -1px -1px rgba(0,0,0,0.1);
+}
