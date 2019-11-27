@@ -137,6 +137,7 @@ export const Message = types.model("Message", {
 export const Theme = types.model("Theme", {
   id: types.optional(types.identifier, uuid),
   name: types.optional(types.string, 'New Theme'),
+  favorite: types.optional(types.boolean, false),
   colors: types.optional(types.array(Color), [{}]),
   interpolationCount: types.optional(types.number, 10),
 }).extend(self => {
@@ -190,11 +191,17 @@ export const Theme = types.model("Theme", {
       removeColor (item) {
         self.colors.splice(self.colors.indexOf(item), 1)
       },
+      toggleFavorite () {
+        self.favorite = !self.favorite
+      },
       resetStore() {
         applySnapshot(self, defaultState)
       },
       loadState(snapshot) {
         applySnapshot(self, snapshot)
+      },
+      remove() {
+        getParent(self, 2).removeTheme(self)
       },
     }
   }
@@ -275,6 +282,9 @@ export const RootStore = types.model("Store", {
     loadState(snapshot) {
       applySnapshot(self, snapshot)
     },
+    removeTheme(item) {
+      self.themes.splice(self.themes.indexOf(item), 1)
+    }
   }
 }))
 

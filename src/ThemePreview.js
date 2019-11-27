@@ -5,8 +5,14 @@ import state from './state'
 import styled from 'styled-components'
 import { applyPatch } from 'mobx-state-tree';
 import { Icon } from '@iconify/react';
+import Button from './Button';
+import deleteIcon from '@iconify/icons-ic/outline-delete';
+import warningIcon from '@iconify/icons-ic/baseline-warning';
+import paletteIcon from '@iconify/icons-ic/outline-palette';
+import roundFavorite from '@iconify/icons-ic/round-favorite';
 
 const Styles = styled.div`
+position: relative;
 box-shadow: var(--box-shadow);
 border-radius: 4px;
 background: var(--gray-6);
@@ -61,6 +67,10 @@ const App = observer(({theme, onDoubleClick}) => {
           </div>
         ))}
       </div>
+      <footer>
+        <Button onClick={() => theme.toggleFavorite()} label={<Icon icon={roundFavorite} />} />
+        <Button onClick={() => theme.remove()} label={<Icon icon={deleteIcon} />} confirmLabel={<Icon icon={warningIcon} />} />
+      </footer>
     </Styles>
   );
 })
