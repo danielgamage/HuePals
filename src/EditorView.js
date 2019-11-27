@@ -4,14 +4,14 @@ import './App.css';
 import { observer } from 'mobx-react';
 import state from './state'
 import styled from 'styled-components'
-import {
-  line, curveBasis
-} from 'd3-shape'
 import SplineGraph from './SplineGraph'
 import { applyPatch } from 'mobx-state-tree';
+import Button from './Button'
 import ColorInput from './ColorInput'
 import { Icon } from '@iconify/react';
 import deleteIcon from '@iconify/icons-ic/outline-delete';
+import warningIcon from '@iconify/icons-ic/baseline-warning';
+import paletteIcon from '@iconify/icons-ic/outline-palette';
 
 const Styles = styled.div`
 display: flex;
@@ -190,12 +190,13 @@ const App = observer(() => {
                 value={color.name}
                 onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
               />
-              <button
-                className="remove-button text danger"
-                onClick={(e) => color.remove()}
-              >
-                <Icon icon={deleteIcon} />
-              </button>
+              <Button
+                status="text danger"
+                className="remove-button"
+                onClick={() => color.remove()}
+                label={<Icon icon={deleteIcon} />}
+                confirmLabel={<Icon icon={warningIcon} />}
+              />
             </h2>
             {state.ui.isGraphVisible && (
               <div className="graphs">
@@ -205,7 +206,7 @@ const App = observer(() => {
                     hue
                     color={color}
                     min={0}
-                    max={720}
+                    max={480}
                     height={2.25}
                     spline={color.hueBezier}
                     onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
@@ -273,7 +274,14 @@ const App = observer(() => {
         ))}
 
         <div className="add-button-container">
-          <button class="add-button" onClick={() => {state.addColor()}}>+ Add Color</button>
+          <Button
+            className="add-button"
+            onClick={() => {state.addColor()}}
+            label={<>
+              <Icon icon={paletteIcon} />
+              <span>Add Color</span>
+            </>}
+          />
         </div>
       </div>
     </Styles>

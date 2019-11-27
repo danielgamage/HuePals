@@ -18,12 +18,6 @@ position: relative;
   border-radius: 4px;
   z-index: -1;
   background: linear-gradient(to bottom,
-    hsl(720, 100%, 30%),
-    hsl(680, 100%, 30%),
-    hsl(640, 100%, 30%),
-    hsl(600, 100%, 30%),
-    hsl(560, 100%, 30%),
-    hsl(520, 100%, 30%),
     hsl(480, 100%, 30%),
     hsl(440, 100%, 30%),
     hsl(400, 100%, 30%),

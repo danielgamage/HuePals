@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import { observer } from 'mobx-react';
 import state from './state'
@@ -7,6 +7,7 @@ import { applyPatch } from 'mobx-state-tree';
 import EditorView from './EditorView'
 import GridView from './GridView'
 import ExportView from './ExportView'
+import Button from './Button'
 import { Icon } from '@iconify/react';
 import tuneIcon from '@iconify/icons-ic/baseline-tune';
 import styleIcon from '@iconify/icons-ic/outline-style';
@@ -109,6 +110,8 @@ padding-bottom: 3rem;
 `
 
 const App = observer(() => {
+  const [resetConfirm, setConfirm] = useState(false)
+
   return (
     <Styles className="App">
       <div className="tabs">
@@ -142,8 +145,20 @@ const App = observer(() => {
         }
       })()}
       <footer className={`app-footer`}>
+        <Button
+          status="danger"
+          onClick={() => {state.resetStore()}}
+          label={<>
+            <Icon height={`${1.25 ** 2}em`} icon={restoreIcon} />
+            <span>Reset All</span>
+          </>}
+          confirmLabel={<>
+            <Icon height={`${1.25 ** 2}em`} icon={restoreIcon} />
+            <span>Are you sure?</span>
+          </>}
+        />
         <label>
-          Number of Shades:
+          Shades:
           <input
             className="shade-count"
             type="number"
@@ -157,10 +172,6 @@ const App = observer(() => {
             value={state.interpolationCount}
           />
         </label>
-        <button className="danger" onClick={() => {state.resetStore()}}>
-          <Icon height={`${1.25 ** 2}em`} icon={restoreIcon} />
-          <span>Reset All</span>
-        </button>
         <div className="messages">
           {state.ui.visibleMessages.map(message => (
             <div className={`message ${message.status}`}>{message.body}</div>

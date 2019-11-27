@@ -4,6 +4,7 @@ import state from './state'
 import styled from 'styled-components'
 import { Icon } from '@iconify/react';
 import copyIcon from '@iconify/icons-ic/outline-content-copy';
+import Button from './Button'
 
 const Styles = styled.div`
   height: 100%;
@@ -78,17 +79,20 @@ const ExportView = observer(() => {
         </select>
       </div>
 
-      <button onClick={() => {
-        outputEl.current.select()
-        document.execCommand('copy')
-        state.ui.addMessage({
-          body: 'Copied to clipboard',
-          status: 'success'
-        })
-      }}>
-        <Icon height={`${1.25 ** 2}em`} icon={copyIcon}/>
-        <span>Copy to clipboard</span>
-      </button>
+      <Button
+        onClick={() => {
+          outputEl.current.select()
+          document.execCommand('copy')
+          state.ui.addMessage({
+            body: 'Copied to clipboard',
+            status: 'success'
+          })
+        }}
+        label={<>
+          <Icon height={`${1.25 ** 2}em`} icon={copyIcon}/>
+          <span>Copy to clipboard</span>
+        </>}
+      />
       <textarea ref={outputEl}>{state.exportText}</textarea>
       <pre>
         {state.exportText}
