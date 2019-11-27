@@ -88,23 +88,23 @@ overflow: auto;
 }
 `
 
-const App = observer(() => {
+const App = observer(({theme}) => {
   return (
-    <Styles className="GridView">
+    <Styles className="Preview">
       <div className="colors">
         <div className="row-labels">
-          {state.colors[0].shades.map((color, i) => (
+          {theme.colors[0].shades.map((color, i) => (
             <div className="row-label">{i + 1}</div>
           ))}
         </div>
-        {state.colors.map(color => (
+        {theme.colors.map(color => (
           <div className="color">
             <div className="column-label">{color.name}</div>
             {color.shades.map((shade, i, arr) => (
               <div className={`shade`} style={{"--color": shade.hsl}} >
                 <div
                   className="swatch"
-                  style={{"--base-color": state.baseColor && state.baseColor.shades[i].hsl}}
+                  style={{"--base-color": theme.baseColor && theme.baseColor.shades[i].hsl}}
                 />
               </div>
             ))}

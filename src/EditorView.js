@@ -18,6 +18,8 @@ display: flex;
 height: 100%;
 flex-flow: column;
 overflow: auto;
+padding-bottom: 3rem;
+
 .graphs {
   position: sticky;
   top: 0;
@@ -169,11 +171,11 @@ h3 {
 }
 `
 
-const App = observer(() => {
+const App = observer(({theme}) => {
   return (
     <Styles className="Editor">
       <div className="colors">
-        {state.colors.map(color => (
+        {theme.colors.map(color => (
           <div className="color">
             <h2 className="title">
               <label className="checkbox">
@@ -198,48 +200,46 @@ const App = observer(() => {
                 confirmLabel={<Icon icon={warningIcon} />}
               />
             </h2>
-            {state.ui.isGraphVisible && (
-              <div className="graphs">
-                <div className="graph graph-hue">
-                  <h3><abbr title="Hue">H</abbr></h3>
-                  <SplineGraph
-                    hue
-                    color={color}
-                    min={0}
-                    max={480}
-                    height={2.25}
-                    spline={color.hueBezier}
-                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
-                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/h', value: v})}}
-                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './hueSpline', value: v})}}
-                  />
-                </div>
-                <div className="graph graph-saturation">
-                  <h3><abbr title="Saturation">S</abbr></h3>
-                  <SplineGraph
-                    color={color}
-                    min={0}
-                    max={100}
-                    spline={color.saturationBezier}
-                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/s', value: v})}}
-                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/s', value: v})}}
-                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './saturationSpline', value: v})}}
-                  />
-                </div>
-                <div className="graph graph-lightness">
-                  <h3><abbr title="Lightness">L</abbr></h3>
-                  <SplineGraph
-                    color={color}
-                    min={0}
-                    max={100}
-                    spline={color.lightnessBezier}
-                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/l', value: v})}}
-                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/l', value: v})}}
-                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './lightnessSpline', value: v})}}
-                  />
-                </div>
+            <div className="graphs">
+              <div className="graph graph-hue">
+                <h3><abbr title="Hue">H</abbr></h3>
+                <SplineGraph
+                  hue
+                  color={color}
+                  min={0}
+                  max={480}
+                  height={2.25}
+                  spline={color.hueBezier}
+                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
+                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/h', value: v})}}
+                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './hueSpline', value: v})}}
+                />
               </div>
-            )}
+              <div className="graph graph-saturation">
+                <h3><abbr title="Saturation">S</abbr></h3>
+                <SplineGraph
+                  color={color}
+                  min={0}
+                  max={100}
+                  spline={color.saturationBezier}
+                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/s', value: v})}}
+                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/s', value: v})}}
+                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './saturationSpline', value: v})}}
+                />
+              </div>
+              <div className="graph graph-lightness">
+                <h3><abbr title="Lightness">L</abbr></h3>
+                <SplineGraph
+                  color={color}
+                  min={0}
+                  max={100}
+                  spline={color.lightnessBezier}
+                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/l', value: v})}}
+                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/l', value: v})}}
+                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './lightnessSpline', value: v})}}
+                />
+              </div>
+            </div>
             <div>
               {color.shades.map((shade, i, arr) => {
                 const isExtreme = i === 0 || i === arr.length - 1
@@ -251,13 +251,13 @@ const App = observer(() => {
                       <ColorInput
                         type="color"
                         value={i === 0 ? color.start.hex : color.end.hex}
-                        baseColor={state.baseColor && state.baseColor.shades[i].hsl}
+                        baseColor={theme.baseColor && theme.baseColor.shades[i].hsl}
                         onInput={(e) => color[i === 0 ? 'start' : 'end'].setHex(e.target.value)}
                       />
                     :
                       <div
                         className="swatch"
-                        style={{"--base-color": state.baseColor && state.baseColor.shades[i].hsl}}
+                        style={{"--base-color": theme.baseColor && theme.baseColor.shades[i].hsl}}
                       />
                     }
                     <div>
@@ -276,7 +276,7 @@ const App = observer(() => {
         <div className="add-button-container">
           <Button
             className="add-button"
-            onClick={() => {state.addColor()}}
+            onClick={() => {theme.addColor()}}
             label={<>
               <Icon icon={paletteIcon} />
               <span>Add Color</span>
@@ -284,6 +284,28 @@ const App = observer(() => {
           />
         </div>
       </div>
+      <footer className={`app-footer`}>
+        <label>
+          Shades:
+          <input
+            className="shade-count"
+            type="number"
+            min="3"
+            onChange={(e) => {
+              const value = parseInt(e.target.value)
+              if (value >= 3 && value <= 16) {
+                applyPatch(theme, {op: 'add', path: './interpolationCount', value: value})
+              }
+            }}
+            value={theme.interpolationCount}
+          />
+        </label>
+        <div className="messages">
+          {state.ui.visibleMessages.map(message => (
+            <div className={`message ${message.status}`}>{message.body}</div>
+          ))}
+        </div>
+      </footer>
     </Styles>
   );
 })

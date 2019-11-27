@@ -1,4 +1,4 @@
-import { types, getSnapshot, applySnapshot, getParent } from "mobx-state-tree"
+import { types, getSnapshot, applySnapshot, getParent, getRoot } from "mobx-state-tree"
 import BezierEasing from 'bezier-easing'
 import {scaleLinear} from "d3-scale";
 import {format} from 'd3-format'
@@ -6,8 +6,10 @@ import {hsl, rgb} from 'd3-color'
 import Bezier from 'bezier-js'
 import {loadState, saveState} from './localStorage'
 import {kebabCase, camelCase} from 'lodash'
+import uuid from 'uuid/v4'
 
 const Shade = types.model('Shade', {
+  id: types.optional(types.identifier, uuid),
   h: types.optional(types.number, 0),
   s: types.optional(types.number, 100),
   l: types.optional(types.number, 100),
@@ -37,6 +39,7 @@ const Shade = types.model('Shade', {
 })
 
 const Color = types.model('Color', {
+  id: types.optional(types.identifier, uuid),
   name: types.optional(types.string, 'Gray'),
   base: types.optional(types.boolean, false),
   start: types.optional(Shade, {h: 78, s: 60, l: 90}),
@@ -88,8 +91,8 @@ const Color = types.model('Color', {
           return intersect.y
         }
 
-        return Array(self.$treenode.root.storedValue.interpolationCount - 2).fill().map((el, i) => {
-          const position = (i + 1) / (self.$treenode.root.storedValue.interpolationCount - 1)
+        return Array(getParent(self, 2).interpolationCount - 2).fill().map((el, i) => {
+          const position = (i + 1) / (getParent(self, 2).interpolationCount - 1)
           return Shade.create({
             h: getYAtX(position, self.hueBezier),
             s: getYAtX(position, self.saturationBezier),
@@ -114,6 +117,7 @@ const Color = types.model('Color', {
 })
 
 export const Message = types.model("Message", {
+  id: types.optional(types.identifier, uuid),
   body: types.optional(types.string, ''),
   date: types.optional(types.string, new Date().toISOString()),
   status: types.optional(types.string, 'secondary'),
@@ -129,6 +133,74 @@ export const Message = types.model("Message", {
   },
 }))
 
+
+export const Theme = types.model("Theme", {
+  id: types.optional(types.identifier, uuid),
+  name: types.optional(types.string, 'New Theme'),
+  colors: types.optional(types.array(Color), [{}]),
+  interpolationCount: types.optional(types.number, 10),
+}).extend(self => {
+  return {
+    views: {
+      get baseColor() {
+        return self.colors.find(color => color.base)
+      },
+      get exportText () {
+        const ui = getRoot(self).ui
+
+        let
+          formatter,
+          prefix,
+          separator,
+          showSemicolon = true;
+        switch(ui.exportLanguage) {
+          case 'sass':
+            formatter = camelCase
+            prefix = '$'
+            separator = ': '
+            showSemicolon = false
+            break;
+          case 'csv':
+            formatter = v => v
+            prefix = ''
+            separator = ','
+            showSemicolon = false
+            break;
+          case 'css':
+          default:
+            formatter = kebabCase
+            prefix = '--'
+            separator = ': '
+            break;
+        }
+        return self.colors.map(color => {
+          return color.shades.map((shade, i) => {
+            const name = formatter(`${color.name} ${i + 1}`)
+            const value = shade[ui.colorspace]
+
+            return `${prefix}${name}${separator}${value}${showSemicolon ? ';' : ''}`
+          }).join('\n')
+        }).join('\n\n')
+      }
+    },
+    actions: {
+      addColor(options) {
+        self.colors.push(options || {})
+      },
+      removeColor (item) {
+        self.colors.splice(self.colors.indexOf(item), 1)
+      },
+      resetStore() {
+        applySnapshot(self, defaultState)
+      },
+      loadState(snapshot) {
+        applySnapshot(self, snapshot)
+      },
+    }
+  }
+})
+
+
 export const UIStore = types.model("UIStore", {
   isFooterOpen: types.optional(types.boolean, false),
   isGraphVisible: types.optional(types.boolean, true),
@@ -136,10 +208,18 @@ export const UIStore = types.model("UIStore", {
   exportLanguage: types.optional(types.string, 'css'),
   messages: types.array(Message),
   colorspace: types.optional(types.string, 'hsl'),
-  tab: types.optional(types.string, 'editor'),
+  tab: types.optional(types.string, 'overview'),
+  currentTheme: types.maybeNull(types.reference(Theme))
 }).extend(self => {
   return {
     views: {
+      get view () {
+        if (self.currentTheme) {
+          return self.tab
+        } else {
+          return 'overview'
+        }
+      },
       get visibleMessages() {
         return self.messages.filter(m => m.visible)
       }
@@ -166,81 +246,37 @@ export const UIStore = types.model("UIStore", {
       setTab(value) {
         self.tab = value;
       },
+      setCurrentTheme(theme) {
+        self.currentTheme = theme
+        self.tab = 'editor'
+      }
     }
   }
 })
 
 const defaultState = {
-  colors: [Color.create({
+  themes: [Theme.create({
+    colors: [Color.create({})]
   })],
   ui: {}
 }
 
 export const RootStore = types.model("Store", {
-  colors: types.array(Color),
-  interpolationCount: types.optional(types.number, 10),
+  themes: types.array(Theme),
   ui: types.optional(UIStore, {}),
-}).extend(self => {
-  return {
-    views: {
-      get baseColor() {
-        return self.colors.find(color => color.base)
-      },
-      get exportText () {
-        let
-          formatter,
-          colorspace,
-          keyFormat,
-          prefix,
-          separator,
-          showSemicolon = true;
-        switch(self.ui.exportLanguage) {
-          case 'sass':
-            formatter = camelCase
-            prefix = '$'
-            separator = ':'
-            showSemicolon = false
-            break;
-          case 'csv':
-            formatter = v => v
-            prefix = ''
-            separator = ':'
-            showSemicolon = false
-            break;
-          case 'css':
-          default:
-            formatter = kebabCase
-            prefix = '--'
-            separator = ':'
-            break;
-        }
-        return self.colors.map(color => {
-          return color.shades.map((shade, i) => {
-            const name = formatter(`${color.name} ${i + 1}`)
-            const value = shade[self.ui.colorspace]
-            console.log({value})
-
-            return `${prefix}${name}${separator} ${value}${showSemicolon ? ';' : ''}`
-          }).join('\n')
-        }).join('\n\n')
-      }
+}).extend(self => ({
+  actions: {
+    addTheme(options) {
+      self.themes.push(options || {})
     },
-    actions: {
-      addColor(options) {
-        self.colors.push(options || {})
-      },
-      removeColor (item) {
-        self.colors.splice(self.colors.indexOf(item), 1)
-      },
-      resetStore() {
-        applySnapshot(self, defaultState)
-      },
-      loadState(snapshot) {
-        applySnapshot(self, snapshot)
-      },
-    }
+    resetStore() {
+      applySnapshot(self, defaultState)
+    },
+    loadState(snapshot) {
+      applySnapshot(self, snapshot)
+    },
   }
-})
+}))
 
 // initialization and unload
 

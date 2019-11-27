@@ -62,7 +62,7 @@ const Styles = styled.div`
   }
 `
 
-const ExportView = observer(() => {
+const ExportView = observer(({theme}) => {
   const outputEl = useRef(null);
   return (
     <Styles className="ExportView">
@@ -93,9 +93,9 @@ const ExportView = observer(() => {
           <span>Copy to clipboard</span>
         </>}
       />
-      <textarea ref={outputEl}>{state.exportText}</textarea>
+      <textarea ref={outputEl}>{theme.exportText}</textarea>
       <pre>
-        {state.exportText}
+        {theme.exportText}
       </pre>
     </Styles>
   );
