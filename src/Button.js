@@ -32,24 +32,28 @@ const Styles = styled.button`
   &.info         { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
 
   &.text {
+    transform: none;
+    background: none;
     box-shadow: none;
   }
-  & svg:not(:last-child) {
-    margin-right: 0.5em;
-  }
-  &:hover, &:focus {
-    /* background: var(--highlight); */
-    outline: 0;
-  }
-  &:active {
-    transition: all 0.1s var(--ease-out);
-    transform: translateY(0px);
-    background: var(--background);
-    box-shadow:
-      0.5px 1px var(--highlight) inset,
-      -0.5px -1px var(--shading) inset,
-      0 0 var(--shading),
-      -1px -1px rgba(0,0,0,0.1);
+  &:not(.text) {
+    & svg:not(:last-child) {
+      margin-right: 0.5em;
+    }
+    &:hover, &:focus {
+      /* background: var(--highlight); */
+      outline: 0;
+    }
+    &:active {
+      transition: all 0.1s var(--ease-out);
+      transform: translateY(0px);
+      background: var(--background);
+      box-shadow:
+        0.5px 1px var(--highlight) inset,
+        -0.5px -1px var(--shading) inset,
+        0 0 var(--shading),
+        -1px -1px rgba(0,0,0,0.1);
+    }
   }
 
 `

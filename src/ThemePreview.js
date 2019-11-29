@@ -68,8 +68,8 @@ const App = observer(({theme, onDoubleClick}) => {
         ))}
       </div>
       <footer>
-        <Button onClick={() => theme.toggleFavorite()} label={<Icon icon={roundFavorite} />} />
-        <Button onClick={() => theme.remove()} label={<Icon icon={deleteIcon} />} confirmLabel={<Icon icon={warningIcon} />} />
+        <Button status="text danger" onClick={() => theme.toggleFavorite()} label={<Icon icon={roundFavorite} />} />
+        <Button status="text danger" onClick={() => theme.remove()} label={<Icon icon={deleteIcon} />} confirmLabel={<Icon icon={warningIcon} />} />
       </footer>
     </Styles>
   );
