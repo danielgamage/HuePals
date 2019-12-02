@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/HuePals/precache-manifest.fe5cc5c533581fed0721e35b34b72211.js"
+  "/HuePals/precache-manifest.b7ba750997b89bac535a3cc5fabda262.js"
 );
 
 self.addEventListener('message', (event) => {

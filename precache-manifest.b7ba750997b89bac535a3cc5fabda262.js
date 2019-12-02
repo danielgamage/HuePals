@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "13fa4bb96cb5a94527f2c87af9eda434",
+    "revision": "2fded07f72dadef029bc811bb876434b",
     "url": "/HuePals/index.html"
   },
   {
-    "revision": "7e076c47e27b7df3a21c",
-    "url": "/HuePals/static/css/main.7bc664aa.chunk.css"
+    "revision": "18940abecae1cc87eb04",
+    "url": "/HuePals/static/css/main.cbe3ce4d.chunk.css"
   },
   {
-    "revision": "a6b6956326bb9d26c46f",
-    "url": "/HuePals/static/js/2.da427a7f.chunk.js"
+    "revision": "e100c60334512b626395",
+    "url": "/HuePals/static/js/2.3404d043.chunk.js"
   },
   {
-    "revision": "7e076c47e27b7df3a21c",
-    "url": "/HuePals/static/js/main.ee3b3196.chunk.js"
+    "revision": "18940abecae1cc87eb04",
+    "url": "/HuePals/static/js/main.4d4607e6.chunk.js"
   },
   {
     "revision": "6429a61297bd6051a9bd",
