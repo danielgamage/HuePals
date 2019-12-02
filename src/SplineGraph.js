@@ -113,28 +113,27 @@ const SplineGraph = observer(({
   const handleMouseMove = (e) => {
     if (isMouseDown) {
       const mouse = {x: e.clientX, y: e.clientY}
-      let newSpline = [...spline].splice(2, spline.length - 2)
+      let newSpline = [...spline]
+
+      const xIndex = selectedNode * 2
+      const yIndex = xIndex + 1
 
       switch (selectedNode) {
-        case 'start-oncurve':
-          onStartUpdate(scaleY(mouse.y))
+        case 0: // first
+        case 3: // last
+          newSpline[yIndex] = scaleY(mouse.y)
           break;
-        case 'start':
-          newSpline[0] = scaleX(mouse.x)
-          newSpline[1] = scaleY(mouse.y)
-          onSplineUpdate(newSpline)
-          break;
-        case 'end-oncurve':
-          onEndUpdate(scaleY(mouse.y))
-          break;
-        case 'end':
-          newSpline[2] = scaleX(mouse.x)
-          newSpline[3] = scaleY(mouse.y)
-          onSplineUpdate(newSpline)
+        case 1: // first offcurve
+        case 2: // last offcurve
+          newSpline[xIndex] = scaleX(mouse.x)
+          newSpline[yIndex] = scaleY(mouse.y)
           break;
         default:
           break;
       }
+
+      onSplineUpdate(newSpline)
+
     }
   }
   const handleMouseEnd = (e) => {
@@ -167,18 +166,18 @@ const SplineGraph = observer(({
         />
         <line x1={scaledS[0]} y1={scaledS[1]} x2={scaledS[2]} y2={scaledS[3]} />
         <circle className="point point--oncurve" cx={scaledS[0]} cy={scaledS[1]} r="0.075"
-          onMouseDown={(e) => {handleMouseDown(e, 'start-oncurve')}}
+          onMouseDown={(e) => {handleMouseDown(e, 0)}}
         />
         <circle className="point point--offcurve" cx={scaledS[2]} cy={scaledS[3]} r="0.075"
-          onMouseDown={(e) => {handleMouseDown(e, 'start')}}
+          onMouseDown={(e) => {handleMouseDown(e, 1)}}
         />
 
         <line x1={scaledS[4]} y1={scaledS[5]} x2={scaledS[6]} y2={scaledS[7]} />
         <circle className="point point--oncurve" cx={scaledS[6]} cy={scaledS[7]} r="0.075"
-          onMouseDown={(e) => {handleMouseDown(e, 'end-oncurve')}}
+          onMouseDown={(e) => {handleMouseDown(e, 3)}}
         />
         <circle className="point point--offcurve" cx={scaledS[4]} cy={scaledS[5]} r="0.075"
-          onMouseDown={(e) => {handleMouseDown(e, 'end')}}
+          onMouseDown={(e) => {handleMouseDown(e, 2)}}
         />
       </svg>
     </Styles>

@@ -26,14 +26,6 @@ const Shade = types.model('Shade', {
         const value = rgb(self.hsl)
         return `rgb(${format('.2f')(value.r)}, ${format('.2f')(value.g)}, ${format('.2f')(value.b)})`
       }
-    },
-    actions: {
-      setHex(v) {
-        const newValue = hsl(v)
-        self.h = newValue.h || 0
-        self.s = newValue.s * 100
-        self.l = newValue.l * 100
-      }
     }
   }
 })
@@ -42,73 +34,53 @@ const Color = types.model('Color', {
   id: types.optional(types.identifier, uuid),
   name: types.optional(types.string, 'Gray'),
   base: types.optional(types.boolean, false),
-  start: types.optional(Shade, {h: 78, s: 60, l: 90}),
-  end: types.optional(Shade, {h: 174, s: 60, l: 12}),
   hueSpline: types.optional(
     types.array(types.number),
-    [0.33, 150, 0.66, 170]
+    [0, 78, 0.33, 150, 0.66, 170, 1, 174]
   ),
   saturationSpline: types.optional(
     types.array(types.number),
-    [0.5, 80, 0.8, 80]
+    [0, 60, 0.5, 80, 0.8, 80, 1, 60]
   ),
   lightnessSpline: types.optional(
     types.array(types.number),
-    [0.33, 66, 0.66, 33]
+    [0, 90, 0.33, 66, 0.66, 33, 1, 12]
   ),
 }).extend(self => {
   return {
     views: {
-      get hueBezier () {
-        return [
-          0, self.start.h,
-          self.hueSpline[0], self.hueSpline[1],
-          self.hueSpline[2], self.hueSpline[3],
-          1, self.end.h,
-        ]
-      },
-      get saturationBezier () {
-        return [
-          0, self.start.s,
-          self.saturationSpline[0], self.saturationSpline[1],
-          self.saturationSpline[2], self.saturationSpline[3],
-          1, self.end.s,
-        ]
-      },
-      get lightnessBezier () {
-        return [
-          0, self.start.l,
-          self.lightnessSpline[0], self.lightnessSpline[1],
-          self.lightnessSpline[2], self.lightnessSpline[3],
-          1, self.end.l,
-        ]
-      },
       get interpolations () {
         const getYAtX = (position, bezier) => {
+          position = Math.min(position, 0.999999)
           var curve = new Bezier(...bezier);
           var line = { p1: { x: position, y: -1000 }, p2: { x: position, y: 1000 } };
           const intersect = curve.get(curve.intersects(line)[0])
           return intersect.y
         }
 
-        return Array(getParent(self, 2).interpolationCount - 2).fill().map((el, i) => {
-          const position = (i + 1) / (getParent(self, 2).interpolationCount - 1)
+        return Array(getParent(self, 2).interpolationCount).fill().map((el, i) => {
+          const position = i / (getParent(self, 2).interpolationCount - 1)
           return Shade.create({
-            h: getYAtX(position, self.hueBezier),
-            s: getYAtX(position, self.saturationBezier),
-            l: getYAtX(position, self.lightnessBezier)
+            h: getYAtX(position, self.hueSpline),
+            s: getYAtX(position, self.saturationSpline),
+            l: getYAtX(position, self.lightnessSpline)
           })
         })
       },
+
       get shades () {
-        return [
-          self.start,
-          ...self.interpolations,
-          self.end
-        ]
+        return self.interpolations
       },
     },
     actions: {
+      setHex(startOrEnd, v) {
+        const newValue = hsl(v)
+        const index = startOrEnd === "start" ? 1 : 7
+
+        self.hueSpline[index] = newValue.h || 0
+        self.saturationSpline[index] = newValue.s * 100
+        self.lightnessSpline[index] = newValue.l * 100
+      },
       remove() {
         getParent(self, 2).removeColor(self)
       }

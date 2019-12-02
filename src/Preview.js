@@ -89,6 +89,12 @@ overflow: auto;
 `
 
 const App = observer(({theme}) => {
+  const size = 2
+  const padding = 1
+  const withPadding = (count) => (count * size) + ((count - 1) * padding)
+  const colorCount = theme.colors.length
+  const shadeCount = theme.colors[0].shades.length
+
   return (
     <Styles className="Preview">
       <div className="colors">

@@ -209,7 +209,7 @@ const App = observer(({theme}) => {
                   min={0}
                   max={480}
                   height={2.25}
-                  spline={color.hueBezier}
+                  spline={color.hueSpline}
                   onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
                   onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/h', value: v})}}
                   onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './hueSpline', value: v})}}
@@ -221,7 +221,7 @@ const App = observer(({theme}) => {
                   color={color}
                   min={0}
                   max={100}
-                  spline={color.saturationBezier}
+                  spline={color.saturationSpline}
                   onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/s', value: v})}}
                   onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/s', value: v})}}
                   onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './saturationSpline', value: v})}}
@@ -233,7 +233,7 @@ const App = observer(({theme}) => {
                   color={color}
                   min={0}
                   max={100}
-                  spline={color.lightnessBezier}
+                  spline={color.lightnessSpline}
                   onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/l', value: v})}}
                   onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/l', value: v})}}
                   onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './lightnessSpline', value: v})}}
@@ -250,9 +250,9 @@ const App = observer(({theme}) => {
                     {isExtreme ?
                       <ColorInput
                         type="color"
-                        value={i === 0 ? color.start.hex : color.end.hex}
+                        value={shade.hex}
                         baseColor={theme.baseColor && theme.baseColor.shades[i].hsl}
-                        onInput={(e) => color[i === 0 ? 'start' : 'end'].setHex(e.target.value)}
+                        onInput={(e) => color.setHex(i === 0 ? 'start' : 'end', e.target.value)}
                       />
                     :
                       <div
