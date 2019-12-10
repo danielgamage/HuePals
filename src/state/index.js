@@ -50,20 +50,40 @@ const Color = types.model('Color', {
   return {
     views: {
       get interpolations () {
-        const getYAtX = (position, bezier) => {
+        const bounds = {
+          hue: {
+            min: 0,
+            max: 480
+          },
+          saturation: {
+            min: 0,
+            max: 100
+          },
+          lightness: {
+            min: 0,
+            max: 100
+          },
+        }
+        const getYAtX = (position, key) => {
           position = Math.min(position, 0.999999)
-          var curve = new Bezier(...bezier);
+          var curve = new Bezier(...self[`${key}Spline`]);
           var line = { p1: { x: position, y: -1000 }, p2: { x: position, y: 1000 } };
           const intersect = curve.get(curve.intersects(line)[0])
-          return intersect.y
+          return Math.min(
+            Math.max(
+              intersect.y,
+              bounds[key].min,
+            ),
+            bounds[key].max
+          )
         }
 
         return Array(getParent(self, 2).interpolationCount).fill().map((el, i) => {
           const position = i / (getParent(self, 2).interpolationCount - 1)
           return Shade.create({
-            h: getYAtX(position, self.hueSpline),
-            s: getYAtX(position, self.saturationSpline),
-            l: getYAtX(position, self.lightnessSpline)
+            h: getYAtX(position, 'hue'),
+            s: getYAtX(position, 'saturation'),
+            l: getYAtX(position, 'lightness')
           })
         })
       },
