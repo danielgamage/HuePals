@@ -73,7 +73,7 @@ position: relative;
 `
 
 let isMouseDown = false;
-let initialMouse, initial, selectedNode, svgBounds, scaleX, scaleY;
+let initialMouse, initial, selectedNode, svgBounds, scaleX, scaleY, scaleYOncurve;
 
 const SplineGraph = observer(({
   spline,
@@ -108,6 +108,9 @@ const SplineGraph = observer(({
     scaleY = scaleLinear()
       .domain([svgBounds.y, svgBounds.y + svgBounds.height])
       .range([max, min])
+    scaleYOncurve = scaleLinear()
+      .domain([svgBounds.y, svgBounds.y + svgBounds.height])
+      .range([max, min])
       .clamp(true)
   }
   const handleMouseMove = (e) => {
@@ -121,7 +124,7 @@ const SplineGraph = observer(({
       switch (selectedNode) {
         case 0: // first
         case 3: // last
-          newSpline[yIndex] = scaleY(mouse.y)
+          newSpline[yIndex] = scaleYOncurve(mouse.y)
           break;
         case 1: // first offcurve
         case 2: // last offcurve
