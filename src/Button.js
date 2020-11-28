@@ -8,7 +8,7 @@ const Styles = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--background);
+  background: var(--bg-1);
   border: 0;
   border-radius: 4px;
   color: inherit;

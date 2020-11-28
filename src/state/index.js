@@ -208,10 +208,26 @@ export const UIStore = types.model("UIStore", {
   messages: types.array(Message),
   colorspace: types.optional(types.string, 'hsl'),
   tab: types.optional(types.string, 'overview'),
-  currentTheme: types.maybeNull(types.reference(Theme))
+  currentTheme: types.maybeNull(types.reference(Theme)),
+  backgroundColorId: types.maybe(types.string),
+  backgroundShadeIndex: types.maybe(types.number),
 }).extend(self => {
   return {
     views: {
+      get backgroundShade () {
+        if (self.currentTheme && self.backgroundColorId && self.backgroundShadeIndex !== undefined) {
+          let shade
+          self.currentTheme.colors.find(color => {
+            if (color.id === self.backgroundColorId) {
+              shade = color.shades[self.backgroundShadeIndex]
+              if (shade) {
+                return true
+              }
+            }
+          })
+          return shade
+        }
+      },
       get view () {
         if (self.currentTheme) {
           return self.tab
@@ -248,6 +264,12 @@ export const UIStore = types.model("UIStore", {
       setCurrentTheme(theme) {
         self.currentTheme = theme
         self.tab = 'editor'
+        self.backgroundShadeIndex = undefined
+        self.backgroundColorId = undefined
+      },
+      setBackgroundShade(colorId, value) {
+        self.backgroundColorId = colorId
+        self.backgroundShadeIndex = value
       }
     }
   }

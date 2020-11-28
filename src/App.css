@@ -5,6 +5,8 @@
   box-sizing: border-box;
 }
 :root {
+  --sans: 'Source Sans Pro', sans-serif;
+  --mono: 'Source Code Pro', monospace;
   --size-5: 3.052rem;
   --size-4: 2.441rem;
   --size-3: 1.953rem;
@@ -62,12 +64,29 @@
   --box-shadow: 0 2px 8px var(--shadow-color);
   --body-background: var(--gray-7);
 }
+.theme--light {
+  --fg-1: #222f;
+  --fg-2: #222a;
+  --fg-3: #2227;
+  --fg-4: #2224;
+  --fg-5: #2222;
+  --bg-1: #fff;
+  --bg-2: #eee;
+  --bg-2: #ddd;
+}
+.theme--dark {
+  --fg-1: #ffff;
+  --fg-2: #fffa;
+  --fg-3: #fff7;
+  --fg-4: #fff4;
+  --fg-5: #fff2;
+  --bg-1: #333;
+  --bg-2: #2a2a2a;
+  --bg-2: #222;
+}
 html {
-  font-size: 16px;
-  background-color: var(--body-background);
-  color: var(--gray-1);
-  user-select: none;
-  font-family: 'Source Sans Pro', sans-serif;
+font-size: 16px;
+
 }
 html, body, #root {
   overflow: hidden;
@@ -92,15 +111,15 @@ select {
   margin: 0;
   border: 0;
   box-shadow:
-    0.5px 1px 0 var(--gray-6) inset,
-    -0.5px -1px 0 var(--gray-8) inset,
-    0 2px 0 var(--gray-8),
+    0.5px 1px 0 var(--highlight) inset,
+    -0.5px -1px 0 var(--shading) inset,
+    0 2px 0 var(--shading),
     0 3px 8px var(--shadow-color);
   border-radius: 4px;
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--gray-7);
+  background-color: var(--bg-1);
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 12 12"><polygon fill="gray" points="0,4 6,12 12,4" /></svg>');
   background-repeat: no-repeat, repeat;
   background-position: right 0.7rem top 50%;

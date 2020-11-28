@@ -19,13 +19,18 @@ const Styles = styled.div`
 display: flex;
 height: 100%;
 flex-flow: column;
-
+background: var(--body-background);
+background-color: var(--body-background);
+color: var(--fg-1);
+user-select: none;
+font-family: var(--sans);
 .tabs {
   display: flex;
   height: 3rem;
   padding: 0 2rem;
-  border-bottom: 1px solid var(--gray-6);
+  border-bottom: 1px solid var(--fg-5);
   box-shadow: var(--box-shadow);
+  background: var(--bg-2);
   z-index: 100;
 }
 .tab-item {
@@ -36,16 +41,16 @@ flex-flow: column;
   padding: 0 0.5rem;
   font-weight: 700;
   &.inactive {
-    color: var(--gray-3);
+    color: var(--fg-3);
     svg {
-      color: var(--gray-4);
+      color: var(--fg-4);
     }
   }
   &.active {
-    box-shadow: 0 -0.15em var(--gray-1) inset;
+    box-shadow: 0 -0.15em var(--fg-3) inset;
   }
   &:active {
-    background: var(--gray-7);
+    background: var(--fg-5);
   }
   input {
     opacity: 0;
@@ -54,7 +59,7 @@ flex-flow: column;
     height: 0;
   }
   svg {
-    color: var(--gray-2);
+    color: var(--fg-2);
     /* height: 1.25em; */
     /* width: 1.25em; */
     margin-right: 0.5rem;
@@ -69,25 +74,6 @@ flex-flow: column;
   box-shadow:
     0 0 0 3px inset var(--base-color),
     var(--box-shadow);
-}
-.app-footer {
-  border-top: 1px solid var(--gray-8);
-  padding: 1rem;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4rem;
-  padding: 0 2rem;
-  background: var(--gray-8);
-  z-index: 1;
-  transition: 0.3s var(--ease-out) height;
-  box-shadow: 0 -2px 8px var(--gray-10);
-  & > * + * {
-    margin-left: 1rem;
-  }
 }
 .shade-count {
   width: 3rem;
@@ -111,7 +97,10 @@ flex-flow: column;
 
 const App = observer(() => {
   return (
-    <Styles className="App">
+    <Styles
+      className={`App ${state.ui.backgroundShade && state.ui.backgroundShade.l > 50 ? "theme--light" : "theme--dark"}`}
+      style={{"--body-background": state.ui.backgroundShade && state.ui.backgroundShade.hex}}
+    >
       <div className="tabs">
         {[
           { label: 'Overview', icon: homeIcon },

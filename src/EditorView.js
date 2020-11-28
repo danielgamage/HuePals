@@ -19,7 +19,6 @@ height: 100%;
 flex-flow: column;
 overflow: auto;
 padding-bottom: 3rem;
-
 .graphs {
   position: sticky;
   top: 0;
@@ -30,7 +29,6 @@ padding-bottom: 3rem;
     "4rem 4rem"
     "4rem 4rem";
   padding: 1rem 0;
-  background: linear-gradient(to bottom, var(--body-background) 90%, #27263700 100%);
 }
 .graph {
   position: relative;
@@ -93,14 +91,16 @@ h3 {
     .viz {
       width: 1rem;
       height: 1rem;
-      border: 2px solid var(--gray-6);
+      border: 2px solid var(--fg-3);
       border-radius: 1rem;
     }
     input:checked + .viz {
       border-color: var(--red-4);
-      background: var(--gray-6);
+      background: var(--fg-3);
     }
   }
+}
+.list {
 }
 .shade {
   position: relative;
@@ -124,7 +124,7 @@ h3 {
       bottom: -0.5rem;
       left: -1rem;
       border-radius: 4px;
-      background: var(--gray-8);
+      background: var(--fg-3);
       opacity: 0;
       z-index: -1;
     }
@@ -135,11 +135,23 @@ h3 {
     }
   }
 }
+.shade-text {
+  flex: 1 1 auto;
+}
+.shade-background-input {
+  align-self: flex-start;
+}
+.shade-background-title {
+  flex: 0 0 auto;
+}
 .shade-title {
   margin: 0;
 }
 .shade-value {
-  margin: 0;
+  margin: 0.1rem 0 0;
+  font-size: var(--size--1);
+  font-family: var(--mono);
+  color: var(--fg-2);
 }
 .swatch {
   width: 2rem;
@@ -168,14 +180,33 @@ h3 {
 .remove-button {
   line-height: 0.5;
   z-index: 11;
+  padding-inline: 0.5rem;
+}
+.app-footer {
+  padding: 1rem;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  padding: 0 2rem;
+  background: var(--bg-2);
+  z-index: 1;
+  transition: 0.3s var(--ease-out) height;
+  box-shadow: 0 -2px 5px var(--fg-5);
+  & > * + * {
+    margin-left: 1rem;
+  }
 }
 `
 
 const App = observer(({theme}) => {
   return (
-    <Styles className="Editor">
+    <Styles className={`Editor`}>
       <div className="colors">
-        {theme.colors.map(color => (
+        {theme.colors.map((color, colorIndex) => (
           <div className="color">
             <h2 className="title">
               <label className="checkbox">
@@ -240,7 +271,7 @@ const App = observer(({theme}) => {
                 />
               </div>
             </div>
-            <div>
+            <div className="list">
               {color.shades.map((shade, i, arr) => {
                 const isExtreme = i === 0 || i === arr.length - 1
                 const RootElement = isExtreme ? 'label' : 'div'
@@ -260,12 +291,25 @@ const App = observer(({theme}) => {
                         style={{"--base-color": theme.baseColor && theme.baseColor.shades[i].hsl}}
                       />
                     }
-                    <div>
+                    <div className="shade-text">
                       <h4 className="shade-title">{color.name} {i + 1}</h4>
                       {state.ui.isValueVisible &&
                         <p className="shade-value">{shade.hsl}</p>
                       }
                     </div>
+                    <input
+                      className="shade-background-input"
+                      type="radio"
+                      name="background-color"
+                      id={shade.hsl}
+                      value={shade.hex}
+                      checked={state.ui.backgroundColorId === color.id && state.ui.backgroundShadeIndex ===  i}
+                      onChange={e => {
+                        if (e.target.checked) {
+                          state.ui.setBackgroundShade(color.id, i)
+                        }
+                      }}
+                    />
                   </RootElement>
                 )
               })}

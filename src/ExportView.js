@@ -14,39 +14,6 @@ const Styles = styled.div`
   user-select: text;
   padding: 2rem;
 
-  .tabs {
-    display: flex;
-    height: 3rem;
-    border-bottom: 1px solid var(--gray-8);
-  }
-  .tab-item {
-    line-height: 3rem;
-    font-size: var(--size-1);
-    padding: 0 0.5rem;
-    font-weight: 700;
-    &.inactive {
-      color: var(--gray-5);
-    }
-    &.active {
-      border-bottom: 0.15em solid var(--gray-1);
-    }
-    input {
-      opacity: 0;
-      position: absolute;
-      width: 0;
-      height: 0;
-    }
-  }
-  .swatch {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 1rem;
-    background: var(--color);
-    flex: 0 0 auto;
-    box-shadow:
-      0 0 0 3px inset var(--base-color),
-      0 0 8px var(--gray-10);
-  }
   textarea {
     width: 0;
     height: 0;

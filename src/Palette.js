@@ -20,46 +20,6 @@ height: 100%;
 flex-flow: column;
 padding-bottom: 3rem;
 
-.tabs {
-  display: flex;
-  height: 3rem;
-  padding: 0 2rem;
-  border-bottom: 1px solid var(--gray-6);
-  box-shadow: var(--box-shadow);
-  z-index: 100;
-}
-.tab-item {
-  display: flex;
-  align-items: center;
-  line-height: 3rem;
-  font-size: var(--size-1);
-  padding: 0 0.5rem;
-  font-weight: 700;
-  &.inactive {
-    color: var(--gray-3);
-    svg {
-      color: var(--gray-4);
-    }
-  }
-  &.active {
-    box-shadow: 0 -0.15em var(--gray-1) inset;
-  }
-  &:active {
-    background: var(--gray-7);
-  }
-  input {
-    opacity: 0;
-    position: absolute;
-    width: 0;
-    height: 0;
-  }
-  svg {
-    color: var(--gray-2);
-    /* height: 1.25em; */
-    /* width: 1.25em; */
-    margin-right: 0.5rem;
-  }
-}
 .swatch {
   width: 2rem;
   height: 2rem;
@@ -70,41 +30,9 @@ padding-bottom: 3rem;
     0 0 0 3px inset var(--base-color),
     var(--box-shadow);
 }
-.app-footer {
-  border-top: 1px solid var(--gray-8);
-  padding: 1rem;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4rem;
-  padding: 0 2rem;
-  background: var(--gray-8);
-  z-index: 1;
-  transition: 0.3s var(--ease-out) height;
-  box-shadow: 0 -2px 8px var(--gray-10);
-  & > * + * {
-    margin-left: 1rem;
-  }
-}
 .shade-count {
   width: 3rem;
   margin-left: 0.5rem;
-}
-.messages {
-  margin-left: auto;
-}
-.message {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px var(--gray-10);
-
-  &.success {
-    background: var(--green-8);
-    color: var(--green-1);
-  }
 }
 
 `

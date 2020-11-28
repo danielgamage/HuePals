@@ -3,13 +3,11 @@ import logo from './logo.svg';
 import { observer } from 'mobx-react';
 import state from './state'
 import styled from 'styled-components'
-import {
-  line, curveBundle,
-} from 'd3-shape'
 import {scaleLinear} from "d3-scale";
 
 const Styles = styled.div`
 position: relative;
+
 .rainbow {
   width: calc(100% + 0.4rem);
   margin-left: -0.2rem;
@@ -38,7 +36,7 @@ position: relative;
   width: 8rem;
   height: 100%;
   vector-effect: non-scaling-stroke;
-  background: var(--gray-10);
+  background: var(--bg-2);
   border-radius: 4px;
   box-shadow:
     0 0 0 1px var(--gray-9),
@@ -48,25 +46,24 @@ position: relative;
     stroke-width: 1px;
     fill: none;
     vector-effect: non-scaling-stroke;
-    mix-blend-mode: lighten;
     stroke-linecap: round;
   }
   line {
-    stroke: var(--gray-5)
+    stroke: var(--fg-2)
   }
   path {
-    stroke: var(--gray-2)
+    stroke: var(--fg-3)
   }
   .point {
     fill: transparent;
     stroke-width: 2px;
 
     &--oncurve {
-      stroke: var(--gray-2);
-      fill: var(--gray-9);
+      stroke: var(--fg-1);
+      fill: var(--fg-2);
     }
     &--offcurve {
-      stroke: var(--gray-6);
+      stroke: var(--fg-2);
     }
   }
 }

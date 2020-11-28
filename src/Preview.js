@@ -8,6 +8,7 @@ import {
   line, curveBasis
 } from 'd3-shape'
 import SplineGraph from './SplineGraph'
+import Button from './Button'
 import { applyPatch } from 'mobx-state-tree';
 import ColorInput from './ColorInput'
 
@@ -78,6 +79,7 @@ overflow: auto;
   line-height: 2rem;
   margin-bottom: 1rem;
   text-align: right;
+  white-space: nowrap;
 }
 .column-label {
   position: absolute;
@@ -85,6 +87,20 @@ overflow: auto;
   right: 0;
   transform: translate(-1rem, -1rem) rotate(45deg);
   transform-origin: bottom right;
+  white-space: nowrap;
+}
+.playground {
+  max-width: 30rem;
+  line-height: 2rem;
+  user-select: text;
+  font-size: var(--size-0);
+  line-height: var(--size-2);
+  em {
+    font-size: var(--size-1);
+  }
+  *:focus {
+    outline: 0;
+  }
 }
 `
 
@@ -116,6 +132,23 @@ const App = observer(({theme}) => {
             ))}
           </div>
         ))}
+      </div>
+      <div className="playground">
+        <h1 contentEditable spellCheck="false">Lorem ipsum</h1>
+        <p><em contentEditable spellCheck="false">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium sit in libero debitis dolorem accusantium nam beatae, doloribus, assumenda, inventore cum placeat nihil unde perspiciatis harum consectetur veniam! Harum, officiis!
+        </em></p>
+        <blockquote contentEditable spellCheck="false">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium sit in libero debitis dolorem accusantium nam beatae, doloribus, assumenda, inventore cum placeat nihil unde perspiciatis harum consectetur veniam! Harum, officiis!</blockquote>
+        <p contentEditable spellCheck="false">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium sit in libero debitis dolorem accusantium nam beatae, doloribus, assumenda, inventore cum placeat nihil unde perspiciatis harum consectetur veniam! Harum, officiis!</p>
+        <h4 contentEditable spellCheck="false">Lorem ipsum</h4>
+        <p contentEditable spellCheck="false">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium sit in libero debitis dolorem accusantium nam beatae, doloribus, assumenda, inventore cum placeat nihil unde perspiciatis harum consectetur veniam! Harum, officiis!</p>
+        <Button
+          className="add-button"
+          onClick={() => {}}
+          label={<span contentEditable spellCheck="false">
+            <span>Add Color</span>
+          </span>}
+        />
       </div>
     </Styles>
   );
