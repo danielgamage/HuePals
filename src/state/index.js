@@ -103,6 +103,10 @@ const Color = types.model('Color', {
       },
       remove() {
         getParent(self, 2).removeColor(self)
+      },
+      duplicate() {
+        const dup = clone(self)
+        getParent(self, 2).addColor(dup)
       }
     }
   }
