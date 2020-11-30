@@ -28,9 +28,8 @@ font-family: var(--sans);
   display: flex;
   height: 3rem;
   padding: 0 2rem;
-  border-bottom: 1px solid var(--fg-5);
-  box-shadow: var(--shadow-elevated);
-  background: var(--bg-2);
+  background-color: var(--body-background);
+  box-shadow: var(--shadow-beveled), var(--shadow-elevated);
   z-index: 100;
 }
 .tab-item {
@@ -75,10 +74,6 @@ font-family: var(--sans);
     0 0 0 3px inset var(--base-color),
     var(--shadow-beveled);
 }
-.shade-count {
-  width: 3rem;
-  margin-left: 0.5rem;
-}
 .messages {
   margin-left: auto;
 }
@@ -92,7 +87,29 @@ font-family: var(--sans);
     color: var(--green-1);
   }
 }
-
+.app-footer {
+  padding: 1rem;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  padding: 0 2rem;
+  background: var(--bg-2);
+  z-index: 1;
+  transition: 0.3s var(--ease-out) height;
+  background-color: var(--body-background);
+  box-shadow: var(--shadow-beveled), var(--shadow-elevated);
+}
+.shade-count {
+  width: 3rem;
+  margin-left: 0.5rem;
+  box-shadow: var(--shadow-recessed);
+  background-color: var(--shadow-5);
+}
 `
 
 const App = observer(() => {

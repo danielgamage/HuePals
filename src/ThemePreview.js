@@ -15,7 +15,6 @@ const Styles = styled.div`
 position: relative;
 box-shadow: var(--shadow-beveled), var(--shadow-elevated);
 border-radius: 4px;
-background: var(--gray-6);
 overflow: hidden;
 display: flex;
 flex-direction: column;
@@ -29,6 +28,8 @@ flex-direction: column;
   input {
     width: 100%;
     flex: 1 1 auto;
+    background: var(--shadow-5);
+    box-shadow: var(--shadow-recessed);
   }
 }
 

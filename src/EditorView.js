@@ -190,24 +190,6 @@ h3 {
   padding-inline: 0;
   font-size: var(--size-1);
 }
-.app-footer {
-  padding: 1rem;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4rem;
-  padding: 0 2rem;
-  background: var(--bg-2);
-  z-index: 1;
-  transition: 0.3s var(--ease-out) height;
-  box-shadow: 0 -2px 5px var(--shadow-color);
-  & > * + * {
-    margin-left: 1rem;
-  }
-}
 `
 
 const App = observer(({theme}) => {

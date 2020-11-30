@@ -55,7 +55,7 @@ overflow: auto;
       border-radius: 1rem;
     }
     input:checked + .viz {
-      border-color: var(--gray-2);
+      border-color: var(--highlight-2);
     }
   }
 }

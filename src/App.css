@@ -72,7 +72,7 @@
 
   --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
   --shadow-color: rgba(0,0,0,0.1);
-  --shadow-elevated: 0 2px 8px var(--shadow-color);
+  --shadow-elevated: 0 1px 1px var(--shadow-color), 0 2px 8px var(--shadow-color);
   --body-background: var(--gray-7);
 }
 .theme--light {
@@ -84,7 +84,8 @@
   --bg-1: #fff;
   --bg-2: #eee;
   --bg-2: #ddd;
-  --shadow-beveled: 0 0.5px 0.5px var(--highlight-2) inset, 0 0.5px 0 var(--shadow-4);
+  --shadow-beveled: 0 0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset;
+  --shadow-recessed: 0 -0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset;
 }
 .theme--dark {
   --fg-1: #ffff;
@@ -95,7 +96,8 @@
   --bg-1: #333;
   --bg-2: #2a2a2a;
   --bg-2: #222;
-  --shadow-beveled: 0 0.5px 0.5px var(--highlight-5) inset, 0 0.5px 0 var(--shadow-3);
+  --shadow-beveled: 0 0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset;
+  --shadow-recessed: 0 -0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset;
 }
 html {
 font-size: 16px;
