@@ -147,8 +147,21 @@ h3 {
   align-self: flex-start;
   flex: 0 0 auto;
   color:var(--fg-4);
+  width: 1rem;
+  position: relative;
   &.active {
-    color:var(--fg-1);
+    color: var(--fg-1);
+    &::after {
+      content: "";
+      position: absolute;
+      border-radius: 2rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 2px var(--fg-1);
+    }
   }
 
   input {
