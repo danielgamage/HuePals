@@ -12,6 +12,8 @@ import { Icon } from '@iconify/react';
 import deleteIcon from '@iconify/icons-ic/outline-delete';
 import warningIcon from '@iconify/icons-ic/baseline-warning';
 import paletteIcon from '@iconify/icons-ic/outline-palette';
+import copyIcon from '@iconify/icons-ic/content-copy';
+import formatColorFill from '@iconify/icons-ic/baseline-format-color-fill';
 
 const Styles = styled.div`
 display: flex;
@@ -44,7 +46,8 @@ padding-bottom: 3rem;
 h3 {
   position: absolute;
   pointer-events: none;
-  opacity: 0.3;
+  color: var(--fg-3);
+  line-height: 1;
   margin: 0;
   top: 0.5rem;
   left: 0.5rem;
@@ -71,10 +74,11 @@ h3 {
     width: 128px;
   }
 }
-.title{
+.title-line{
   display: flex;
   align-items: center;
   margin: 0;
+  gap: 0.8rem;
   input[type=text] {
     all: unset;
     width: 100%;
@@ -109,6 +113,7 @@ h3 {
   white-space: nowrap;
   align-items: center;
   border-radius: 4px;
+  gap: 0.5rem;
   & + .shade {
     margin-top: 1rem;
   }
@@ -138,11 +143,24 @@ h3 {
 .shade-text {
   flex: 1 1 auto;
 }
-.shade-background-input {
+.shade-background-field {
   align-self: flex-start;
-}
-.shade-background-title {
   flex: 0 0 auto;
+  color:var(--fg-4);
+  &.active {
+    color:var(--fg-1);
+  }
+
+  input {
+    opacity: 0;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+  }
 }
 .shade-title {
   margin: 0;
@@ -152,17 +170,6 @@ h3 {
   font-size: var(--size--1);
   font-family: var(--mono);
   color: var(--fg-2);
-}
-.swatch {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 1rem;
-  background: var(--color);
-  margin-right: 1rem;
-  flex: 0 0 auto;
-  box-shadow:
-    0 0 0 3px inset var(--base-color),
-    var(--box-shadow);
 }
 .add-button-container {
   flex: 0 0 auto;
@@ -180,7 +187,8 @@ h3 {
 .remove-button {
   line-height: 0.5;
   z-index: 11;
-  padding-inline: 0.5rem;
+  padding-inline: 0;
+  font-size: var(--size-1);
 }
 .app-footer {
   padding: 1rem;
@@ -195,7 +203,7 @@ h3 {
   background: var(--bg-2);
   z-index: 1;
   transition: 0.3s var(--ease-out) height;
-  box-shadow: 0 -2px 5px var(--fg-5);
+  box-shadow: 0 -2px 5px var(--shadow-color);
   & > * + * {
     margin-left: 1rem;
   }
@@ -208,20 +216,28 @@ const App = observer(({theme}) => {
       <div className="colors">
         {theme.colors.map((color, colorIndex) => (
           <div className="color">
-            <h2 className="title">
+            <h2 className="title-line">
+              <input
+                type="text"
+                value={color.name}
+                onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
+              />
               <label className="checkbox">
                 <input
                   type="checkbox"
                   name="base-radio"
                   checked={color.base}
-                  onChange={(e)=> {applyPatch(color, {op: 'add', path: './base', value: e.target.checked})}}
+                  onChange={(e) => {
+                    applyPatch(color, {op: 'add', path: './base', value: e.target.checked})}
+                  }
                 />
                 <div className="viz" />
               </label>
-              <input
-                type="text"
-                value={color.name}
-                onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
+              <Button
+                status="text"
+                className="remove-button"
+                onClick={() => color.duplicate()}
+                label={<Icon icon={copyIcon} />}
               />
               <Button
                 status="text danger"
@@ -294,22 +310,25 @@ const App = observer(({theme}) => {
                     <div className="shade-text">
                       <h4 className="shade-title">{color.name} {i + 1}</h4>
                       {state.ui.isValueVisible &&
-                        <p className="shade-value">{shade.hsl}</p>
+                        <p className="shade-value">{shade.merged}</p>
                       }
                     </div>
-                    <input
-                      className="shade-background-input"
-                      type="radio"
-                      name="background-color"
-                      id={shade.hsl}
-                      value={shade.hex}
-                      checked={state.ui.backgroundColorId === color.id && state.ui.backgroundShadeIndex ===  i}
-                      onChange={e => {
-                        if (e.target.checked) {
-                          state.ui.setBackgroundShade(color.id, i)
-                        }
-                      }}
-                    />
+                    <label className={"shade-background-field " + `${theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i && "active"}`}>
+                      <Icon icon={formatColorFill}></Icon>
+                      <input
+                        className="shade-background-input"
+                        type="radio"
+                        name="background-color"
+                        id={shade.hsl}
+                        value={shade.hex}
+                        checked={theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            theme.setBackgroundShade(color.id, i)
+                          }
+                        }}
+                      />
+                    </label>
                   </RootElement>
                 )
               })}
@@ -320,6 +339,7 @@ const App = observer(({theme}) => {
         <div className="add-button-container">
           <Button
             className="add-button"
+            status="secondary"
             onClick={() => {theme.addColor()}}
             label={<>
               <Icon icon={paletteIcon} />
@@ -328,28 +348,6 @@ const App = observer(({theme}) => {
           />
         </div>
       </div>
-      <footer className={`app-footer`}>
-        <label>
-          Shades:
-          <input
-            className="shade-count"
-            type="number"
-            min="3"
-            onChange={(e) => {
-              const value = parseInt(e.target.value)
-              if (value >= 3 && value <= 16) {
-                applyPatch(theme, {op: 'add', path: './interpolationCount', value: value})
-              }
-            }}
-            value={theme.interpolationCount}
-          />
-        </label>
-        <div className="messages">
-          {state.ui.visibleMessages.map(message => (
-            <div className={`message ${message.status}`}>{message.body}</div>
-          ))}
-        </div>
-      </footer>
     </Styles>
   );
 })

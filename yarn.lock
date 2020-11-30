@@ -953,17 +953,15 @@
   dependencies:
     "@hapi/hoek" "8.x.x"
 
-"@iconify/icons-ic@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@iconify/icons-ic/-/icons-ic-1.0.8.tgz#fbc3f7f2d12febaca8dbf74eb39dd4eea2091020"
-  integrity sha512-r/VJI2a9mMDHszAj3FtdjwpvcFBiA/w9bbpkWSZ6NpFZ7HTdC5l+s4t5NQvBUNe2Cm7XWC5FUaT2K6bt++j+ng==
+"@iconify/icons-ic@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-ic/-/icons-ic-1.1.0.tgz#3a02e7bf823c1a9ce3539dbe1646ab47f4f6768d"
+  integrity sha512-PyR3EOJOwWLTxA36AVi+r0u3eJC68KA38gsPYX3ZbyiD6fvnIwQFFcfNLoslOOBCPixWqPmjLXe0l1lLSTPc3A==
 
-"@iconify/react@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@iconify/react/-/react-1.1.1.tgz#38526508f722e0b617723d79209bb1e6d8c59c61"
-  integrity sha512-BRbPW/vkyWi6n2dHx4O8Cp0RKeI4KsxieLZ+UcyknCkk1IVxii5IassCIKHJ3jWB6s6uLAWq5EnHJniI7er9+w==
-  dependencies:
-    react "^16.8.3"
+"@iconify/react@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify/react/-/react-1.1.3.tgz#ebe4d3e5f5dea23cd6a9634acd7a0a25c7414a59"
+  integrity sha512-ReZNJyr89AfED6XZIXkhsJiNv2taT3j1cTo1HVPHMsrKOz6gAYdXtD2kDWF6+GVoFUxpmnO0fMcA6yCyTf6Tow==
 
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
@@ -8775,7 +8773,7 @@ react-scripts@3.2.0:
   optionalDependencies:
     fsevents "2.0.7"
 
-react@^16.12.0, react@^16.8.3:
+react@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
   integrity sha512-fglqy3k5E+81pA8s+7K0/T3DBCF0ZDOher1elBFzF7O6arXJgzyu/FW+COxFvAWXJoJN9KIZbT2LXlukwphYTA==

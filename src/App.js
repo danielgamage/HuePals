@@ -29,7 +29,7 @@ font-family: var(--sans);
   height: 3rem;
   padding: 0 2rem;
   border-bottom: 1px solid var(--fg-5);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow-elevated);
   background: var(--bg-2);
   z-index: 100;
 }
@@ -73,7 +73,7 @@ font-family: var(--sans);
   flex: 0 0 auto;
   box-shadow:
     0 0 0 3px inset var(--base-color),
-    var(--box-shadow);
+    var(--shadow-beveled);
 }
 .shade-count {
   width: 3rem;
@@ -85,7 +85,7 @@ font-family: var(--sans);
 .message {
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  box-shadow: 0 2px 8px var(--gray-10);
+  box-shadow: 0 2px 8px var(--shadow-color);
 
   &.success {
     background: var(--green-8);
@@ -98,8 +98,8 @@ font-family: var(--sans);
 const App = observer(() => {
   return (
     <Styles
-      className={`App ${state.ui.backgroundShade && state.ui.backgroundShade.l > 50 ? "theme--light" : "theme--dark"}`}
-      style={{"--body-background": state.ui.backgroundShade && state.ui.backgroundShade.hex}}
+      className={`App ${state.ui.currentTheme && state.ui.currentTheme.backgroundShade && state.ui.currentTheme.backgroundShade.l > 50 ? "theme--light" : "theme--dark"}`}
+      style={{"--body-background": state.ui.currentTheme && state.ui.currentTheme.backgroundShade && state.ui.currentTheme.backgroundShade.hex}}
     >
       <div className="tabs">
         {[
@@ -136,6 +136,30 @@ const App = observer(() => {
           default: return <OverviewView />
         }
       })()}
+      {state.ui.view !== 'overview' && (
+        <footer className={`app-footer`}>
+          <label>
+            Shades:
+            <input
+              className="shade-count"
+              type="number"
+              min="3"
+              onChange={(e) => {
+                const value = parseInt(e.target.value)
+                if (value >= 3 && value <= 16) {
+                  applyPatch(state.ui.currentTheme, {op: 'add', path: './interpolationCount', value: value})
+                }
+              }}
+              value={state.ui.currentTheme.interpolationCount}
+            />
+          </label>
+          <div className="messages">
+            {state.ui.visibleMessages.map(message => (
+              <div className={`message ${message.status}`}>{message.body}</div>
+            ))}
+          </div>
+        </footer>
+      )}
     </Styles>
   );
 })

@@ -1,4 +1,4 @@
-import { types, getSnapshot, applySnapshot, getParent, getRoot } from "mobx-state-tree"
+import { types, getType, getSnapshot, applySnapshot, getParent, getRoot, clone } from "mobx-state-tree"
 import BezierEasing from 'bezier-easing'
 import {scaleLinear} from "d3-scale";
 import {format} from 'd3-format'
@@ -8,6 +8,14 @@ import {loadState, saveState} from './localStorage'
 import {kebabCase, camelCase} from 'lodash'
 import uuid from 'uuid/v4'
 
+// clone does... just that, and does not update `id`
+const cloneWithNewId = (node, id) =>
+  getType(node).create(Object.assign({}, getSnapshot(node), { id }));
+
+/**
+ * @name Shade
+ * @description Mostly interpolations
+ */
 const Shade = types.model('Shade', {
   id: types.optional(types.identifier, uuid),
   h: types.optional(types.number, 0),
@@ -16,6 +24,9 @@ const Shade = types.model('Shade', {
 }).extend(self => {
   return {
     views: {
+      get merged () {
+        return `hsl(${format('.0f')(self.h)}deg, ${format('.0f')(self.s)}%, ${format('.0f')(self.l)}%)`
+      },
       get hsl () {
         return `hsl(${format('.2f')(self.h)}, ${format('.2f')(self.s)}%, ${format('.2f')(self.l)}%)`
       },
@@ -30,6 +41,10 @@ const Shade = types.model('Shade', {
   }
 })
 
+/**
+ * @name Color
+ * @description contains shades,
+ */
 const Color = types.model('Color', {
   id: types.optional(types.identifier, uuid),
   name: types.optional(types.string, 'Gray'),
@@ -105,13 +120,16 @@ const Color = types.model('Color', {
         getParent(self, 2).removeColor(self)
       },
       duplicate() {
-        const dup = clone(self)
+        const dup = cloneWithNewId(self, uuid())
         getParent(self, 2).addColor(dup)
       }
     }
   }
 })
 
+/**
+ * @name Message
+ */
 export const Message = types.model("Message", {
   id: types.optional(types.identifier, uuid),
   body: types.optional(types.string, ''),
@@ -130,15 +148,34 @@ export const Message = types.model("Message", {
 }))
 
 
+/**
+ * @name Theme
+ */
 export const Theme = types.model("Theme", {
   id: types.optional(types.identifier, uuid),
   name: types.optional(types.string, 'New Theme'),
   favorite: types.optional(types.boolean, false),
   colors: types.optional(types.array(Color), [{}]),
   interpolationCount: types.optional(types.number, 10),
+  backgroundColorId: types.maybe(types.string),
+  backgroundShadeIndex: types.maybe(types.number),
 }).extend(self => {
   return {
     views: {
+      get backgroundShade () {
+        if (self.backgroundColorId && self.backgroundShadeIndex !== undefined) {
+          let shade
+          self.colors.find(color => {
+            if (color.id === self.backgroundColorId) {
+              shade = color.shades[self.backgroundShadeIndex]
+              if (shade) {
+                return true
+              }
+            }
+          })
+          return shade
+        }
+      },
       get baseColor() {
         return self.colors.find(color => color.base)
       },
@@ -199,11 +236,18 @@ export const Theme = types.model("Theme", {
       remove() {
         getParent(self, 2).removeTheme(self)
       },
+      setBackgroundShade(colorId, value) {
+        self.backgroundColorId = colorId
+        self.backgroundShadeIndex = value
+      }
     }
   }
 })
 
 
+/**
+ * @name UIStore
+ */
 export const UIStore = types.model("UIStore", {
   isFooterOpen: types.optional(types.boolean, false),
   isGraphVisible: types.optional(types.boolean, true),
@@ -213,25 +257,9 @@ export const UIStore = types.model("UIStore", {
   colorspace: types.optional(types.string, 'hsl'),
   tab: types.optional(types.string, 'overview'),
   currentTheme: types.maybeNull(types.reference(Theme)),
-  backgroundColorId: types.maybe(types.string),
-  backgroundShadeIndex: types.maybe(types.number),
 }).extend(self => {
   return {
     views: {
-      get backgroundShade () {
-        if (self.currentTheme && self.backgroundColorId && self.backgroundShadeIndex !== undefined) {
-          let shade
-          self.currentTheme.colors.find(color => {
-            if (color.id === self.backgroundColorId) {
-              shade = color.shades[self.backgroundShadeIndex]
-              if (shade) {
-                return true
-              }
-            }
-          })
-          return shade
-        }
-      },
       get view () {
         if (self.currentTheme) {
           return self.tab
@@ -271,10 +299,6 @@ export const UIStore = types.model("UIStore", {
         self.backgroundShadeIndex = undefined
         self.backgroundColorId = undefined
       },
-      setBackgroundShade(colorId, value) {
-        self.backgroundColorId = colorId
-        self.backgroundShadeIndex = value
-      }
     }
   }
 })

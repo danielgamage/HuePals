@@ -8,28 +8,22 @@ const Styles = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-1);
+  background: var(--background);
   border: 0;
   border-radius: 4px;
   color: inherit;
   font: inherit;
   font-weight: 700;
-  box-shadow:
-    0.5px 1px 0 var(--highlight) inset,
-    -0.5px -1px 0 var(--shading) inset,
-    0 2px 0 var(--shading),
-    0 3px 8px var(--shadow-color);
+  box-shadow: var(--shadow-beveled), var(--shadow-elevated);
   color: var(--color);
   padding: 0.5rem 1rem;
-  transition: all 0.2s var(--ease-out);
-  transform: translateY(-2px);
 
-  &.primary      { --color: var(--blue-2);  --background: var(--blue-7);  --highlight: var(--blue-6);  --shading: var(--blue-8); }
-  &, &.secondary { --color: var(--gray-1);  --background: var(--gray-7);  --highlight: var(--gray-6);  --shading: var(--gray-8); }
-  &.success      { --color: var(--green-2); --background: var(--green-7); --highlight: var(--green-6); --shading: var(--green-8); }
-  &.danger       { --color: var(--red-4);   --background:  var(--gray-7); --highlight: var(--gray-6);  --shading: var(--gray-8); }
-  &.warning      { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
-  &.info         { --color: var(--gray-2);  --background: var(--green-7); --highlight: var(--green-4); --shading: var(--red-9); }
+  &.primary      { --color: var(--blue-2);  --background: var(--blue-7);  }
+  &, &.secondary { --color: var(--fg-2);    --background: var(--body-background); }
+  &.success      { --color: var(--green-2); --background: var(--green-7); }
+  &.danger       { --color: var(--red-4);   --background:  var(--gray-7); }
+  &.warning      { --color: var(--gray-2);  --background: var(--green-7); }
+  &.info         { --color: var(--gray-2);  --background: var(--green-7); }
 
   &.text {
     transform: none;
@@ -46,7 +40,7 @@ const Styles = styled.button`
     }
     &:active {
       transition: all 0.1s var(--ease-out);
-      transform: translateY(0px);
+      transform: translateY(1px);
       background: var(--background);
       box-shadow:
         0.5px 1px var(--highlight) inset,

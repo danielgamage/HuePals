@@ -13,7 +13,7 @@ import roundFavorite from '@iconify/icons-ic/round-favorite';
 
 const Styles = styled.div`
 position: relative;
-box-shadow: var(--box-shadow);
+box-shadow: var(--shadow-beveled), var(--shadow-elevated);
 border-radius: 4px;
 background: var(--gray-6);
 overflow: hidden;

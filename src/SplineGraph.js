@@ -7,52 +7,69 @@ import {scaleLinear} from "d3-scale";
 
 const Styles = styled.div`
 position: relative;
+background: var(--body-background);
+/* backdrop-filter: blur(10px); */
+border-radius: 4px;
 
 .rainbow {
-  width: calc(100% + 0.4rem);
-  margin-left: -0.2rem;
+  width: 100%;
   height: 100%;
   position: absolute;
   border-radius: 4px;
-  z-index: -1;
-  background: linear-gradient(to bottom,
-    hsl(480, 100%, 50%),
-    hsl(440, 100%, 50%),
-    hsl(400, 100%, 50%),
-    hsl(360, 100%, 50%),
-    hsl(320, 100%, 50%),
-    hsl(280, 100%, 50%),
-    hsl(240, 100%, 50%),
-    hsl(200, 100%, 50%),
-    hsl(160, 100%, 50%),
-    hsl(120, 100%, 50%),
-    hsl(80,  100%, 50%),
-    hsl(40,  100%, 50%),
-    hsl(0,   100%, 50%)
-  );
+  z-index: 0;
+  opacity: 0.5;
+  overflow: hidden;
+  &::before,
+  &::after {
+    content: "";
+    width: 2px;
+    height: 100%;
+    position: absolute;
+    background: linear-gradient(to bottom,
+      hsl(480, 100%, 50%),
+      hsl(440, 100%, 50%),
+      hsl(400, 100%, 50%),
+      hsl(360, 100%, 50%),
+      hsl(320, 100%, 50%),
+      hsl(280, 100%, 50%),
+      hsl(240, 100%, 50%),
+      hsl(200, 100%, 50%),
+      hsl(160, 100%, 50%),
+      hsl(120, 100%, 50%),
+      hsl(80,  100%, 50%),
+      hsl(40,  100%, 50%),
+      hsl(0,   100%, 50%)
+    );
+  }
+  &::before {
+    left: 0;
+  }
+  &::after {
+    right: 0;
+  }
 }
 .splineGraph {
   overflow: visible;
   width: 8rem;
   height: 100%;
   vector-effect: non-scaling-stroke;
-  background: var(--bg-2);
+  position: relative;
   border-radius: 4px;
   box-shadow:
-    0 0 0 1px var(--gray-9),
-    var(--box-shadow);
+    var(--shadow-beveled),
+    var(--shadow-elevated);
 
   path, line, circle {
-    stroke-width: 1px;
+    stroke-width: 2px;
     fill: none;
     vector-effect: non-scaling-stroke;
     stroke-linecap: round;
   }
   line {
-    stroke: var(--fg-2)
+    stroke: var(--fg-4)
   }
   path {
-    stroke: var(--fg-3)
+    stroke: var(--fg-1)
   }
   .point {
     fill: transparent;
@@ -60,10 +77,9 @@ position: relative;
 
     &--oncurve {
       stroke: var(--fg-1);
-      fill: var(--fg-2);
     }
     &--offcurve {
-      stroke: var(--fg-2);
+      stroke: var(--fg-4);
     }
   }
 }
@@ -165,18 +181,18 @@ const SplineGraph = observer(({
         `}
         />
         <line x1={scaledS[0]} y1={scaledS[1]} x2={scaledS[2]} y2={scaledS[3]} />
-        <circle className="point point--oncurve" cx={scaledS[0]} cy={scaledS[1]} r="0.075"
+        <circle className="point point--oncurve" cx={scaledS[0]} cy={scaledS[1]} r="0.07"
           onMouseDown={(e) => {handleMouseDown(e, 0)}}
         />
-        <circle className="point point--offcurve" cx={scaledS[2]} cy={scaledS[3]} r="0.075"
+        <circle className="point point--offcurve" cx={scaledS[2]} cy={scaledS[3]} r="0.06"
           onMouseDown={(e) => {handleMouseDown(e, 1)}}
         />
 
         <line x1={scaledS[4]} y1={scaledS[5]} x2={scaledS[6]} y2={scaledS[7]} />
-        <circle className="point point--oncurve" cx={scaledS[6]} cy={scaledS[7]} r="0.075"
+        <circle className="point point--oncurve" cx={scaledS[6]} cy={scaledS[7]} r="0.07"
           onMouseDown={(e) => {handleMouseDown(e, 3)}}
         />
-        <circle className="point point--offcurve" cx={scaledS[4]} cy={scaledS[5]} r="0.075"
+        <circle className="point point--offcurve" cx={scaledS[4]} cy={scaledS[5]} r="0.06"
           onMouseDown={(e) => {handleMouseDown(e, 2)}}
         />
       </svg>

@@ -20,21 +20,6 @@ height: 100%;
 flex-flow: column;
 padding-bottom: 3rem;
 
-.swatch {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 1rem;
-  background: var(--color);
-  flex: 0 0 auto;
-  box-shadow:
-    0 0 0 3px inset var(--base-color),
-    var(--box-shadow);
-}
-.shade-count {
-  width: 3rem;
-  margin-left: 0.5rem;
-}
-
 `
 
 const App = observer(() => {

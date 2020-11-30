@@ -48,6 +48,17 @@
   --blue-9: #0e143b;
   --blue-10: #0c1131;
 
+  --highlight-1: #fff;
+  --highlight-2: #fffa;
+  --highlight-3: #fff7;
+  --highlight-4: #fff4;
+  --highlight-5: #fff2;
+  --shadow-1:    #000;
+  --shadow-2:    #000a;
+  --shadow-3:    #0007;
+  --shadow-4:    #0004;
+  --shadow-5:    #0002;
+
   --gray-1: #e4e5e7;
   --gray-2: #a2a5ad;
   --gray-3: #7a7d8b;
@@ -60,8 +71,9 @@
   --gray-10: #16151c;
 
   --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
-  --shadow-color: rgba(0,0,0,0.2);
-  --box-shadow: 0 2px 8px var(--shadow-color);
+  --shadow-color: rgba(0,0,0,0.1);
+  --shadow-beveled: 0 0.5px 0.5px var(--highlight-4) inset, 0 0.5px 0 var(--shadow-4);
+  --shadow-elevated: 0 2px 8px var(--shadow-color);
   --body-background: var(--gray-7);
 }
 .theme--light {
