@@ -72,7 +72,6 @@
 
   --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
   --shadow-color: rgba(0,0,0,0.1);
-  --shadow-beveled: 0 0.5px 0.5px var(--highlight-4) inset, 0 0.5px 0 var(--shadow-4);
   --shadow-elevated: 0 2px 8px var(--shadow-color);
   --body-background: var(--gray-7);
 }
@@ -85,6 +84,7 @@
   --bg-1: #fff;
   --bg-2: #eee;
   --bg-2: #ddd;
+  --shadow-beveled: 0 0.5px 0.5px var(--highlight-2) inset, 0 0.5px 0 var(--shadow-4);
 }
 .theme--dark {
   --fg-1: #ffff;
@@ -95,6 +95,7 @@
   --bg-1: #333;
   --bg-2: #2a2a2a;
   --bg-2: #222;
+  --shadow-beveled: 0 0.5px 0.5px var(--highlight-5) inset, 0 0.5px 0 var(--shadow-3);
 }
 html {
 font-size: 16px;
@@ -123,15 +124,13 @@ select {
   margin: 0;
   border: 0;
   box-shadow:
-    0.5px 1px 0 var(--highlight) inset,
-    -0.5px -1px 0 var(--shading) inset,
-    0 2px 0 var(--shading),
-    0 3px 8px var(--shadow-color);
+    var(--shadow-beveled),
+    var(--shadow-elevated);
   border-radius: 4px;
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  background-color: var(--bg-1);
+  background-color: var(--body-background);
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 12 12"><polygon fill="gray" points="0,4 6,12 12,4" /></svg>');
   background-repeat: no-repeat, repeat;
   background-position: right 0.7rem top 50%;
