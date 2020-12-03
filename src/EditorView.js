@@ -34,6 +34,7 @@ const Styles = styled.div`
       "4rem 4rem"
       "4rem 4rem";
     padding: 1rem 0;
+    margin-bottom: -1rem;
   }
   .graph {
     position: relative;
@@ -82,6 +83,7 @@ const Styles = styled.div`
     }
   }
   .title-line {
+    font-size: var(--size-1);
     display: flex;
     align-items: center;
     margin: 0;
@@ -92,7 +94,6 @@ const Styles = styled.div`
     input[type="text"] {
       all: unset;
       width: 100%;
-      margin-left: 0.5rem;
     }
     svg {
       height: 20px;
@@ -115,6 +116,7 @@ const Styles = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-top: 1rem;
   }
   .shade {
     position: relative;
