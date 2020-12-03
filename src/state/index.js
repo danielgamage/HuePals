@@ -365,6 +365,7 @@ export const RootStore = types
   .model("Store", {
     themes: types.array(Theme),
     ui: types.optional(UIStore, {}),
+    version: "1.0",
   })
   .extend((self) => ({
     actions: {
@@ -375,7 +376,9 @@ export const RootStore = types
         applySnapshot(self, defaultState)
       },
       loadState(snapshot) {
-        applySnapshot(self, snapshot)
+        if (self.version) {
+          applySnapshot(self, snapshot)
+        }
       },
       removeTheme(item) {
         self.themes.splice(self.themes.indexOf(item), 1)
