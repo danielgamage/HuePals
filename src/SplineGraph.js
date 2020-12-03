@@ -222,8 +222,6 @@ const SplineGraph = observer(
 
     const scaledS = spline.map((el, i) => (i % 2 === 0 ? el : graphScaleY(el)))
 
-    console.log(spline)
-
     return (
       <Styles className={`SplineGraph ${attribute}`} height={height}>
         {attribute === "hue" && <div className="rainbow" />}
