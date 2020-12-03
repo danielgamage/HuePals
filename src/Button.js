@@ -17,6 +17,12 @@ const Styles = styled.button`
   box-shadow: var(--shadow-beveled), var(--shadow-elevated);
   color: var(--color);
   padding: 0.5rem 1rem;
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 1px solid var(--fg-3);
+  }
 
   &.primary {
     --color: var(--blue-2);
