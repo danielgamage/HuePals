@@ -6,10 +6,10 @@ import styled from 'styled-components'
 import { applyPatch } from 'mobx-state-tree';
 import { Icon } from '@iconify/react';
 import Button from './Button';
-import deleteIcon from '@iconify/icons-ic/outline-delete';
-import warningIcon from '@iconify/icons-ic/baseline-warning';
+import deleteIcon from '@iconify-icons/ph/trash';
+import warningIcon from '@iconify-icons/ph/warning';
 import paletteIcon from '@iconify/icons-ic/outline-palette';
-import roundFavorite from '@iconify/icons-ic/round-favorite';
+import heartIcon from '@iconify-icons/ph/heart';
 
 const Styles = styled.div`
 position: relative;
@@ -69,7 +69,7 @@ const App = observer(({theme, onDoubleClick}) => {
         ))}
       </div>
       <footer>
-        <Button status="text danger" onClick={() => theme.toggleFavorite()} label={<Icon icon={roundFavorite} />} />
+        <Button status="text danger" onClick={() => theme.toggleFavorite()} label={<Icon icon={heartIcon} />} />
         <Button status="text danger" onClick={() => theme.remove()} label={<Icon icon={deleteIcon} />} confirmLabel={<Icon icon={warningIcon} />} />
       </footer>
     </Styles>

@@ -10,10 +10,10 @@ import ExportView from './ExportView'
 import OverviewView from './OverviewView'
 import Button from './Button'
 import { Icon } from '@iconify/react';
-import tuneIcon from '@iconify/icons-ic/baseline-tune';
-import importExportIcon from '@iconify/icons-ic/baseline-import-export';
-import columnIcon from '@iconify/icons-ic/round-view-column';
-import homeIcon from '@iconify/icons-ic/round-home';
+import houseIcon from '@iconify-icons/ph/house-line-bold';
+import slidersIcon from '@iconify-icons/ph/sliders-bold';
+import circlesIcon from '@iconify-icons/ph/circles-four-bold';
+import shareBold from '@iconify-icons/ph/share-bold';
 
 const Styles = styled.div`
 display: flex;
@@ -120,10 +120,10 @@ const App = observer(() => {
     >
       <div className="tabs">
         {[
-          { label: 'Overview', icon: homeIcon },
-          !!state.ui.currentTheme && { label: 'Editor', icon: tuneIcon },
-          !!state.ui.currentTheme && { label: 'Preview', icon: columnIcon },
-          !!state.ui.currentTheme && { label: 'Export', icon: importExportIcon }
+          { label: 'Overview', icon: houseIcon },
+          !!state.ui.currentTheme && { label: 'Editor', icon: slidersIcon },
+          !!state.ui.currentTheme && { label: 'Preview', icon: circlesIcon },
+          !!state.ui.currentTheme && { label: 'Export', icon: shareBold }
         ].filter(Boolean).map(tab => {
           const value = tab.label.toLowerCase()
           return (

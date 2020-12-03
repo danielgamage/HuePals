@@ -953,6 +953,11 @@
   dependencies:
     "@hapi/hoek" "8.x.x"
 
+"@iconify-icons/ph@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/ph/-/ph-1.1.1.tgz#888cab69ae0c9e0719dfaa966c946423ed82a179"
+  integrity sha512-uAS8CZD9kQAUQaY60Y5GwzK+8txP45kdrXw8LqjFxyb2FbHuwcfvkpOuv7nEPWUVwA9RoOvKJvr8ATbTErHqWw==
+
 "@iconify/icons-ic@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@iconify/icons-ic/-/icons-ic-1.1.0.tgz#3a02e7bf823c1a9ce3539dbe1646ab47f4f6768d"

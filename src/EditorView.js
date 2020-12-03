@@ -9,11 +9,14 @@ import { applyPatch } from 'mobx-state-tree';
 import Button from './Button'
 import ColorInput from './ColorInput'
 import { Icon } from '@iconify/react';
-import deleteIcon from '@iconify/icons-ic/outline-delete';
-import warningIcon from '@iconify/icons-ic/baseline-warning';
+import deleteIcon from '@iconify-icons/ph/trash';
+import warningIcon from '@iconify-icons/ph/warning';
+import circleHalf from '@iconify-icons/ph/circle-half';
+import circleHalfFill from '@iconify-icons/ph/circle-half-fill';
 import paletteIcon from '@iconify/icons-ic/outline-palette';
-import copyIcon from '@iconify/icons-ic/content-copy';
-import formatColorFill from '@iconify/icons-ic/baseline-format-color-fill';
+import copyIcon from '@iconify-icons/ph/copy';
+import paintBrushBroad from '@iconify-icons/ph/paint-brush-broad';
+import paintBrushBroadFill from '@iconify-icons/ph/paint-brush-broad-fill';
 
 const Styles = styled.div`
 display: flex;
@@ -79,10 +82,15 @@ h3 {
   align-items: center;
   margin: 0;
   gap: 0.8rem;
+  color: var(--fg-2);
   input[type=text] {
     all: unset;
     width: 100%;
     margin-left: 0.5rem;
+  }
+  svg {
+    height: 20px;
+    width: 20px;
   }
   .checkbox {
     cursor: pointer;
@@ -92,15 +100,8 @@ h3 {
       width: 0;
       height: 0;
     }
-    .viz {
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid var(--fg-3);
-      border-radius: 1rem;
-    }
-    input:checked + .viz {
-      border-color: var(--red-4);
-      background: var(--fg-3);
+    input:checked + svg {
+      color: var(--fg-1);
     }
   }
 }
@@ -149,19 +150,18 @@ h3 {
   color:var(--fg-4);
   width: 1rem;
   position: relative;
+  &::after {
+    content: "";
+    opacity: 0.2;
+    position: absolute;
+    width: 1.6rem;
+    height: 1.6rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   &.active {
     color: var(--fg-1);
-    &::after {
-      content: "";
-      position: absolute;
-      border-radius: 2rem;
-      width: 1.6rem;
-      height: 1.6rem;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 2px var(--fg-1);
-    }
   }
 
   input {
@@ -226,7 +226,7 @@ const App = observer(({theme}) => {
                     applyPatch(color, {op: 'add', path: './base', value: e.target.checked})}
                   }
                 />
-                <div className="viz" />
+                <Icon icon={color.base ? circleHalfFill : circleHalf}></Icon>
               </label>
               <Button
                 status="text"
@@ -286,7 +286,7 @@ const App = observer(({theme}) => {
               {color.shades.map((shade, i, arr) => {
                 const isExtreme = i === 0 || i === arr.length - 1
                 const RootElement = isExtreme ? 'label' : 'div'
-
+                const isBackground = theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i
                 return (
                   <RootElement className={`shade`} style={{"--color": shade.hsl}} >
                     {isExtreme ?
@@ -308,8 +308,8 @@ const App = observer(({theme}) => {
                         <p className="shade-value">{shade.merged}</p>
                       }
                     </div>
-                    <label className={"shade-background-field " + `${theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i && "active"}`}>
-                      <Icon icon={formatColorFill}></Icon>
+                    <label className={"shade-background-field " + `${isBackground ? "active" : ""}`}>
+                      <Icon icon={isBackground ? paintBrushBroadFill : paintBrushBroad}></Icon>
                       <input
                         className="shade-background-input"
                         type="radio"
