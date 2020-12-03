@@ -84,8 +84,8 @@
   --bg-1: #fff;
   --bg-2: #eee;
   --bg-2: #ddd;
-  --shadow-beveled: 0 0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset;
-  --shadow-recessed: 0 -0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset;
+  --shadow-beveled: 0 10px 15px -20px var(--highlight-2) inset, 0 0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset, 0 -10px 15px -20px var(--shadow-4) inset;
+  --shadow-recessed: 0 10px 15px -20px var(--shadow-4) inset, 0 -0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset, 0 -10px 15px -20px var(--highlight-2) inset;
 }
 .theme--dark {
   --fg-1: #ffff;
@@ -96,8 +96,8 @@
   --bg-1: #333;
   --bg-2: #2a2a2a;
   --bg-2: #222;
-  --shadow-beveled: 0 0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset;
-  --shadow-recessed: 0 -0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset;
+  --shadow-beveled: 0 10px 15px -20px var(--highlight-5) inset, 0 0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset, 0 -10px 15px -20px var(--shadow-3) inset;
+  --shadow-recessed: 0 10px 15px -20px var(--shadow-3) inset, 0 -0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset, 0 -10px 15px -20px var(--highlight-5) inset;
 }
 html {
 font-size: 16px;
