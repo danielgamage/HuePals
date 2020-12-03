@@ -5,10 +5,7 @@ import {
   applySnapshot,
   getParent,
   getRoot,
-  clone,
 } from "mobx-state-tree"
-import BezierEasing from "bezier-easing"
-import { scaleLinear } from "d3-scale"
 import { format } from "d3-format"
 import { hsl, rgb } from "d3-color"
 import Bezier from "bezier-js"
