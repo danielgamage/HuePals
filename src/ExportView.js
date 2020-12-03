@@ -1,10 +1,10 @@
-import React, {useRef} from 'react';
-import { observer } from 'mobx-react';
-import state from './state'
-import styled from 'styled-components'
-import { Icon } from '@iconify/react';
-import copyIcon from '@iconify/icons-ic/outline-content-copy';
-import Button from './Button'
+import React, { useRef } from "react"
+import { observer } from "mobx-react"
+import state from "./state"
+import styled from "styled-components"
+import { Icon } from "@iconify/react"
+import copyIcon from "@iconify/icons-ic/outline-content-copy"
+import Button from "./Button"
 
 const Styles = styled.div`
   height: 100%;
@@ -29,18 +29,24 @@ const Styles = styled.div`
   }
 `
 
-const ExportView = observer(({theme}) => {
-  const outputEl = useRef(null);
+const ExportView = observer(({ theme }) => {
+  const outputEl = useRef(null)
   return (
     <Styles className="ExportView">
       <div className="options">
-        <select onChange={e => state.ui.setExportLanguage(e.target.value)} value={state.ui.exportLanguage}>
-          {["css", "sass", "csv"].map(el => (
+        <select
+          onChange={(e) => state.ui.setExportLanguage(e.target.value)}
+          value={state.ui.exportLanguage}
+        >
+          {["css", "sass", "csv"].map((el) => (
             <option value={el}>{el.toUpperCase()}</option>
           ))}
         </select>
-        <select onChange={e => state.ui.setColorspace(e.target.value)} value={state.ui.colorspace}>
-          {["hex", "rgb", "hsl",].map(el => (
+        <select
+          onChange={(e) => state.ui.setColorspace(e.target.value)}
+          value={state.ui.colorspace}
+        >
+          {["hex", "rgb", "hsl"].map((el) => (
             <option value={el}>{el.toUpperCase()}</option>
           ))}
         </select>
@@ -49,23 +55,23 @@ const ExportView = observer(({theme}) => {
       <Button
         onClick={() => {
           outputEl.current.select()
-          document.execCommand('copy')
+          document.execCommand("copy")
           state.ui.addMessage({
-            body: 'Copied to clipboard',
-            status: 'success'
+            body: "Copied to clipboard",
+            status: "success",
           })
         }}
-        label={<>
-          <Icon height={`${1.25 ** 2}em`} icon={copyIcon}/>
-          <span>Copy to clipboard</span>
-        </>}
+        label={
+          <>
+            <Icon height={`${1.25 ** 2}em`} icon={copyIcon} />
+            <span>Copy to clipboard</span>
+          </>
+        }
       />
       <textarea ref={outputEl}>{theme.exportText}</textarea>
-      <pre>
-        {theme.exportText}
-      </pre>
+      <pre>{theme.exportText}</pre>
     </Styles>
-  );
+  )
 })
 
-export default ExportView;
+export default ExportView

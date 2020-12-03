@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap");
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 :root {
-  --sans: 'Source Sans Pro', sans-serif;
-  --mono: 'Source Code Pro', monospace;
+  --sans: "Source Sans Pro", sans-serif;
+  --mono: "Source Code Pro", monospace;
   --size-5: 3.052rem;
   --size-4: 2.441rem;
   --size-3: 1.953rem;
@@ -53,11 +53,11 @@
   --highlight-3: #fff7;
   --highlight-4: #fff4;
   --highlight-5: #fff2;
-  --shadow-1:    #000;
-  --shadow-2:    #000a;
-  --shadow-3:    #0007;
-  --shadow-4:    #0004;
-  --shadow-5:    #0002;
+  --shadow-1: #000;
+  --shadow-2: #000a;
+  --shadow-3: #0007;
+  --shadow-4: #0004;
+  --shadow-5: #0002;
 
   --gray-1: #e4e5e7;
   --gray-2: #a2a5ad;
@@ -70,9 +70,10 @@
   --gray-9: #1a1921;
   --gray-10: #16151c;
 
-  --ease-out: cubic-bezier(0.3, 0.90, 0.5, 1);
-  --shadow-color: rgba(0,0,0,0.1);
-  --shadow-elevated: 0 1px 1px var(--shadow-color), 0 2px 8px var(--shadow-color);
+  --ease-out: cubic-bezier(0.3, 0.9, 0.5, 1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-elevated: 0 1px 1px var(--shadow-color),
+    0 2px 8px var(--shadow-color);
   --body-background: var(--gray-7);
 }
 .theme--light {
@@ -84,8 +85,13 @@
   --bg-1: #fff;
   --bg-2: #eee;
   --bg-2: #ddd;
-  --shadow-beveled: 0 10px 20px -20px var(--highlight-2) inset, 0 0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset, 0 -10px 20px -20px var(--shadow-5) inset;
-  --shadow-recessed: 0 10px 20px -20px var(--shadow-4) inset, 0 -0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset, 0 -10px 20px -20px var(--highlight-2) inset;
+  --shadow-beveled: 0 10px 20px -20px var(--highlight-2) inset,
+    0 0.5px 0.5px var(--highlight-2) inset, 0 1px 0 -0.5px var(--shadow-4) inset,
+    0 -10px 20px -20px var(--shadow-5) inset;
+  --shadow-recessed: 0 10px 20px -20px var(--shadow-4) inset,
+    0 -0.5px 0.5px var(--highlight-2) inset,
+    0 1px 0 -0.5px var(--shadow-4) inset,
+    0 -10px 20px -20px var(--highlight-2) inset;
 }
 .theme--dark {
   --fg-1: #ffff;
@@ -96,14 +102,20 @@
   --bg-1: #333;
   --bg-2: #2a2a2a;
   --bg-2: #222;
-  --shadow-beveled: 0 10px 20px -20px var(--highlight-5) inset, 0 0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset, 0 -10px 20px -20px var(--shadow-4) inset;
-  --shadow-recessed: 0 10px 20px -20px var(--shadow-3) inset, 0 -0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset, 0 -10px 20px -20px var(--highlight-5) inset;
+  --shadow-beveled: 0 10px 20px -20px var(--highlight-5) inset,
+    0 0.5px 0.5px var(--highlight-5) inset, 0 1px 0 -0.5px var(--shadow-3) inset,
+    0 -10px 20px -20px var(--shadow-4) inset;
+  --shadow-recessed: 0 10px 20px -20px var(--shadow-3) inset,
+    0 -0.5px 0.5px var(--highlight-5) inset,
+    0 1px 0 -0.5px var(--shadow-3) inset,
+    0 -10px 20px -20px var(--highlight-5) inset;
 }
 html {
-font-size: 16px;
-
+  font-size: 16px;
 }
-html, body, #root {
+html,
+body,
+#root {
   overflow: hidden;
   height: 100%;
   margin: 0;
@@ -121,13 +133,11 @@ select {
   font-weight: 700;
   color: inherit;
   line-height: 1.3;
-  padding: .5rem 2rem .5rem 1rem;
+  padding: 0.5rem 2rem 0.5rem 1rem;
   max-width: 100%;
   margin: 0;
   border: 0;
-  box-shadow:
-    var(--shadow-beveled),
-    var(--shadow-elevated);
+  box-shadow: var(--shadow-beveled), var(--shadow-elevated);
   border-radius: 4px;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -136,7 +146,7 @@ select {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 12 12"><polygon fill="gray" points="0,4 6,12 12,4" /></svg>');
   background-repeat: no-repeat, repeat;
   background-position: right 0.7rem top 50%;
-  background-size: .5rem auto;
+  background-size: 0.5rem auto;
 }
 select::-ms-expand {
   display: none;
@@ -149,11 +159,11 @@ select:focus {
   outline: none;
 }
 select option {
-  font-weight:normal;
+  font-weight: normal;
 }
 
-input[type=text],
-input[type=number] {
+input[type="text"],
+input[type="number"] {
   color: inherit;
   font: inherit;
   border: 0;
