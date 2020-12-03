@@ -299,108 +299,110 @@ const App = observer(({ theme }) => {
                   confirmLabel={<Icon icon={warningIcon} />}
                 />
               </h2>
-              <div className="graphs">
-                <div className="graph graph-hue">
-                  <h3>
-                    <abbr title="Hue">H</abbr>
-                  </h3>
-                  <SplineGraph
-                    attribute="hue"
-                    color={color}
-                    min={0}
-                    max={480}
-                    height={2.25}
-                    spline={color.hueSpline}
-                    onStartUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./start/h",
-                        value: v,
-                      })
-                    }}
-                    onEndUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./end/h",
-                        value: v,
-                      })
-                    }}
-                    onSplineUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./hueSpline",
-                        value: v,
-                      })
-                    }}
-                  />
+              {state.ui.isGraphVisible && (
+                <div className="graphs">
+                  <div className="graph graph-hue">
+                    <h3>
+                      <abbr title="Hue">H</abbr>
+                    </h3>
+                    <SplineGraph
+                      attribute="hue"
+                      color={color}
+                      min={0}
+                      max={480}
+                      height={2.25}
+                      spline={color.hueSpline}
+                      onStartUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./start/h",
+                          value: v,
+                        })
+                      }}
+                      onEndUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./end/h",
+                          value: v,
+                        })
+                      }}
+                      onSplineUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./hueSpline",
+                          value: v,
+                        })
+                      }}
+                    />
+                  </div>
+                  <div className="graph graph-saturation">
+                    <h3>
+                      <abbr title="Saturation">S</abbr>
+                    </h3>
+                    <SplineGraph
+                      attribute="saturation"
+                      color={color}
+                      min={0}
+                      max={100}
+                      spline={color.saturationSpline}
+                      onStartUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./start/s",
+                          value: v,
+                        })
+                      }}
+                      onEndUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./end/s",
+                          value: v,
+                        })
+                      }}
+                      onSplineUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./saturationSpline",
+                          value: v,
+                        })
+                      }}
+                    />
+                  </div>
+                  <div className="graph graph-lightness">
+                    <h3>
+                      <abbr title="Lightness">L</abbr>
+                    </h3>
+                    <SplineGraph
+                      attribute="lightness"
+                      color={color}
+                      min={0}
+                      max={100}
+                      spline={color.lightnessSpline}
+                      onStartUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./start/l",
+                          value: v,
+                        })
+                      }}
+                      onEndUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./end/l",
+                          value: v,
+                        })
+                      }}
+                      onSplineUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./lightnessSpline",
+                          value: v,
+                        })
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="graph graph-saturation">
-                  <h3>
-                    <abbr title="Saturation">S</abbr>
-                  </h3>
-                  <SplineGraph
-                    attribute="saturation"
-                    color={color}
-                    min={0}
-                    max={100}
-                    spline={color.saturationSpline}
-                    onStartUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./start/s",
-                        value: v,
-                      })
-                    }}
-                    onEndUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./end/s",
-                        value: v,
-                      })
-                    }}
-                    onSplineUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./saturationSpline",
-                        value: v,
-                      })
-                    }}
-                  />
-                </div>
-                <div className="graph graph-lightness">
-                  <h3>
-                    <abbr title="Lightness">L</abbr>
-                  </h3>
-                  <SplineGraph
-                    attribute="lightness"
-                    color={color}
-                    min={0}
-                    max={100}
-                    spline={color.lightnessSpline}
-                    onStartUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./start/l",
-                        value: v,
-                      })
-                    }}
-                    onEndUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./end/l",
-                        value: v,
-                      })
-                    }}
-                    onSplineUpdate={(v) => {
-                      applyPatch(color, {
-                        op: "add",
-                        path: "./lightnessSpline",
-                        value: v,
-                      })
-                    }}
-                  />
-                </div>
-              </div>
+              )}
               <div className="list">
                 {color.shades.map((shade, i, arr) => {
                   const isExtreme = i === 0 || i === arr.length - 1
