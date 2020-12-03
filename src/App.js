@@ -8,12 +8,15 @@ import EditorView from "./EditorView"
 import Preview from "./Preview"
 import ExportView from "./ExportView"
 import OverviewView from "./OverviewView"
+import LabeledCheckbox from "./LabeledCheckbox"
 import Button from "./Button"
 import { Icon } from "@iconify/react"
 import houseIcon from "@iconify-icons/ph/house-line-bold"
 import slidersIcon from "@iconify-icons/ph/sliders-bold"
 import circlesIcon from "@iconify-icons/ph/circles-four-bold"
 import shareBold from "@iconify-icons/ph/share-bold"
+import eyeIcon from "@iconify-icons/ph/eye-fill"
+import eyeOffIcon from "@iconify-icons/ph/eye-slash-fill"
 
 const Styles = styled.div`
   display: flex;
@@ -107,6 +110,8 @@ const Styles = styled.div`
     transition: 0.3s var(--ease-out) height;
     background-color: var(--body-background);
     box-shadow: var(--shadow-beveled), var(--shadow-elevated);
+    --unchecked-icon-color: var(--fg-4);
+    --checked-icon-color: var(--fg-2);
   }
   .shade-count {
     width: 3rem;
@@ -202,6 +207,26 @@ const App = observer(() => {
               value={state.ui.currentTheme.interpolationCount}
             />
           </label>
+          <LabeledCheckbox
+            value={state.ui.isGraphVisible}
+            onChange={(v) => {
+              applyPatch(state.ui, {
+                op: "add",
+                path: "./isGraphVisible",
+                value: v,
+              })
+            }}
+            checkedLabel={
+              <>
+                <Icon icon={eyeIcon} /> Graphs
+              </>
+            }
+            uncheckedLabel={
+              <>
+                <Icon icon={eyeOffIcon} /> Graphs
+              </>
+            }
+          />
           <div className="messages">
             {state.ui.visibleMessages.map((message) => (
               <div className={`message ${message.status}`}>{message.body}</div>

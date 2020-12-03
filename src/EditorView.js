@@ -1,11 +1,11 @@
 import React from "react"
-import logo from "./logo.svg"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
 import SplineGraph from "./SplineGraph"
 import { applyPatch } from "mobx-state-tree"
+import LabeledCheckbox from "./LabeledCheckbox"
 import Button from "./Button"
 import ColorInput from "./ColorInput"
 import { Icon } from "@iconify/react"
@@ -86,7 +86,9 @@ const Styles = styled.div`
     align-items: center;
     margin: 0;
     gap: 0.8rem;
-    color: var(--fg-2);
+    color: var(--fg-1);
+    --unchecked-icon-color: var(--fg-2);
+    --checked-icon-color: var(--fg-1);
     input[type="text"] {
       all: unset;
       width: 100%;
@@ -263,21 +265,26 @@ const App = observer(({ theme }) => {
                     })
                   }}
                 />
-                <label className="checkbox">
-                  <input
-                    type="checkbox"
-                    name="base-radio"
-                    checked={color.base}
-                    onChange={(e) => {
-                      applyPatch(color, {
+                <LabeledCheckbox
+                  value={theme.baseColorId === color.id}
+                  onChange={(v) => {
+                    if (v) {
+                      applyPatch(theme, {
                         op: "add",
-                        path: "./base",
-                        value: e.target.checked,
+                        path: "./baseColorId",
+                        value: color.id,
                       })
-                    }}
-                  />
-                  <Icon icon={color.base ? circleHalfFill : circleHalf}></Icon>
-                </label>
+                    } else {
+                      applyPatch(theme, {
+                        op: "add",
+                        path: "./baseColorId",
+                        value: undefined,
+                      })
+                    }
+                  }}
+                  checkedLabel={<Icon icon={circleHalfFill} />}
+                  uncheckedLabel={<Icon icon={circleHalf} />}
+                />
                 <Button
                   status="text"
                   className="remove-button"
