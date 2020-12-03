@@ -64,7 +64,6 @@ const Color = types
   .model("Color", {
     id: types.optional(types.identifier, uuid),
     name: types.optional(types.string, "Gray"),
-    base: types.optional(types.boolean, false),
     hueSpline: types.optional(types.array(types.number), [
       0,
       78,
@@ -195,6 +194,7 @@ export const Theme = types
     name: types.optional(types.string, "New Theme"),
     favorite: types.optional(types.boolean, false),
     colors: types.optional(types.array(Color), [{}]),
+    baseColorId: types.maybe(types.string, null),
     interpolationCount: types.optional(types.number, 10),
     backgroundColorId: types.maybe(types.string),
     backgroundShadeIndex: types.maybe(types.number),
@@ -220,7 +220,7 @@ export const Theme = types
           }
         },
         get baseColor() {
-          return self.colors.find((color) => color.base)
+          return self.colors.find((color) => color.id === self.baseColorId)
         },
         get exportText() {
           const ui = getRoot(self).ui
