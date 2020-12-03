@@ -84,6 +84,7 @@ const Styles = styled.div`
     }
     path {
       stroke: var(--fg-1);
+      pointer-events: none;
     }
     .point {
       fill: transparent;
@@ -119,8 +120,19 @@ const Styles = styled.div`
         }
       }
       &--offcurve {
-        stroke: var(--fg-4);
+        fill: var(--body-background);
+        r: 0.07;
+      }
+      &--offcurve-2 {
         r: 0.06;
+        stroke: var(--fg-4);
+        stroke-width: 2.5px;
+        pointer-events: none;
+      }
+      &--offcurve-3 {
+        fill: var(--fg-4);
+        r: 0.015;
+        pointer-events: none;
       }
     }
   }
@@ -216,20 +228,65 @@ const SplineGraph = observer(
       <Styles className={`SplineGraph ${attribute}`} height={height}>
         {attribute === "hue" && <div className="rainbow" />}
         <svg className="splineGraph" viewBox={`0 0 1 ${height}`} ref={svgRef}>
-          <path
-            d={`
-        M ${scaledS[0]}, ${scaledS[1]}
-        C ${scaledS[2]}, ${scaledS[3]}
-          ${scaledS[4]}, ${scaledS[5]}
-          ${scaledS[6]}, ${scaledS[7]}
-        `}
-          />
           <line
             x1={scaledS[0]}
             y1={scaledS[1]}
             x2={scaledS[2]}
             y2={scaledS[3]}
           />
+          <circle
+            className="point point--offcurve"
+            cx={scaledS[2]}
+            cy={scaledS[3]}
+            onMouseDown={(e) => {
+              handleMouseDown(e, 1)
+            }}
+          />
+          <circle
+            className="point point--offcurve-2"
+            cx={scaledS[2]}
+            cy={scaledS[3]}
+          />
+          <circle
+            className="point point--offcurve-3"
+            cx={scaledS[2]}
+            cy={scaledS[3]}
+          />
+
+          <line
+            x1={scaledS[4]}
+            y1={scaledS[5]}
+            x2={scaledS[6]}
+            y2={scaledS[7]}
+          />
+          <circle
+            className="point point--offcurve"
+            cx={scaledS[4]}
+            cy={scaledS[5]}
+            onMouseDown={(e) => {
+              handleMouseDown(e, 2)
+            }}
+          />
+          <circle
+            className="point point--offcurve-2"
+            cx={scaledS[4]}
+            cy={scaledS[5]}
+          />
+          <circle
+            className="point point--offcurve-3"
+            cx={scaledS[4]}
+            cy={scaledS[5]}
+          />
+
+          <path
+            d={`
+            M ${scaledS[0]}, ${scaledS[1]}
+            C ${scaledS[2]}, ${scaledS[3]}
+              ${scaledS[4]}, ${scaledS[5]}
+              ${scaledS[6]}, ${scaledS[7]}
+            `}
+          />
+
           <circle
             className="point point--oncurve"
             cx={scaledS[0]}
@@ -248,21 +305,7 @@ const SplineGraph = observer(
             cx={scaledS[0]}
             cy={scaledS[1]}
           />
-          <circle
-            className="point point--offcurve"
-            cx={scaledS[2]}
-            cy={scaledS[3]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 1)
-            }}
-          />
 
-          <line
-            x1={scaledS[4]}
-            y1={scaledS[5]}
-            x2={scaledS[6]}
-            y2={scaledS[7]}
-          />
           <circle
             className="point point--oncurve"
             cx={scaledS[6]}
@@ -280,14 +323,6 @@ const SplineGraph = observer(
             className="point point--oncurve-sample end"
             cx={scaledS[6]}
             cy={scaledS[7]}
-          />
-          <circle
-            className="point point--offcurve"
-            cx={scaledS[4]}
-            cy={scaledS[5]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 2)
-            }}
           />
         </svg>
       </Styles>
