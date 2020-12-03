@@ -25,10 +25,14 @@ const Shade = types.model('Shade', {
   return {
     views: {
       get merged () {
-        return `hsl(${format('.0f')(self.h)}deg, ${format('.0f')(self.s)}%, ${format('.0f')(self.l)}%)`
+        return [
+          {value: format('.0f')(self.h), unit: "º"},
+          {value: format('.0f')(self.s), unit: "%"},
+          {value: format('.0f')(self.l), unit: "%"}
+        ]
       },
       get hsl () {
-        return `hsl(${format('.2f')(self.h)}, ${format('.2f')(self.s)}%, ${format('.2f')(self.l)}%)`
+        return `hsl(${format('.2f')(self.h % 360)}, ${format('.2f')(self.s)}%, ${format('.2f')(self.l)}%)`
       },
       get hex () {
         return rgb(self.hsl).formatHex()

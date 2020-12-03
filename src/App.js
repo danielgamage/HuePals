@@ -67,12 +67,20 @@ font-family: var(--sans);
 .swatch {
   width: 2rem;
   height: 2rem;
+  position: relative;
   border-radius: 1rem;
   background: var(--color);
   flex: 0 0 auto;
-  box-shadow:
-    0 0 0 3px inset var(--base-color),
-    var(--shadow-beveled);
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1rem;
+    height: 2rem;
+    background: var(--base-color);
+  }
 }
 .messages {
   margin-left: auto;

@@ -13,7 +13,7 @@ import deleteIcon from '@iconify-icons/ph/trash';
 import warningIcon from '@iconify-icons/ph/warning';
 import circleHalf from '@iconify-icons/ph/circle-half';
 import circleHalfFill from '@iconify-icons/ph/circle-half-fill';
-import paletteIcon from '@iconify/icons-ic/outline-palette';
+import swatchesIcon from '@iconify-icons/ph/swatches';
 import copyIcon from '@iconify-icons/ph/copy';
 import paintBrushBroad from '@iconify-icons/ph/paint-brush-broad';
 import paintBrushBroadFill from '@iconify-icons/ph/paint-brush-broad-fill';
@@ -106,6 +106,9 @@ h3 {
   }
 }
 .list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 .shade {
   position: relative;
@@ -114,10 +117,7 @@ h3 {
   white-space: nowrap;
   align-items: center;
   border-radius: 4px;
-  gap: 0.5rem;
-  & + .shade {
-    margin-top: 1rem;
-  }
+  gap: 1rem;
 
   &:first-child, &:last-child {
     cursor: pointer;
@@ -142,10 +142,13 @@ h3 {
   }
 }
 .shade-text {
+  display: flex;
   flex: 1 1 auto;
+  align-items: baseline;
+  margin: 0;
+  gap: 1rem;
 }
 .shade-background-field {
-  align-self: flex-start;
   flex: 0 0 auto;
   color:var(--fg-4);
   width: 1rem;
@@ -177,12 +180,31 @@ h3 {
 }
 .shade-title {
   margin: 0;
+  font-size: var(--size-0);
+  color: var(--fg-5);
+}
+.shade-title-padding {
+  color: var(--fg-5);
 }
 .shade-value {
-  margin: 0.1rem 0 0;
-  font-size: var(--size--1);
+  display: flex;
+  margin: 0;
+  font-size: var(--size-0);
   font-family: var(--mono);
-  color: var(--fg-2);
+  color: var(--fg-1);
+}
+.shade-value-value {
+  display: inline-block;
+  width: 2.5em;
+  text-align: right;
+}
+.shade-value-unit {
+  color: var(--fg-4);
+}
+.shade-value-separator {
+  display: inline-block;
+  color: var(--fg-5);
+  opacity: 0;
 }
 .add-button-container {
   flex: 0 0 auto;
@@ -207,129 +229,151 @@ h3 {
 
 const App = observer(({theme}) => {
   return (
-    <Styles className={`Editor`}>
+    <Styles className={`Editor`} >
       <div className="colors">
-        {theme.colors.map((color, colorIndex) => (
-          <div className="color">
-            <h2 className="title-line">
-              <input
-                type="text"
-                value={color.name}
-                onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
-              />
-              <label className="checkbox">
+        {theme.colors.map((color, colorIndex) => {
+          const start = color.shades[0]
+          const end = color.shades[color.shades.length - 1]
+          return (
+            <div className="color" style={{
+              "--start-hue": `${start.h}deg`,
+              "--end-hue": `${end.h}deg`,
+              "--start-saturation": `${start.s}%`,
+              "--end-saturation": `${end.s}%`,
+              "--start-lightness": `${start.l}%`,
+              "--end-lightness": `${end.l}%`,
+            }}>
+              <h2 className="title-line">
                 <input
-                  type="checkbox"
-                  name="base-radio"
-                  checked={color.base}
-                  onChange={(e) => {
-                    applyPatch(color, {op: 'add', path: './base', value: e.target.checked})}
-                  }
+                  type="text"
+                  value={color.name}
+                  onInput={(e)=> {applyPatch(color, {op: 'add', path: './name', value: e.target.value})}}
                 />
-                <Icon icon={color.base ? circleHalfFill : circleHalf}></Icon>
-              </label>
-              <Button
-                status="text"
-                className="remove-button"
-                onClick={() => color.duplicate()}
-                label={<Icon icon={copyIcon} />}
-              />
-              <Button
-                status="text danger"
-                className="remove-button"
-                onClick={() => color.remove()}
-                label={<Icon icon={deleteIcon} />}
-                confirmLabel={<Icon icon={warningIcon} />}
-              />
-            </h2>
-            <div className="graphs">
-              <div className="graph graph-hue">
-                <h3><abbr title="Hue">H</abbr></h3>
-                <SplineGraph
-                  hue
-                  color={color}
-                  min={0}
-                  max={480}
-                  height={2.25}
-                  spline={color.hueSpline}
-                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
-                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/h', value: v})}}
-                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './hueSpline', value: v})}}
-                />
-              </div>
-              <div className="graph graph-saturation">
-                <h3><abbr title="Saturation">S</abbr></h3>
-                <SplineGraph
-                  color={color}
-                  min={0}
-                  max={100}
-                  spline={color.saturationSpline}
-                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/s', value: v})}}
-                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/s', value: v})}}
-                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './saturationSpline', value: v})}}
-                />
-              </div>
-              <div className="graph graph-lightness">
-                <h3><abbr title="Lightness">L</abbr></h3>
-                <SplineGraph
-                  color={color}
-                  min={0}
-                  max={100}
-                  spline={color.lightnessSpline}
-                  onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/l', value: v})}}
-                  onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/l', value: v})}}
-                  onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './lightnessSpline', value: v})}}
-                />
-              </div>
-            </div>
-            <div className="list">
-              {color.shades.map((shade, i, arr) => {
-                const isExtreme = i === 0 || i === arr.length - 1
-                const RootElement = isExtreme ? 'label' : 'div'
-                const isBackground = theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i
-                return (
-                  <RootElement className={`shade`} style={{"--color": shade.hsl}} >
-                    {isExtreme ?
-                      <ColorInput
-                        type="color"
-                        value={shade.hex}
-                        baseColor={theme.baseColor && theme.baseColor.shades[i].hsl}
-                        onInput={(e) => color.setHex(i === 0 ? 'start' : 'end', e.target.value)}
-                      />
-                    :
-                      <div
-                        className="swatch"
-                        style={{"--base-color": theme.baseColor && theme.baseColor.shades[i].hsl}}
-                      />
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    name="base-radio"
+                    checked={color.base}
+                    onChange={(e) => {
+                      applyPatch(color, {op: 'add', path: './base', value: e.target.checked})}
                     }
-                    <div className="shade-text">
-                      <h4 className="shade-title">{color.name} {i + 1}</h4>
-                      {state.ui.isValueVisible &&
-                        <p className="shade-value">{shade.merged}</p>
+                  />
+                  <Icon icon={color.base ? circleHalfFill : circleHalf}></Icon>
+                </label>
+                <Button
+                  status="text"
+                  className="remove-button"
+                  onClick={() => color.duplicate()}
+                  label={<Icon icon={copyIcon} />}
+                />
+                <Button
+                  status="text danger"
+                  className="remove-button"
+                  onClick={() => color.remove()}
+                  label={<Icon icon={deleteIcon} />}
+                  confirmLabel={<Icon icon={warningIcon} />}
+                />
+              </h2>
+              <div className="graphs">
+                <div className="graph graph-hue">
+                  <h3><abbr title="Hue">H</abbr></h3>
+                  <SplineGraph
+                    attribute='hue'
+                    color={color}
+                    min={0}
+                    max={480}
+                    height={2.25}
+                    spline={color.hueSpline}
+                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/h', value: v})}}
+                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/h', value: v})}}
+                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './hueSpline', value: v})}}
+                  />
+                </div>
+                <div className="graph graph-saturation">
+                  <h3><abbr title="Saturation">S</abbr></h3>
+                  <SplineGraph
+                    attribute='saturation'
+                    color={color}
+                    min={0}
+                    max={100}
+                    spline={color.saturationSpline}
+                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/s', value: v})}}
+                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/s', value: v})}}
+                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './saturationSpline', value: v})}}
+                  />
+                </div>
+                <div className="graph graph-lightness">
+                  <h3><abbr title="Lightness">L</abbr></h3>
+                  <SplineGraph
+                    attribute='lightness'
+                    color={color}
+                    min={0}
+                    max={100}
+                    spline={color.lightnessSpline}
+                    onStartUpdate={(v) => {applyPatch(color, {op: 'add', path: './start/l', value: v})}}
+                    onEndUpdate={(v) => {applyPatch(color, {op: 'add', path: './end/l', value: v})}}
+                    onSplineUpdate={(v)=> {applyPatch(color, {op: 'add', path: './lightnessSpline', value: v})}}
+                  />
+                </div>
+              </div>
+              <div className="list">
+                {color.shades.map((shade, i, arr) => {
+                  const isExtreme = i === 0 || i === arr.length - 1
+                  const RootElement = isExtreme ? 'label' : 'div'
+                  const isBackground = theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i
+                  const name = i + 1
+                  const namePadding = Array(arr.length.toString().length - name.toString().length).fill('0')
+                  return (
+                    <RootElement className={`shade`} style={{"--color": shade.hsl}} >
+                      {isExtreme ?
+                        <ColorInput
+                          type="color"
+                          value={shade.hex}
+                          baseColor={theme.baseColor && theme.baseColor.shades[i].hsl}
+                          onInput={(e) => color.setHex(i === 0 ? 'start' : 'end', e.target.value)}
+                        />
+                      :
+                        <div
+                          className="swatch"
+                          style={{"--base-color": theme.baseColor && theme.baseColor.shades[i].hsl}}
+                        />
                       }
-                    </div>
-                    <label className={"shade-background-field " + `${isBackground ? "active" : ""}`}>
-                      <Icon icon={isBackground ? paintBrushBroadFill : paintBrushBroad}></Icon>
-                      <input
-                        className="shade-background-input"
-                        type="radio"
-                        name="background-color"
-                        id={shade.hsl}
-                        value={shade.hex}
-                        checked={theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i}
-                        onChange={e => {
-                          if (e.target.checked) {
-                            theme.setBackgroundShade(color.id, i)
-                          }
-                        }}
-                      />
-                    </label>
-                  </RootElement>
-                )
-              })}
+                      <dl className="shade-text">
+                        <dt className="shade-title"><span className="shade-title-padding">{namePadding}</span>{name}–</dt>
+                        {state.ui.isValueVisible &&
+                          <dd className="shade-value">
+                            {shade.merged.map((v, i) => (<>
+                              {i !== 0 && <span className="shade-value-separator">|</span>}
+                              <span className="shade-value-value">{v.value}
+                              <span className="shade-value-unit">{v.unit}</span>
+                              </span>
+                            </>))}
+                          </dd>
+                        }
+                      </dl>
+                      <label className={"shade-background-field " + `${isBackground ? "active" : ""}`}>
+                        <Icon icon={isBackground ? paintBrushBroadFill : paintBrushBroad}></Icon>
+                        <input
+                          className="shade-background-input"
+                          type="radio"
+                          name="background-color"
+                          id={shade.hsl}
+                          value={shade.hex}
+                          checked={theme.backgroundColorId === color.id && theme.backgroundShadeIndex ===  i}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              theme.setBackgroundShade(color.id, i)
+                            }
+                          }}
+                        />
+                      </label>
+                    </RootElement>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         <div className="add-button-container">
           <Button
@@ -337,7 +381,7 @@ const App = observer(({theme}) => {
             status="secondary"
             onClick={() => {theme.addColor()}}
             label={<>
-              <Icon icon={paletteIcon} />
+              <Icon icon={swatchesIcon} />
               <span>Add Color</span>
             </>}
           />

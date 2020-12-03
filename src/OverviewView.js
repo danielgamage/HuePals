@@ -10,8 +10,8 @@ import ExportView from './ExportView'
 import ThemePreview from './ThemePreview'
 import Button from './Button'
 import { Icon } from '@iconify/react';
-import restoreIcon from '@iconify/icons-ic/baseline-restore';
 import addIcon from '@iconify/icons-ic/round-add-circle-outline';
+import restoreIcon from '@iconify-icons/ph/clock-counter-clockwise-fill';
 
 const Styles = styled.div`
 padding: 1rem;

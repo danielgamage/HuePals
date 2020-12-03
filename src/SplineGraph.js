@@ -11,6 +11,19 @@ background: var(--body-background);
 /* backdrop-filter: blur(10px); */
 border-radius: 4px;
 
+&.hue {
+  --start-saturation: 100%;
+  --end-saturation: 100%;
+  --start-lightness: 50%;
+  --end-lightness: 50%;
+}
+&.saturation {
+  --start-lightness: 50%;
+  --end-lightness: 50%;
+}
+&.lightness {
+}
+
 .rainbow {
   width: 100%;
   height: 100%;
@@ -76,10 +89,29 @@ border-radius: 4px;
     stroke-width: 2px;
 
     &--oncurve {
-      stroke: var(--fg-1);
+      r: 0.07;
+      fill: var(--bg-1);
+    }
+    &--oncurve-2 {
+      r: 0.06;
+      stroke: var(--fg-4);
+      stroke-width: 2.5px;
+      fill: var(--body-background);
+      pointer-events: none;
+    }
+    &--oncurve-sample {
+      r: 0.015;
+      pointer-events: none;
+      &.start {
+        fill: hsl(var(--start-hue), var(--start-saturation), var(--start-lightness));
+      }
+      &.end {
+        fill: hsl(var(--end-hue), var(--end-saturation), var(--end-lightness));
+      }
     }
     &--offcurve {
       stroke: var(--fg-4);
+      r: 0.06;
     }
   }
 }
@@ -98,7 +130,7 @@ const SplineGraph = observer(({
   height = 1,
   onStartUpdate,
   onEndUpdate,
-  hue
+  attribute
 }) => {
   const svgRef = useRef(null)
 
@@ -169,9 +201,11 @@ const SplineGraph = observer(({
       : graphScaleY(el)
   ))
 
+  console.log(spline)
+
   return (
-    <Styles className="SplineGraph" height={height}>
-      {hue && <div className="rainbow" />}
+    <Styles className={`SplineGraph ${attribute}`} height={height} >
+      {attribute === "hue" && <div className="rainbow" />}
       <svg className="splineGraph" viewBox={`0 0 1 ${height}`} ref={svgRef}>
         <path d={`
         M ${scaledS[0]}, ${scaledS[1]}
@@ -181,18 +215,22 @@ const SplineGraph = observer(({
         `}
         />
         <line x1={scaledS[0]} y1={scaledS[1]} x2={scaledS[2]} y2={scaledS[3]} />
-        <circle className="point point--oncurve" cx={scaledS[0]} cy={scaledS[1]} r="0.07"
+        <circle className="point point--oncurve" cx={scaledS[0]} cy={scaledS[1]}
           onMouseDown={(e) => {handleMouseDown(e, 0)}}
         />
-        <circle className="point point--offcurve" cx={scaledS[2]} cy={scaledS[3]} r="0.06"
+        <circle className="point point--oncurve-2" cx={scaledS[0]} cy={scaledS[1]} />
+        <circle className="point point--oncurve-sample start" cx={scaledS[0]} cy={scaledS[1]} />
+        <circle className="point point--offcurve" cx={scaledS[2]} cy={scaledS[3]}
           onMouseDown={(e) => {handleMouseDown(e, 1)}}
         />
 
         <line x1={scaledS[4]} y1={scaledS[5]} x2={scaledS[6]} y2={scaledS[7]} />
-        <circle className="point point--oncurve" cx={scaledS[6]} cy={scaledS[7]} r="0.07"
+        <circle className="point point--oncurve" cx={scaledS[6]} cy={scaledS[7]}
           onMouseDown={(e) => {handleMouseDown(e, 3)}}
         />
-        <circle className="point point--offcurve" cx={scaledS[4]} cy={scaledS[5]} r="0.06"
+        <circle className="point point--oncurve-2" cx={scaledS[6]} cy={scaledS[7]} />
+        <circle className="point point--oncurve-sample end" cx={scaledS[6]} cy={scaledS[7]} />
+        <circle className="point point--offcurve" cx={scaledS[4]} cy={scaledS[5]}
           onMouseDown={(e) => {handleMouseDown(e, 2)}}
         />
       </svg>
