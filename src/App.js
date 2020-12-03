@@ -69,18 +69,14 @@ const Styles = styled.div`
     height: 2rem;
     position: relative;
     border-radius: 1rem;
-    background: var(--color);
+    background: linear-gradient(
+      to right,
+      var(--base-color, var(--color)),
+      var(--base-color, var(--color)) 49%,
+      var(--color) 51%
+    );
     flex: 0 0 auto;
     overflow: hidden;
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 1rem;
-      height: 2rem;
-      background: var(--base-color);
-    }
   }
   .messages {
     margin-left: auto;
