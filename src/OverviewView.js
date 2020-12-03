@@ -18,7 +18,7 @@ const Styles = styled.div`
   overflow: auto;
   .themes {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
     grid-auto-rows: 12rem;
     margin-bottom: 1rem;
     grid-gap: 1rem;
@@ -28,26 +28,42 @@ const Styles = styled.div`
 const App = observer(() => {
   return (
     <Styles className="Overview">
-      <div className="themes">
-        {state.themes.map((theme) => (
-          <ThemePreview
-            theme={theme}
-            onDoubleClick={() => state.ui.setCurrentTheme(theme)}
-          />
+      {[
+        {
+          label: "Favorites",
+          themes: state.themes.filter((theme) => theme.favorite),
+        },
+        {
+          label: "All",
+          themes: state.themes.filter((theme) => !theme.favorite),
+        },
+      ]
+        .filter((group) => group.themes.length)
+        .map((group) => (
+          <>
+            <h2>{group.label}</h2>
+            <div className="themes">
+              {group.themes.map((theme) => (
+                <ThemePreview
+                  theme={theme}
+                  onDoubleClick={() => state.ui.setCurrentTheme(theme)}
+                />
+              ))}
+              <Button
+                status="primary"
+                onClick={() => {
+                  state.addTheme()
+                }}
+                label={
+                  <>
+                    <Icon height={`${1.25 ** 2}em`} icon={addIcon} />
+                    <span>New Theme</span>
+                  </>
+                }
+              />
+            </div>
+          </>
         ))}
-        <Button
-          status="primary"
-          onClick={() => {
-            state.addTheme()
-          }}
-          label={
-            <>
-              <Icon height={`${1.25 ** 2}em`} icon={addIcon} />
-              <span>New Theme</span>
-            </>
-          }
-        />
-      </div>
       <Button
         status="danger"
         onClick={() => {

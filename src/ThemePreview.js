@@ -10,6 +10,7 @@ import deleteIcon from "@iconify-icons/ph/trash"
 import warningIcon from "@iconify-icons/ph/warning"
 import paletteIcon from "@iconify/icons-ic/outline-palette"
 import heartIcon from "@iconify-icons/ph/heart"
+import heartFilledIcon from "@iconify-icons/ph/heart-fill"
 
 const Styles = styled.div`
   position: relative;
@@ -47,6 +48,9 @@ const Styles = styled.div`
     flex: 1 1 auto;
     background: var(--color);
   }
+  .Button {
+    padding: 1rem;
+  }
 `
 
 const App = observer(({ theme, onDoubleClick }) => {
@@ -78,7 +82,7 @@ const App = observer(({ theme, onDoubleClick }) => {
         <Button
           status="text danger"
           onClick={() => theme.toggleFavorite()}
-          label={<Icon icon={heartIcon} />}
+          label={<Icon icon={theme.favorite ? heartFilledIcon : heartIcon} />}
         />
         <Button
           status="text danger"
