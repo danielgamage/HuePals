@@ -12,10 +12,19 @@ import Button from "./Button"
 import { Icon } from "@iconify/react"
 import addIcon from "@iconify-icons/ph/folder-plus-duotone"
 import restoreIcon from "@iconify-icons/ph/clock-counter-clockwise-duotone"
+import heartBold from "@iconify-icons/ph/heart-bold"
+import swatchesBold from "@iconify-icons/ph/swatches-bold"
 
 const Styles = styled.div`
   padding: 1rem;
   overflow: auto;
+  .themes-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--size-1);
+    line-height: 1;
+  }
   .themes {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
@@ -30,18 +39,26 @@ const App = observer(() => {
     <Styles className="Overview">
       {[
         {
-          label: "Favorites",
+          label: (
+            <>
+              <Icon icon={heartBold} /> Favorites
+            </>
+          ),
           themes: state.themes.filter((theme) => theme.favorite),
         },
         {
-          label: "All",
+          label: (
+            <>
+              <Icon icon={swatchesBold} /> All
+            </>
+          ),
           themes: state.themes.filter((theme) => !theme.favorite),
         },
       ]
         .filter((group) => group.themes.length)
         .map((group) => (
           <>
-            <h2>{group.label}</h2>
+            <h2 className="themes-header">{group.label}</h2>
             <div className="themes">
               {group.themes.map((theme) => (
                 <ThemePreview
