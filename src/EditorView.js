@@ -35,11 +35,7 @@ const Styles = styled.div`
       "4rem 4rem";
     padding: 1rem 0;
     margin-bottom: -1rem;
-    background-image: linear-gradient(
-      to bottom,
-      var(--body-background) 85%,
-      transparent
-    );
+    background: var(--body-background);
   }
   .graph {
     position: relative;
@@ -122,6 +118,32 @@ const Styles = styled.div`
     flex-direction: column;
     gap: 0.5rem;
     margin-top: 1rem;
+  }
+
+  &.graphs-hidden .list-header {
+    top: 0;
+  }
+  &.graphs-visible .list-header {
+    top: 20rem;
+  }
+  .list-header {
+    position: sticky;
+    padding-left: 5rem;
+    font-family: var(--mono);
+    font-size: var(--size-0);
+    color: var(--fg-5);
+    z-index: 1;
+    background: var(--body-background);
+    box-shadow: 0 7px 10px -7px var(--shadow-color);
+    span {
+      width: 3rem;
+      display: inline-block;
+      text-align: right;
+      padding-right: 1.1rem;
+    }
+    abbr {
+      text-decoration: none;
+    }
   }
   .shade {
     position: relative;
@@ -243,7 +265,11 @@ const Styles = styled.div`
 
 const App = observer(({ theme }) => {
   return (
-    <Styles className={`Editor`}>
+    <Styles
+      className={`Editor ${
+        state.ui.isGraphVisible ? "graphs-visible" : "graphs-hidden"
+      }`}
+    >
       <div className="colors">
         {theme.colors.map((color, colorIndex) => {
           const start = color.shades[0]
@@ -411,7 +437,17 @@ const App = observer(({ theme }) => {
                 </div>
               )}
               <div className="list">
-                <div></div>
+                <div className="list-header">
+                  <span>
+                    <abbr title="hue">H</abbr>
+                  </span>
+                  <span>
+                    <abbr title="saturation">S</abbr>
+                  </span>
+                  <span>
+                    <abbr title="lightness">L</abbr>
+                  </span>
+                </div>
                 {color.shades.map((shade, i, arr) => {
                   const isExtreme = i === 0 || i === arr.length - 1
                   const isBackground =
