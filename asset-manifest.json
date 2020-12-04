@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/HuePals/static/css/main.cbe3ce4d.chunk.css",
-    "main.js": "/HuePals/static/js/main.4d4607e6.chunk.js",
-    "main.js.map": "/HuePals/static/js/main.4d4607e6.chunk.js.map",
-    "runtime-main.js": "/HuePals/static/js/runtime-main.a84d0c07.js",
-    "runtime-main.js.map": "/HuePals/static/js/runtime-main.a84d0c07.js.map",
-    "static/js/2.3404d043.chunk.js": "/HuePals/static/js/2.3404d043.chunk.js",
-    "static/js/2.3404d043.chunk.js.map": "/HuePals/static/js/2.3404d043.chunk.js.map",
+    "main.css": "/HuePals/static/css/main.aed2e7d2.chunk.css",
+    "main.js": "/HuePals/static/js/main.5d95cdc3.chunk.js",
+    "main.js.map": "/HuePals/static/js/main.5d95cdc3.chunk.js.map",
+    "runtime-main.js": "/HuePals/static/js/runtime-main.0833c1a0.js",
+    "runtime-main.js.map": "/HuePals/static/js/runtime-main.0833c1a0.js.map",
+    "static/js/2.35883340.chunk.js": "/HuePals/static/js/2.35883340.chunk.js",
+    "static/js/2.35883340.chunk.js.map": "/HuePals/static/js/2.35883340.chunk.js.map",
     "index.html": "/HuePals/index.html",
-    "precache-manifest.b7ba750997b89bac535a3cc5fabda262.js": "/HuePals/precache-manifest.b7ba750997b89bac535a3cc5fabda262.js",
+    "precache-manifest.d4c49d60ae696ccf8727b2e7ad5b723e.js": "/HuePals/precache-manifest.d4c49d60ae696ccf8727b2e7ad5b723e.js",
     "service-worker.js": "/HuePals/service-worker.js",
-    "static/css/main.cbe3ce4d.chunk.css.map": "/HuePals/static/css/main.cbe3ce4d.chunk.css.map",
+    "static/css/main.aed2e7d2.chunk.css.map": "/HuePals/static/css/main.aed2e7d2.chunk.css.map",
     "static/media/logo.svg": "/HuePals/static/media/logo.25bf045c.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.a84d0c07.js",
-    "static/js/2.3404d043.chunk.js",
-    "static/css/main.cbe3ce4d.chunk.css",
-    "static/js/main.4d4607e6.chunk.js"
+    "static/js/runtime-main.0833c1a0.js",
+    "static/js/2.35883340.chunk.js",
+    "static/css/main.aed2e7d2.chunk.css",
+    "static/js/main.5d95cdc3.chunk.js"
   ]
 }
