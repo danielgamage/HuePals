@@ -35,6 +35,11 @@ const Styles = styled.div`
       "4rem 4rem";
     padding: 1rem 0;
     margin-bottom: -1rem;
+    background-image: linear-gradient(
+      to bottom,
+      var(--body-background) 85%,
+      transparent
+    );
   }
   .graph {
     position: relative;
