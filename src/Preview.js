@@ -134,7 +134,7 @@ const App = observer(({ theme }) => {
           </div>
         ))}
       </div>
-      <div className="playground">
+      {/* <div className="playground">
         <h1 contentEditable spellCheck="false">
           Lorem ipsum
         </h1>
@@ -176,7 +176,7 @@ const App = observer(({ theme }) => {
             </span>
           }
         />
-      </div>
+      </div> */}
     </Styles>
   )
 })
