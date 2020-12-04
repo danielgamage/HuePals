@@ -6,10 +6,9 @@ import styled from "styled-components"
 import { applyPatch } from "mobx-state-tree"
 import { Icon } from "@iconify/react"
 import Button from "./Button"
-import deleteIcon from "@iconify-icons/ph/trash"
-import warningIcon from "@iconify-icons/ph/warning"
-import paletteIcon from "@iconify/icons-ic/outline-palette"
-import heartIcon from "@iconify-icons/ph/heart"
+import deleteIcon from "@iconify-icons/ph/trash-duotone"
+import warningIcon from "@iconify-icons/ph/warning-duotone"
+import heartIcon from "@iconify-icons/ph/heart-duotone"
 import heartFilledIcon from "@iconify-icons/ph/heart-fill"
 
 const Styles = styled.div`

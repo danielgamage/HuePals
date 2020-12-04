@@ -15,8 +15,9 @@ import houseIcon from "@iconify-icons/ph/house-line-bold"
 import slidersIcon from "@iconify-icons/ph/sliders-bold"
 import circlesIcon from "@iconify-icons/ph/circles-four-bold"
 import shareBold from "@iconify-icons/ph/share-bold"
-import eyeIcon from "@iconify-icons/ph/eye-fill"
-import eyeOffIcon from "@iconify-icons/ph/eye-slash-fill"
+import eyeIcon from "@iconify-icons/ph/eye-duotone"
+import eyeOffIcon from "@iconify-icons/ph/eye-slash-duotone"
+import threeDotsVertical from "@iconify-icons/ph/dots-three-outline-vertical-duotone"
 
 const Styles = styled.div`
   display: flex;
@@ -39,9 +40,10 @@ const Styles = styled.div`
     display: flex;
     align-items: center;
     line-height: 3rem;
-    font-size: var(--size-1);
-    padding: 0 0.5rem;
+    font-size: var(--size-0);
+    padding: 0 0.75rem;
     font-weight: 700;
+    margin: 0 0.75rem 0 -0.75rem;
     &.inactive {
       color: var(--fg-3);
       svg {
@@ -64,7 +66,7 @@ const Styles = styled.div`
       color: var(--fg-2);
       /* height: 1.25em; */
       /* width: 1.25em; */
-      margin-right: 0.5rem;
+      margin-right: 0.4rem;
     }
   }
   .swatch {
@@ -103,7 +105,7 @@ const Styles = styled.div`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4rem;
+    height: 3rem;
     padding: 0 2rem;
     background: var(--bg-2);
     z-index: 1;
@@ -189,6 +191,7 @@ const App = observer(() => {
       {state.ui.view !== "overview" && (
         <footer className={`app-footer`}>
           <label>
+            <Icon icon={threeDotsVertical} />
             Shades:
             <input
               className="shade-count"

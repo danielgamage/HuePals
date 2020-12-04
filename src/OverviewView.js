@@ -10,8 +10,8 @@ import ExportView from "./ExportView"
 import ThemePreview from "./ThemePreview"
 import Button from "./Button"
 import { Icon } from "@iconify/react"
-import addIcon from "@iconify/icons-ic/round-add-circle-outline"
-import restoreIcon from "@iconify-icons/ph/clock-counter-clockwise-fill"
+import addIcon from "@iconify-icons/ph/folder-plus-duotone"
+import restoreIcon from "@iconify-icons/ph/clock-counter-clockwise-duotone"
 
 const Styles = styled.div`
   padding: 1rem;
@@ -50,7 +50,6 @@ const App = observer(() => {
                 />
               ))}
               <Button
-                status="primary"
                 onClick={() => {
                   state.addTheme()
                 }}

@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
 import { Icon } from "@iconify/react"
-import copyIcon from "@iconify/icons-ic/outline-content-copy"
+import copyIcon from "@iconify-icons/ph/copy-duotone"
 import Button from "./Button"
 
 const Styles = styled.div`

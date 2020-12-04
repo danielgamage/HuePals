@@ -9,13 +9,13 @@ import LabeledCheckbox from "./LabeledCheckbox"
 import Button from "./Button"
 import ColorInput from "./ColorInput"
 import { Icon } from "@iconify/react"
-import deleteIcon from "@iconify-icons/ph/trash"
-import warningIcon from "@iconify-icons/ph/warning"
-import circleHalf from "@iconify-icons/ph/circle-half"
+import deleteIcon from "@iconify-icons/ph/trash-duotone"
+import warningIcon from "@iconify-icons/ph/warning-duotone"
+import circleHalf from "@iconify-icons/ph/circle-half-duotone"
 import circleHalfFill from "@iconify-icons/ph/circle-half-fill"
-import swatchesIcon from "@iconify-icons/ph/swatches"
-import copyIcon from "@iconify-icons/ph/copy"
-import paintBrushBroad from "@iconify-icons/ph/paint-brush-broad"
+import swatchesIcon from "@iconify-icons/ph/swatches-duotone"
+import copyIcon from "@iconify-icons/ph/copy-duotone"
+import paintBrushBroad from "@iconify-icons/ph/paint-brush-broad-duotone"
 import paintBrushBroadFill from "@iconify-icons/ph/paint-brush-broad-fill"
 
 const Styles = styled.div`
@@ -223,8 +223,8 @@ const Styles = styled.div`
   .add-button {
     width: 100%;
     font: inherit;
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: var(--size-1);
+    font-weight: 400;
     position: sticky;
     top: 1rem;
   }
@@ -406,9 +406,9 @@ const App = observer(({ theme }) => {
                 </div>
               )}
               <div className="list">
+                <div></div>
                 {color.shades.map((shade, i, arr) => {
                   const isExtreme = i === 0 || i === arr.length - 1
-                  const RootElement = isExtreme ? "label" : "div"
                   const isBackground =
                     theme.backgroundColorId === color.id &&
                     theme.backgroundShadeIndex === i
@@ -417,33 +417,21 @@ const App = observer(({ theme }) => {
                     arr.length.toString().length - name.toString().length
                   ).fill("0")
                   return (
-                    <RootElement
-                      className={`shade`}
-                      style={{ "--color": shade.hsl }}
-                    >
-                      {isExtreme ? (
-                        <ColorInput
-                          type="color"
-                          value={shade.hex}
-                          baseColor={
-                            theme.baseColor && theme.baseColor.shades[i].hsl
-                          }
-                          onInput={(e) =>
-                            color.setHex(
-                              i === 0 ? "start" : "end",
-                              e.target.value
-                            )
-                          }
-                        />
-                      ) : (
-                        <div
-                          className="swatch"
-                          style={{
-                            "--base-color":
-                              theme.baseColor && theme.baseColor.shades[i].hsl,
-                          }}
-                        />
-                      )}
+                    <label className={`shade`} style={{ "--color": shade.hsl }}>
+                      <ColorInput
+                        disabled={!isExtreme}
+                        type="color"
+                        value={shade.hex}
+                        baseColor={
+                          theme.baseColor && theme.baseColor.shades[i].hsl
+                        }
+                        onInput={(e) =>
+                          color.setHex(
+                            i === 0 ? "start" : "end",
+                            e.target.value
+                          )
+                        }
+                      />
                       <dl className="shade-text">
                         <dt className="shade-title">
                           <span className="shade-title-padding">
@@ -499,7 +487,7 @@ const App = observer(({ theme }) => {
                           }}
                         />
                       </label>
-                    </RootElement>
+                    </label>
                   )
                 })}
               </div>
