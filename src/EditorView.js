@@ -478,7 +478,7 @@ const App = observer(({ theme }) => {
                           <span className="shade-title-padding">
                             {namePadding}
                           </span>
-                          {name}–
+                          {name}
                         </dt>
                         {state.ui.isValueVisible && (
                           <dd className="shade-value">
