@@ -12,6 +12,7 @@ import Bezier from "bezier-js"
 import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
 import uuid from "uuid/v4"
+import { easings, lerp } from "../utils/easings"
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -64,36 +65,18 @@ const Color = types
   .model("Color", {
     id: types.optional(types.identifier, uuid),
     name: types.optional(types.string, "Gray"),
-    hueSpline: types.optional(types.array(types.number), [
-      0,
-      78,
-      0.33,
-      150,
-      0.66,
-      170,
-      1,
-      174,
-    ]),
-    saturationSpline: types.optional(types.array(types.number), [
-      0,
-      60,
-      0.5,
-      80,
-      0.8,
-      80,
-      1,
-      60,
-    ]),
-    lightnessSpline: types.optional(types.array(types.number), [
-      0,
-      90,
-      0.33,
-      66,
-      0.66,
-      33,
-      1,
-      12,
-    ]),
+    hueSpline: types.optional(
+      types.array(types.number),
+      [0, 78, 0.33, 150, 0.66, 170, 1, 174]
+    ),
+    saturationSpline: types.optional(
+      types.array(types.number),
+      [0, 60, 0.5, 80, 0.8, 80, 1, 60]
+    ),
+    lightnessSpline: types.optional(
+      types.array(types.number),
+      [0, 90, 0.33, 66, 0.66, 33, 1, 12]
+    ),
   })
   .extend((self) => {
     return {
@@ -151,6 +134,24 @@ const Color = types
           self.hueSpline[index] = newValue.h || 0
           self.saturationSpline[index] = newValue.s * 100
           self.lightnessSpline[index] = newValue.l * 100
+        },
+        setEasing(splineKey, easingKey) {
+          const spline = self[`${splineKey}Spline`]
+          const start = spline[1]
+          const end = spline[7]
+          const newSpline = [
+            spline[0],
+            spline[1],
+
+            easings[0],
+            lerp(start, end, easings[easingKey][1]),
+            easings[2],
+            lerp(start, end, easings[easingKey][3]),
+
+            spline[6],
+            spline[7],
+          ]
+          self[`${splineKey}Spline`] = newSpline
         },
         remove() {
           getParent(self, 2).removeColor(self)
