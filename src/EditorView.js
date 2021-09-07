@@ -229,6 +229,9 @@ const Styles = styled.div`
     font-family: var(--mono);
     color: var(--fg-1);
   }
+  .shade-value-padding {
+    color: var(--fg-5);
+  }
   .shade-value-value {
     display: inline-block;
     width: 2.5em;
@@ -490,6 +493,11 @@ const App = observer(({ theme }) => {
                                   </span>
                                 )}
                                 <span className="shade-value-value">
+                                  <span className="shade-value-padding">
+                                    {Array(3 - String(v.value).length).fill(
+                                      "0"
+                                    )}
+                                  </span>
                                   {v.value}
                                   <span className="shade-value-unit">
                                     {v.unit}
