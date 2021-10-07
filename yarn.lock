@@ -953,15 +953,15 @@
   dependencies:
     "@hapi/hoek" "8.x.x"
 
-"@iconify-icons/ph@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@iconify-icons/ph/-/ph-1.1.1.tgz#888cab69ae0c9e0719dfaa966c946423ed82a179"
-  integrity sha512-uAS8CZD9kQAUQaY60Y5GwzK+8txP45kdrXw8LqjFxyb2FbHuwcfvkpOuv7nEPWUVwA9RoOvKJvr8ATbTErHqWw==
+"@iconify-icons/ph@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/ph/-/ph-1.1.3.tgz#17933f2de84145f752e73bba6a2eef7356633dba"
+  integrity sha512-mxgJFm/orB1znRNhDBKT7S9hcSs+1UjFDuxOfrmx+CoGgIPGohHytP9vSpY0fD4hRo3LTkNkePaH7tzaagdodA==
 
-"@iconify/icons-ic@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@iconify/icons-ic/-/icons-ic-1.1.0.tgz#3a02e7bf823c1a9ce3539dbe1646ab47f4f6768d"
-  integrity sha512-PyR3EOJOwWLTxA36AVi+r0u3eJC68KA38gsPYX3ZbyiD6fvnIwQFFcfNLoslOOBCPixWqPmjLXe0l1lLSTPc3A==
+"@iconify/icons-ic@^1.1.11":
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-ic/-/icons-ic-1.1.11.tgz#bc026a2768c38bc865b78d3e8ad119fa113d598d"
+  integrity sha512-lGrnc5mLR0KiGbKhIEQ1eAZa07oi2Yse6sKq8UFrB+xQCepGfT63PBf+e7QSL2n9TVEf47DmNdns1XjKzjMhpQ==
 
 "@iconify/react@^1.1.3":
   version "1.1.3"
@@ -6574,6 +6574,11 @@ lodash@^3.0.0, lodash@^3.1.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
   integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 lodash@~2.4.1:
   version "2.4.2"
