@@ -114,7 +114,7 @@ const Color = types
           return Array(getParent(self, 2).interpolationCount)
             .fill()
             .map((el, i) => {
-              const position = i / (getParent(self, 2).interpolationCount - 1)
+              const position = Math.max(i, 0.00001) / (getParent(self, 2).interpolationCount - 1)
               return Shade.create({
                 h: getYAtX(position, "hue"),
                 s: getYAtX(position, "saturation"),
