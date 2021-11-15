@@ -151,6 +151,7 @@ const Styles = styled.div`
     inset: 0;
     grid-template-columns: 1fr 1fr 1fr;
     overflow: auto;
+    box-shadow: var(--shadow-beveled), var(--shadow-elevated);
   }
   .easing-option {
     display: flex;
