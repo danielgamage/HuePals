@@ -362,6 +362,9 @@ const App = observer(({ theme }) => {
                           value: v,
                         })
                       }}
+                      onEasingSelect={(key) => {
+                        color.setEasing("hue", key)
+                      }}
                       onSplineUpdate={(v) => {
                         applyPatch(color, {
                           op: "add",
@@ -395,6 +398,9 @@ const App = observer(({ theme }) => {
                           value: v,
                         })
                       }}
+                      onEasingSelect={(key) => {
+                        color.setEasing("saturation", key)
+                      }}
                       onSplineUpdate={(v) => {
                         applyPatch(color, {
                           op: "add",
@@ -427,6 +433,9 @@ const App = observer(({ theme }) => {
                           path: "./end/l",
                           value: v,
                         })
+                      }}
+                      onEasingSelect={(key) => {
+                        color.setEasing("lightness", key)
                       }}
                       onSplineUpdate={(v) => {
                         applyPatch(color, {

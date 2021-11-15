@@ -1,9 +1,10 @@
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import logo from "./logo.svg"
 import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
 import { scaleLinear } from "d3-scale"
+import { easings } from "./utils/easings"
 
 const Styles = styled.div`
   position: relative;
@@ -22,6 +23,14 @@ const Styles = styled.div`
     --end-lightness: 50%;
   }
   &.lightness {
+  }
+  &.menu-open {
+    .splineGraph {
+      opacity: 0;
+    }
+    .easing-menu {
+      display: grid;
+    }
   }
 
   .rainbow {
@@ -136,6 +145,37 @@ const Styles = styled.div`
       }
     }
   }
+  .easing-menu {
+    display: none;
+    position: absolute;
+    inset: 0;
+    grid-template-columns: 1fr 1fr 1fr;
+    overflow: auto;
+  }
+  .easing-option {
+    display: flex;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    &:hover,
+    &:focus {
+      path {
+        stroke: var(--fg-2);
+      }
+    }
+    svg {
+      overflow: visible;
+      height: 100%;
+      width: 100%;
+    }
+    path {
+      stroke: var(--fg-4);
+      fill: none;
+      vector-effect: non-scaling-stroke;
+      stroke-width: 2px;
+      stroke-linecap: round;
+    }
+  }
 `
 
 let isMouseDown = false
@@ -152,6 +192,7 @@ const SplineGraph = observer(
     spline,
     color,
     onSplineUpdate,
+    onEasingSelect,
     max,
     min,
     width,
@@ -161,6 +202,7 @@ const SplineGraph = observer(
     attribute,
   }) => {
     const svgRef = useRef(null)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const handleMouseDown = (e, index) => {
       // right click
@@ -223,9 +265,14 @@ const SplineGraph = observer(
     const scaledS = spline.map((el, i) => (i % 2 === 0 ? el : graphScaleY(el)))
 
     return (
-      <Styles className={`SplineGraph ${attribute}`} height={height}>
+      <Styles className={`SplineGraph ${attribute} ${isMenuOpen && "menu-open"}`} height={height}>
         {attribute === "hue" && <div className="rainbow" />}
-        <svg className="splineGraph" viewBox={`0 0 1 ${height}`} ref={svgRef}>
+        <svg
+          className="splineGraph"
+          viewBox={`0 0 1 ${height}`}
+          ref={svgRef}
+          onContextMenu={(e)=>{e.preventDefault(); setIsMenuOpen(true)}}
+        >
           <line
             x1={scaledS[0]}
             y1={scaledS[1]}
@@ -323,6 +370,29 @@ const SplineGraph = observer(
             cy={scaledS[7]}
           />
         </svg>
+
+          <div className="easing-menu">
+            {Object.entries(easings).map(([key, value]) => (
+              <button
+                onClick={() => {
+                  onEasingSelect(key)
+                  setIsMenuOpen(false)
+                }}
+                onContextMenu={(e)=>{e.preventDefault(); setIsMenuOpen(false)}}
+                className="easing-option"
+                title={value.name}
+              >
+                <svg viewBox="0 0 1 1">
+                  <path d={`
+                    M 0, 0
+                    C ${value.handles[0]}, ${value.handles[1]}
+                      ${value.handles[2]}, ${value.handles[3]}
+                      1, 1
+                  `} />
+                </svg>
+              </button>
+            ))}
+          </div>
       </Styles>
     )
   }

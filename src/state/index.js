@@ -13,6 +13,7 @@ import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
 import uuid from "uuid/v4"
 import { easings, lerp } from "../utils/easings"
+import { toJS } from "mobx"
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -139,14 +140,15 @@ const Color = types
           const spline = self[`${splineKey}Spline`]
           const start = spline[1]
           const end = spline[7]
+          const easing = easings[easingKey]
           const newSpline = [
             spline[0],
             spline[1],
 
-            easings[0],
-            lerp(start, end, easings[easingKey][1]),
-            easings[2],
-            lerp(start, end, easings[easingKey][3]),
+            easing.handles[0],
+            lerp(start, end, easing.handles[1]),
+            easing.handles[2],
+            lerp(start, end, easing.handles[3]),
 
             spline[6],
             spline[7],
