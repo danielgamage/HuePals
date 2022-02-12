@@ -7,6 +7,18 @@ export const remap = (value, min1, max1, min2, max2) => {
 }
 
 export const easings = {
+  linear: {
+    name: "Linear",
+    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+  },
+  linear2: {
+    name: "Linear",
+    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+  },
+  linear3: {
+    name: "Linear",
+    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+  },
   easeInSine: { name: "Sine In", handles: [0.12, 0, 0.39, 0] },
   easeOutSine: { name: "Sine Out", handles: [0.61, 1, 0.88, 1] },
   easeInOutSine: { name: "Sine", handles: [0.37, 0, 0.63, 1] },
