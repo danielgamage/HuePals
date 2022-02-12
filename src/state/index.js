@@ -13,7 +13,8 @@ import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
 import uuid from "uuid/v4"
 import { easings, lerp, remap } from "../utils/easings"
-
+import { hsluvToRgb, hsluvToHex } from "hsluv"
+console.log(hsluvToRgb)
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
   getType(node).create(Object.assign({}, getSnapshot(node), { id }))
@@ -39,19 +40,29 @@ const Shade = types
             { value: format(".0f")(self.l), unit: "%" },
           ]
         },
+        get convertedRGB() {
+          console.log(
+            hsluvToRgb,
+            self.h,
+            self.s,
+            self.l,
+            hsluvToRgb([self.h, self.s, self.l])
+          )
+          return hsluvToRgb([self.h, self.s, self.l]).map((v) => v * 255)
+        },
         get hsl() {
           return `hsl(${format(".2f")(self.h % 360)}, ${format(".2f")(
             self.s
           )}%, ${format(".2f")(self.l)}%)`
         },
         get hex() {
-          return rgb(self.hsl).formatHex()
+          return hsluvToHex([self.h, self.s, self.l])
         },
         get rgb() {
-          const value = rgb(self.hsl)
-          return `rgb(${format(".2f")(value.r)}, ${format(".2f")(
-            value.g
-          )}, ${format(".2f")(value.b)})`
+          const value = self.convertedRGB
+          return `rgb(${format(".2f")(value[0])}, ${format(".2f")(
+            value[1]
+          )}, ${format(".2f")(value[2])})`
         },
       },
     }

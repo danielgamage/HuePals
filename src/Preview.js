@@ -121,12 +121,12 @@ const App = observer(({ theme }) => {
           <div className="color">
             <div className="column-label">{color.name}</div>
             {color.shades.map((shade, i, arr) => (
-              <div className={`shade`} style={{ "--color": shade.hsl }}>
+              <div className={`shade`} style={{ "--color": shade.hex }}>
                 <div
                   className="swatch"
                   style={{
                     "--base-color":
-                      theme.baseColor && theme.baseColor.shades[i].hsl,
+                      theme.baseColor && theme.baseColor.shades[i].hex,
                   }}
                 />
               </div>
