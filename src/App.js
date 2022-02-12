@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
@@ -9,7 +9,6 @@ import Preview from "./Preview"
 import ExportView from "./ExportView"
 import OverviewView from "./OverviewView"
 import LabeledCheckbox from "./LabeledCheckbox"
-import Button from "./Button"
 import { Icon } from "@iconify/react"
 import houseIcon from "@iconify-icons/ph/house-line-bold"
 import slidersIcon from "@iconify-icons/ph/sliders-bold"
@@ -155,6 +154,7 @@ const App = observer(() => {
                 className={`tab-item ${
                   state.ui.tab === value ? "active" : "inactive"
                 }`}
+                key={value}
               >
                 <input
                   type="radio"

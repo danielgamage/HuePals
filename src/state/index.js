@@ -8,12 +8,11 @@ import {
 } from "mobx-state-tree"
 import { format } from "d3-format"
 import { hsl, rgb } from "d3-color"
-import Bezier from "bezier-js"
+import { Bezier } from "bezier-js"
 import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
 import uuid from "uuid/v4"
-import { easings, lerp } from "../utils/easings"
-import { toJS } from "mobx"
+import { easings, lerp, remap } from "../utils/easings"
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -99,22 +98,33 @@ const Color = types
           }
           const getYAtX = (position, key) => {
             position = Math.min(position, 0.999999)
-            var curve = new Bezier(...self[`${key}Spline`])
-            var line = {
+            const spline = self[`${key}Spline`]
+            const bezierPoints = [
+              { x: spline[0], y: spline[1] },
+              { x: spline[2], y: spline[3] },
+              { x: spline[4], y: spline[5] },
+              { x: spline[6], y: spline[7] },
+            ]
+            const curve = new Bezier(bezierPoints)
+            const line = {
               p1: { x: position, y: -1000 },
               p2: { x: position, y: 1000 },
             }
-            const intersect = curve.get(curve.intersects(line)[0])
-            return Math.min(
-              Math.max(intersect.y, bounds[key].min),
+            const intersect = curve.intersects(line)[0]
+            const intersectY = curve.get(intersect).y
+            const output = Math.min(
+              Math.max(intersectY, bounds[key].min),
               bounds[key].max
             )
+            return output
           }
 
           return Array(getParent(self, 2).interpolationCount)
             .fill()
-            .map((el, i) => {
-              const position = Math.max(i, 0.00001) / (getParent(self, 2).interpolationCount - 1)
+            .map((_el, i) => {
+              const position =
+                Math.max(i, 0.00001) /
+                (getParent(self, 2).interpolationCount - 1)
               return Shade.create({
                 h: getYAtX(position, "hue"),
                 s: getYAtX(position, "saturation"),

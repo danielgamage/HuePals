@@ -2,6 +2,10 @@ export const lerp = (start, end, position) => {
   return (1 - position) * start + position * end
 }
 
+export const remap = (value, min1, max1, min2, max2) => {
+  return min2 + ((value - min1) * (max2 - min2)) / (max1 - min1)
+}
+
 export const easings = {
   easeInSine: { name: "Sine In", handles: [0.12, 0, 0.39, 0] },
   easeOutSine: { name: "Sine Out", handles: [0.61, 1, 0.88, 1] },

@@ -1,10 +1,6 @@
 import React, { useRef } from "react"
-import logo from "./logo.svg"
 import { observer } from "mobx-react"
-import state from "./state"
 import styled from "styled-components"
-import { line, curveBundle } from "d3-shape"
-import { scaleLinear } from "d3-scale"
 
 const Styles = styled.label`
   cursor: pointer;
@@ -17,14 +13,14 @@ const Styles = styled.label`
   }
 `
 
-const ColorInput = observer((props) => {
+const ColorInput = observer(({ baseColor, ...props }) => {
   return (
     <Styles className="ColorInput">
       <div
         className="swatch"
-        style={{ "--color": props.value, "--base-color": props.baseColor }}
+        style={{ "--color": props.value, "--base-color": baseColor }}
       />
-      <input type="color" {...props} />
+      <input type="color" {...{ props }} />
     </Styles>
   )
 })

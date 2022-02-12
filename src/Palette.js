@@ -36,6 +36,7 @@ const App = observer(() => {
               className={`tab-item ${
                 state.ui.tab === value ? "active" : "inactive"
               }`}
+              key={value}
             >
               <input
                 type="radio"
