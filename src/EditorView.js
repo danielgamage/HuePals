@@ -470,13 +470,13 @@ const App = observer(({ theme }) => {
                     arr.length.toString().length - name.toString().length
                   ).fill("0")
                   return (
-                    <label className={`shade`} style={{ "--color": shade.hsl }}>
+                    <label className={`shade`} style={{ "--color": shade.hex }}>
                       <ColorInput
                         disabled={!isExtreme}
                         type="color"
                         value={shade.hex}
                         baseColor={
-                          theme.baseColor && theme.baseColor.shades[i].hsl
+                          theme.baseColor && theme.baseColor.shades[i].hex
                         }
                         onInput={(e) =>
                           color.setHex(
@@ -532,7 +532,7 @@ const App = observer(({ theme }) => {
                           className="shade-background-input"
                           type="radio"
                           name="background-color"
-                          id={shade.hsl}
+                          id={shade.hex}
                           value={shade.hex}
                           checked={
                             theme.backgroundColorId === color.id &&
