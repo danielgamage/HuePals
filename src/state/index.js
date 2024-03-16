@@ -12,7 +12,9 @@ import { Bezier } from "bezier-js"
 import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
 import uuid from "uuid/v4"
+import ColorJS from "colorjs.io"
 import { easings, lerp, remap } from "../utils/easings"
+console.log(ColorJS)
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -25,9 +27,10 @@ const cloneWithNewId = (node, id) =>
 const Shade = types
   .model("Shade", {
     id: types.optional(types.identifier, uuid),
-    h: types.optional(types.number, 0),
     s: types.optional(types.number, 100),
     l: types.optional(types.number, 100),
+    c: types.optional(types.number, 0.2),
+    h: types.optional(types.number, 0),
   })
   .extend((self) => {
     return {
@@ -39,19 +42,22 @@ const Shade = types
             { value: format(".0f")(self.l), unit: "%" },
           ]
         },
+        get colorObject() {
+          return new ColorJS("HSL", [self.h, self.s, self.l])
+        },
+        get lch() {
+          console.log(self.colorObject.to("hsl"))
+          return self.colorObject.to("lch").toString({format: "lch"})
+        },
         get hsl() {
-          return `hsl(${format(".2f")(self.h % 360)}, ${format(".2f")(
-            self.s
-          )}%, ${format(".2f")(self.l)}%)`
+          console.log(self.colorObject.to("hsl"))
+          return self.colorObject.to("hsl").toString({format: "hsl"})
         },
         get hex() {
-          return rgb(self.hsl).formatHex()
+          return self.colorObject.to("srgb").toString({format: "hex"})
         },
         get rgb() {
-          const value = rgb(self.hsl)
-          return `rgb(${format(".2f")(value.r)}, ${format(".2f")(
-            value.g
-          )}, ${format(".2f")(value.b)})`
+          return self.colorObject.to("srgb").toString({format: "rgb"})
         },
       },
     }

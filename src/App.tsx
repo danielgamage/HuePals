@@ -126,17 +126,13 @@ const App = observer(() => {
   return (
     <Styles
       className={`App ${
-        state.ui.currentTheme &&
-        state.ui.currentTheme.backgroundShade &&
-        state.ui.currentTheme.backgroundShade.l > 50
+        state.ui.currentTheme?.backgroundShade?.l > 50
           ? "theme--light"
           : "theme--dark"
       }`}
       style={{
         "--body-background":
-          state.ui.currentTheme &&
-          state.ui.currentTheme.backgroundShade &&
-          state.ui.currentTheme.backgroundShade.hex,
+          state.ui.currentTheme?.backgroundShade?.hex,
       }}
     >
       <div className="tabs">
