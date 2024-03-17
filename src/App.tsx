@@ -113,6 +113,11 @@ const Styles = styled.div`
     box-shadow: var(--shadow-beveled), var(--shadow-elevated);
     --unchecked-icon-color: var(--fg-4);
     --checked-icon-color: var(--fg-2);
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
   .shade-count {
     width: 3rem;

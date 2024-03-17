@@ -10,10 +10,9 @@ import { format } from "d3-format"
 import { hsl, rgb } from "d3-color"
 import { Bezier } from "bezier-js"
 import { loadState, saveState } from "./localStorage"
-import { kebabCase, camelCase } from "lodash"
+import { kebabCase, camelCase, cloneDeep } from "lodash"
 import ColorJS from "colorjs.io"
 import { easings, lerp } from "../utils/easings"
-console.log(ColorJS)
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -27,14 +26,13 @@ const Shade = types
   .model("Shade", {
     id: types.optional(types.identifier, () => crypto.randomUUID()),
     l: types.optional(types.number, 1),
-    s: types.optional(types.number, .5),
+    s: types.optional(types.number, 0.5),
     h: types.optional(types.number, 0),
   })
   .extend((self) => {
     return {
       views: {
         get merged() {
-          console.log(self.colorObject)
           return [
             { value: format(".2f")(self.l), unit: "" },
             { value: format(".2f")(self.s), unit: "" },
@@ -45,16 +43,16 @@ const Shade = types
           return new ColorJS("oklch", [self.l, self.s, self.h])
         },
         get oklch() {
-          return self.colorObject.to("oklch").toString({format: "oklch"})
+          return self.colorObject.to("oklch").toString({ format: "oklch" })
         },
         get hsl() {
-          return self.colorObject.to("hsl").toString({format: "hsl"})
+          return self.colorObject.to("hsl").toString({ format: "hsl" })
         },
         get hex() {
-          return self.colorObject.to("srgb").toString({format: "hex"})
+          return self.colorObject.to("srgb").toString({ format: "hex" })
         },
         get rgb() {
-          return self.colorObject.to("srgb").toString({format: "rgb"})
+          return self.colorObject.to("srgb").toString({ format: "rgb" })
         },
       },
     }
@@ -74,12 +72,15 @@ const Color = types
     ),
     saturationSpline: types.optional(
       types.array(types.number),
-      [0, .30, 0.5, .40, 0.8, .40, 1, .30]
+      [0, 0.3, 0.5, 0.4, 0.8, 0.4, 1, 0.3]
     ),
     lightnessSpline: types.optional(
       types.array(types.number),
-      [0, .45, 0.33, .33, 0.66, .165, 1, .06]
+      [0, 0.45, 0.33, 0.33, 0.66, 0.165, 1, 0.06]
     ),
+    hueLinked: types.optional(types.boolean, false),
+    saturationLinked: types.optional(types.boolean, true),
+    lightnessLinked: types.optional(types.boolean, true),
   })
   .extend((self) => {
     return {
@@ -141,6 +142,47 @@ const Color = types
         },
       },
       actions: {
+        setSpline(key, value, propagate = true) {
+          self[`${key}Spline`] = value
+          if (propagate === true && self[`${key}Linked`]) {
+            getParent(self, 2).colors.forEach((color) => {
+              if (color.id !== self.id && color[`${key}Linked`]) {
+                color.setSpline(key, value, false)
+              }
+            })
+          }
+        },
+        linkSpline(key: "hue" | "lightness" | "saturation", value) {
+          let linkKey: "hueLinked" | "lightnessLinked" | "saturationLinked"
+          let splineKey: "hueSpline" | "lightnessSpline" | "saturationSpline"
+          switch (key) {
+            case "hue": {
+              linkKey = "hueLinked"
+              splineKey = "hueSpline"
+              break
+            }
+            case "lightness": {
+              linkKey = "lightnessLinked"
+              splineKey = "lightnessSpline"
+              break
+            }
+            case "saturation": {
+              linkKey = "saturationLinked"
+              splineKey = "saturationSpline"
+              break
+            }
+          }
+          if (value === true) {
+            const linkSource = getParent(self, 2).colors.find(
+              (color) => color[linkKey] === true
+            )
+            if (linkSource) {
+              self[splineKey] = cloneDeep(linkSource[splineKey])
+            }
+          }
+
+          self[linkKey] = value
+        },
         setHex(startOrEnd, v) {
           const newValue = hsl(v)
           const index = startOrEnd === "start" ? 1 : 7
@@ -167,6 +209,14 @@ const Color = types
             spline[7],
           ]
           self[`${splineKey}Spline`] = newSpline
+          
+          if (self[`${splineKey}Linked`]) {
+            getParent(self, 2).colors.forEach((color) => {
+              if (color.id !== self.id && color[`${splineKey}Linked`]) {
+                color[splineKey + "Spline"] = cloneDeep(newSpline)
+              }
+            })
+          }
         },
         remove() {
           getParent(self, 2).removeColor(self)

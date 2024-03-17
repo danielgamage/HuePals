@@ -17,6 +17,8 @@ import swatchesIcon from "@iconify-icons/ph/swatches-duotone"
 import copyIcon from "@iconify-icons/ph/copy-duotone"
 import paintBrushBroad from "@iconify-icons/ph/paint-brush-broad-duotone"
 import paintBrushBroadFill from "@iconify-icons/ph/paint-brush-broad-fill"
+import linkIcon from "@iconify-icons/ph/link-bold"
+import classNames from "classnames"
 
 const Styles = styled.div`
   display: flex;
@@ -135,6 +137,7 @@ const Styles = styled.div`
   }
   .list-header {
     position: sticky;
+    display: flex;
     padding-left: 5rem;
     font-family: var(--mono);
     font-size: var(--size-0);
@@ -142,11 +145,28 @@ const Styles = styled.div`
     z-index: 1;
     background: var(--body-background);
     box-shadow: 0 7px 10px -7px var(--shadow-color);
-    span {
+    .list-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
       width: 3rem;
-      display: inline-block;
       text-align: right;
       padding-right: 1.1rem;
+      color: var(--fg-3);
+      svg {
+        color: var(--fg-5);
+      }
+      &.active {
+        svg {
+          color: var(--fg-3);
+        }
+      }
+    }
+    .link-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
     }
     abbr {
       text-decoration: none;
@@ -354,29 +374,11 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       min={0}
                       max={1}
                       spline={color.lightnessSpline}
-                      onStartUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./start/l",
-                          value: v,
-                        })
-                      }}
-                      onEndUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./end/l",
-                          value: v,
-                        })
-                      }}
                       onEasingSelect={(key) => {
                         color.setEasing("lightness", key)
                       }}
                       onSplineUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./lightnessSpline",
-                          value: v,
-                        })
+                        color.setSpline("lightness", v)
                       }}
                     />
                   </div>
@@ -391,29 +393,11 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       min={0}
                       max={0.5}
                       spline={color.saturationSpline}
-                      onStartUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./start/s",
-                          value: v,
-                        })
-                      }}
-                      onEndUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./end/s",
-                          value: v,
-                        })
-                      }}
                       onEasingSelect={(key) => {
                         color.setEasing("saturation", key)
                       }}
                       onSplineUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./saturationSpline",
-                          value: v,
-                        })
+                        color.setSpline("saturation", v)
                       }}
                     />
                   </div>
@@ -429,29 +413,11 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       max={480}
                       height={2.25}
                       spline={color.hueSpline}
-                      onStartUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./start/h",
-                          value: v,
-                        })
-                      }}
-                      onEndUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./end/h",
-                          value: v,
-                        })
-                      }}
                       onEasingSelect={(key) => {
                         color.setEasing("hue", key)
                       }}
                       onSplineUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./hueSpline",
-                          value: v,
-                        })
+                        color.setSpline("hue", v)
                       }}
                     />
                   </div>
@@ -459,13 +425,74 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
               )}
               <div className="list">
                 <div className="list-header">
-                  <span>
+                  {/* <div className="list-header">
+                  {[{
+                    key: "lightness",
+                    label: "Lightness",
+                    abbr: "L",
+                  }, {
+                    key: "saturation",
+                    label: "Chroma",
+                    abbr: "C",
+                  }, {
+                    key: "hue",
+                    label: "Hue",
+                    abbr: "H",
+                  }].map(({ key, label, abbr }) => (
+                    <span key={key}>
+                      <button
+                        className={classNames("link-button", {
+                          active: color[`${key}Linked`],
+                        })}
+                        onClick={() => color.linkSpline(key, !color[`${key}Linked`])}
+                      >
+                        <Icon icon={linkIcon} />
+                      </button>
+                      <abbr title={label}>{abbr}</abbr>
+                    </span>
+                  ))}
+                </div> */}
+                  <span
+                    className={classNames("list-heading", {
+                      active: color.lightnessLinked,
+                    })}
+                  >
+                    <button
+                      className={classNames("link-button")}
+                      onClick={() =>
+                        color.linkSpline("lightness", !color.lightnessLinked)
+                      }
+                    >
+                      <Icon icon={linkIcon} />
+                    </button>
                     <abbr title="lightness">L</abbr>
                   </span>
-                  <span>
+                  <span
+                    className={classNames("list-heading", {
+                      active: color.saturationLinked,
+                    })}
+                  >
+                    <button
+                      className={classNames("link-button")}
+                      onClick={() =>
+                        color.linkSpline("saturation", !color.saturationLinked)
+                      }
+                    >
+                      <Icon icon={linkIcon} />
+                    </button>
                     <abbr title="chroma">C</abbr>
                   </span>
-                  <span>
+                  <span
+                    className={classNames("list-heading", {
+                      active: color.hueLinked,
+                    })}
+                  >
+                    <button
+                      className={classNames("link-button")}
+                      onClick={() => color.linkSpline("hue", !color.hueLinked)}
+                    >
+                      <Icon icon={linkIcon} />
+                    </button>
                     <abbr title="hue">H</abbr>
                   </span>
                 </div>
@@ -515,9 +542,9 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                                 )}
                                 <span className="shade-value-value">
                                   <span className="shade-value-padding">
-                                    {Array(Math.max(0,3 - String(v.value).length)).fill(
-                                      "0"
-                                    )}
+                                    {Array(
+                                      Math.max(0, 3 - String(v.value).length)
+                                    ).fill("0")}
                                   </span>
                                   {v.value}
                                   <span className="shade-value-unit">

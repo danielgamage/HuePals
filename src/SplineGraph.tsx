@@ -192,15 +192,11 @@ let initialMouse,
 const SplineGraph = observer(
   ({
     spline,
-    color,
     onSplineUpdate,
     onEasingSelect,
     max,
     min,
-    width,
     height = 1,
-    onStartUpdate,
-    onEndUpdate,
     attribute,
   }) => {
     const svgRef = useRef(null)
