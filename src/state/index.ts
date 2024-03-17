@@ -11,9 +11,8 @@ import { hsl, rgb } from "d3-color"
 import { Bezier } from "bezier-js"
 import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase } from "lodash"
-import uuid from "uuid/v4"
 import ColorJS from "colorjs.io"
-import { easings, lerp, remap } from "../utils/easings"
+import { easings, lerp } from "../utils/easings"
 console.log(ColorJS)
 
 // clone does... just that, and does not update `id`
@@ -26,31 +25,29 @@ const cloneWithNewId = (node, id) =>
  */
 const Shade = types
   .model("Shade", {
-    id: types.optional(types.identifier, uuid),
-    s: types.optional(types.number, 100),
-    l: types.optional(types.number, 100),
-    c: types.optional(types.number, 0.2),
+    id: types.optional(types.identifier, () => crypto.randomUUID()),
+    l: types.optional(types.number, 1),
+    s: types.optional(types.number, .5),
     h: types.optional(types.number, 0),
   })
   .extend((self) => {
     return {
       views: {
         get merged() {
+          console.log(self.colorObject)
           return [
+            { value: format(".2f")(self.l), unit: "" },
+            { value: format(".2f")(self.s), unit: "" },
             { value: format(".0f")(self.h), unit: "º" },
-            { value: format(".0f")(self.s), unit: "%" },
-            { value: format(".0f")(self.l), unit: "%" },
           ]
         },
         get colorObject() {
-          return new ColorJS("HSL", [self.h, self.s, self.l])
+          return new ColorJS("oklch", [self.l, self.s, self.h])
         },
-        get lch() {
-          console.log(self.colorObject.to("hsl"))
-          return self.colorObject.to("lch").toString({format: "lch"})
+        get oklch() {
+          return self.colorObject.to("oklch").toString({format: "oklch"})
         },
         get hsl() {
-          console.log(self.colorObject.to("hsl"))
           return self.colorObject.to("hsl").toString({format: "hsl"})
         },
         get hex() {
@@ -69,7 +66,7 @@ const Shade = types
  */
 const Color = types
   .model("Color", {
-    id: types.optional(types.identifier, uuid),
+    id: types.optional(types.identifier, () => crypto.randomUUID()),
     name: types.optional(types.string, "Gray"),
     hueSpline: types.optional(
       types.array(types.number),
@@ -77,11 +74,11 @@ const Color = types
     ),
     saturationSpline: types.optional(
       types.array(types.number),
-      [0, 60, 0.5, 80, 0.8, 80, 1, 60]
+      [0, .30, 0.5, .40, 0.8, .40, 1, .30]
     ),
     lightnessSpline: types.optional(
       types.array(types.number),
-      [0, 90, 0.33, 66, 0.66, 33, 1, 12]
+      [0, .45, 0.33, .33, 0.66, .165, 1, .06]
     ),
   })
   .extend((self) => {
@@ -95,11 +92,11 @@ const Color = types
             },
             saturation: {
               min: 0,
-              max: 100,
+              max: 0.5,
             },
             lightness: {
               min: 0,
-              max: 100,
+              max: 1,
             },
           }
           const getYAtX = (position, key) => {
@@ -175,7 +172,7 @@ const Color = types
           getParent(self, 2).removeColor(self)
         },
         duplicate() {
-          const dup = cloneWithNewId(self, uuid())
+          const dup = cloneWithNewId(self, crypto.randomUUID())
           getParent(self, 2).addColor(dup)
         },
       },
@@ -187,7 +184,7 @@ const Color = types
  */
 export const Message = types
   .model("Message", {
-    id: types.optional(types.identifier, uuid),
+    id: types.optional(types.identifier, () => crypto.randomUUID()),
     body: types.optional(types.string, ""),
     date: types.optional(types.string, new Date().toISOString()),
     status: types.optional(types.string, "secondary"),
@@ -209,7 +206,7 @@ export const Message = types
  */
 export const Theme = types
   .model("Theme", {
-    id: types.optional(types.identifier, uuid),
+    id: types.optional(types.identifier, () => crypto.randomUUID()),
     name: types.optional(types.string, "New Theme"),
     favorite: types.optional(types.boolean, false),
     colors: types.optional(types.array(Color), [{}]),
@@ -321,7 +318,7 @@ export const UIStore = types
     isValueVisible: types.optional(types.boolean, true),
     exportLanguage: types.optional(types.string, "css"),
     messages: types.array(Message),
-    colorspace: types.optional(types.string, "hsl"),
+    colorspace: types.optional(types.string, "lch"),
     tab: types.optional(types.string, "overview"),
     currentTheme: types.maybeNull(types.reference(Theme)),
   })
@@ -396,6 +393,9 @@ export const RootStore = types
       },
       loadState(snapshot) {
         if (self.version) {
+          if (self.version == "1.0") {
+            // convert from hsl to oklch
+          }
           applySnapshot(self, snapshot)
         }
       },

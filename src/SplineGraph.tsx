@@ -49,19 +49,19 @@ const Styles = styled.div`
       position: absolute;
       background: linear-gradient(
         to bottom,
-        hsl(480, 100%, 50%),
-        hsl(440, 100%, 50%),
-        hsl(400, 100%, 50%),
-        hsl(360, 100%, 50%),
-        hsl(320, 100%, 50%),
-        hsl(280, 100%, 50%),
-        hsl(240, 100%, 50%),
-        hsl(200, 100%, 50%),
-        hsl(160, 100%, 50%),
-        hsl(120, 100%, 50%),
-        hsl(80, 100%, 50%),
-        hsl(40, 100%, 50%),
-        hsl(0, 100%, 50%)
+        oklch(.7 .4 480),
+        oklch(.7 .4 440),
+        oklch(.7 .4 400),
+        oklch(.7 .4 360),
+        oklch(.7 .4 320),
+        oklch(.7 .4 280),
+        oklch(.7 .4 240),
+        oklch(.7 .4 200),
+        oklch(.7 .4 160),
+        oklch(.7 .4 120),
+        oklch(.7 .4 80),
+        oklch(.7 .4 40),
+        oklch(.7 .4 0)
       );
     }
     &::before {
@@ -100,47 +100,48 @@ const Styles = styled.div`
       stroke-width: 2px;
 
       &--oncurve {
-        r: 0.07;
+        r: 0.07px;
+        stroke: var(--fg-4);
         fill: var(--bg-1);
       }
       &--oncurve-2 {
-        r: 0.06;
+        r: 0.06px;
         stroke: var(--fg-4);
         stroke-width: 2.5px;
         fill: var(--body-background);
         pointer-events: none;
       }
       &--oncurve-sample {
-        r: 0.015;
+        r: 0.015px;
         pointer-events: none;
         &.start {
-          fill: hsl(
-            var(--start-hue),
-            var(--start-saturation),
-            var(--start-lightness)
+          fill: oklch(
+            var(--start-lightness) 
+            var(--start-saturation) 
+            var(--start-hue)
           );
         }
         &.end {
-          fill: hsl(
-            var(--end-hue),
-            var(--end-saturation),
-            var(--end-lightness)
+          fill: oklch(
+            var(--end-lightness) 
+            var(--end-saturation) 
+            var(--end-hue)
           );
         }
       }
       &--offcurve {
         fill: var(--body-background);
-        r: 0.07;
+        r: 0.07px;
       }
       &--offcurve-2 {
-        r: 0.06;
+        r: 0.06px;
         stroke: var(--fg-4);
         stroke-width: 2.5px;
         pointer-events: none;
       }
       &--offcurve-3 {
         fill: var(--fg-4);
-        r: 0.015;
+        r: 0.015px;
         pointer-events: none;
       }
     }

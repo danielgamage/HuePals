@@ -1,7 +1,7 @@
-import React from "react"
 import "./App.css"
+import { Instance } from "mobx-state-tree"
 import { observer } from "mobx-react"
-import state from "./state"
+import state, { Theme } from "./state"
 import styled from "styled-components"
 import SplineGraph from "./SplineGraph"
 import { applyPatch } from "mobx-state-tree"
@@ -24,6 +24,7 @@ const Styles = styled.div`
   flex-flow: column;
   overflow: auto;
   padding-bottom: 3rem;
+  background: var(--body-background);
   .graphs {
     position: sticky;
     top: 0;
@@ -31,8 +32,8 @@ const Styles = styled.div`
     display: grid;
     grid-gap: 1rem;
     grid-template-areas:
-      "4rem 4rem"
-      "4rem 4rem";
+      "l h"
+      "c h";
     padding: 1rem 0;
     margin-bottom: -1rem;
     background: var(--body-background);
@@ -43,7 +44,7 @@ const Styles = styled.div`
     justify-content: space-between;
   }
   .graph-hue {
-    grid-row: 1 / 3;
+    grid-area: h;
   }
   .graph-lightness,
   .graph-saturation {
@@ -51,6 +52,12 @@ const Styles = styled.div`
       top: auto;
       bottom: 0.5rem;
     }
+  }
+  .graph-lightness {
+    grid-area: l;
+  }
+  .graph-saturation {
+    grid-area: c;
   }
   h3 {
     position: absolute;
@@ -266,7 +273,7 @@ const Styles = styled.div`
   }
 `
 
-const App = observer(({ theme }) => {
+const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
   return (
     <Styles
       className={`Editor ${
@@ -274,19 +281,19 @@ const App = observer(({ theme }) => {
       }`}
     >
       <div className="colors">
-        {theme.colors.map((color, colorIndex) => {
+        {theme.colors.map((color) => {
           const start = color.shades[0]
           const end = color.shades[color.shades.length - 1]
           return (
             <div
               className="color"
               style={{
-                "--start-hue": `${start.h}deg`,
-                "--end-hue": `${end.h}deg`,
-                "--start-saturation": `${start.s}%`,
-                "--end-saturation": `${end.s}%`,
-                "--start-lightness": `${start.l}%`,
-                "--end-lightness": `${end.l}%`,
+                "--start-hue": `${start.h}`,
+                "--end-hue": `${end.h}`,
+                "--start-saturation": `${start.s}`,
+                "--end-saturation": `${end.s}`,
+                "--start-lightness": `${start.l}`,
+                "--end-lightness": `${end.l}`,
               }}
             >
               <h2 className="title-line">
@@ -337,6 +344,80 @@ const App = observer(({ theme }) => {
               </h2>
               {state.ui.isGraphVisible && (
                 <div className="graphs">
+                  <div className="graph graph-lightness">
+                    <h3>
+                      <abbr title="Lightness">L</abbr>
+                    </h3>
+                    <SplineGraph
+                      attribute="lightness"
+                      color={color}
+                      min={0}
+                      max={1}
+                      spline={color.lightnessSpline}
+                      onStartUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./start/l",
+                          value: v,
+                        })
+                      }}
+                      onEndUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./end/l",
+                          value: v,
+                        })
+                      }}
+                      onEasingSelect={(key) => {
+                        color.setEasing("lightness", key)
+                      }}
+                      onSplineUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./lightnessSpline",
+                          value: v,
+                        })
+                      }}
+                    />
+                  </div>
+
+                  <div className="graph graph-saturation">
+                    <h3>
+                      <abbr title="Chroma">C</abbr>
+                    </h3>
+                    <SplineGraph
+                      attribute="saturation"
+                      color={color}
+                      min={0}
+                      max={0.5}
+                      spline={color.saturationSpline}
+                      onStartUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./start/s",
+                          value: v,
+                        })
+                      }}
+                      onEndUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./end/s",
+                          value: v,
+                        })
+                      }}
+                      onEasingSelect={(key) => {
+                        color.setEasing("saturation", key)
+                      }}
+                      onSplineUpdate={(v) => {
+                        applyPatch(color, {
+                          op: "add",
+                          path: "./saturationSpline",
+                          value: v,
+                        })
+                      }}
+                    />
+                  </div>
+
                   <div className="graph graph-hue">
                     <h3>
                       <abbr title="Hue">H</abbr>
@@ -374,90 +455,18 @@ const App = observer(({ theme }) => {
                       }}
                     />
                   </div>
-                  <div className="graph graph-saturation">
-                    <h3>
-                      <abbr title="Saturation">S</abbr>
-                    </h3>
-                    <SplineGraph
-                      attribute="saturation"
-                      color={color}
-                      min={0}
-                      max={100}
-                      spline={color.saturationSpline}
-                      onStartUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./start/s",
-                          value: v,
-                        })
-                      }}
-                      onEndUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./end/s",
-                          value: v,
-                        })
-                      }}
-                      onEasingSelect={(key) => {
-                        color.setEasing("saturation", key)
-                      }}
-                      onSplineUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./saturationSpline",
-                          value: v,
-                        })
-                      }}
-                    />
-                  </div>
-                  <div className="graph graph-lightness">
-                    <h3>
-                      <abbr title="Lightness">L</abbr>
-                    </h3>
-                    <SplineGraph
-                      attribute="lightness"
-                      color={color}
-                      min={0}
-                      max={100}
-                      spline={color.lightnessSpline}
-                      onStartUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./start/l",
-                          value: v,
-                        })
-                      }}
-                      onEndUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./end/l",
-                          value: v,
-                        })
-                      }}
-                      onEasingSelect={(key) => {
-                        color.setEasing("lightness", key)
-                      }}
-                      onSplineUpdate={(v) => {
-                        applyPatch(color, {
-                          op: "add",
-                          path: "./lightnessSpline",
-                          value: v,
-                        })
-                      }}
-                    />
-                  </div>
                 </div>
               )}
               <div className="list">
                 <div className="list-header">
                   <span>
-                    <abbr title="hue">H</abbr>
-                  </span>
-                  <span>
-                    <abbr title="saturation">S</abbr>
-                  </span>
-                  <span>
                     <abbr title="lightness">L</abbr>
+                  </span>
+                  <span>
+                    <abbr title="chroma">C</abbr>
+                  </span>
+                  <span>
+                    <abbr title="hue">H</abbr>
                   </span>
                 </div>
                 {color.shades.map((shade, i, arr) => {
@@ -470,13 +479,16 @@ const App = observer(({ theme }) => {
                     arr.length.toString().length - name.toString().length
                   ).fill("0")
                   return (
-                    <label className={`shade`} style={{ "--color": shade.hsl }}>
+                    <label
+                      className={`shade`}
+                      style={{ "--color": shade.oklch }}
+                    >
                       <ColorInput
                         disabled={!isExtreme}
                         type="color"
-                        value={shade.hex}
+                        value={shade.oklch}
                         baseColor={
-                          theme.baseColor && theme.baseColor.shades[i].hsl
+                          theme.baseColor && theme.baseColor.shades[i].oklch
                         }
                         onInput={(e) =>
                           color.setHex(
@@ -503,7 +515,7 @@ const App = observer(({ theme }) => {
                                 )}
                                 <span className="shade-value-value">
                                   <span className="shade-value-padding">
-                                    {Array(3 - String(v.value).length).fill(
+                                    {Array(Math.max(0,3 - String(v.value).length)).fill(
                                       "0"
                                     )}
                                   </span>

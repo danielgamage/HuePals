@@ -10,7 +10,7 @@ export const loadState = () => {
     return undefined
   }
 }
-export const saveState = (state) => {
+export const saveState = (state: object) => {
   try {
     const serializedState = JSON.stringify(state)
     localStorage.setItem("huepals__state", serializedState)

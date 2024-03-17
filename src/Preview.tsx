@@ -1,14 +1,7 @@
-import React from "react"
-import logo from "./logo.svg"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
-import { line, curveBasis } from "d3-shape"
-import SplineGraph from "./SplineGraph"
-import Button from "./Button"
-import { applyPatch } from "mobx-state-tree"
-import ColorInput from "./ColorInput"
 
 const Styles = styled.div`
   display: flex;

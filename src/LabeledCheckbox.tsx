@@ -1,7 +1,4 @@
-import React from "react"
 import "./App.css"
-import { observer } from "mobx-react"
-import state from "./state"
 import styled from "styled-components"
 
 const Root = styled.label`
@@ -26,7 +23,14 @@ const Root = styled.label`
   }
 `
 
-const LabeledCheckbox = (props) => {
+const LabeledCheckbox = (props: {
+  value: boolean
+  name: string
+  type: "checkbox"
+  onChange: (v: boolean) => void
+  checkedLabel: string
+  uncheckedLabel: string
+}) => {
   return (
     <Root
       className={`LabeledCheckbox ${props.value ? "checked" : "unchecked"}`}

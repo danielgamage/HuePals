@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import "./App.css"
 import { observer } from "mobx-react"
 import styled from "styled-components"
+import classnames from "classnames"
 
 const Styles = styled.button`
   padding: 0.5rem 1rem;
@@ -75,14 +76,26 @@ const Styles = styled.button`
   }
 `
 
-const App = observer(
-  ({ status, className, label, confirmLabel, children, onClick }) => {
+const Button = observer(
+  ({
+    status,
+    className,
+    label,
+    confirmLabel,
+    onClick,
+  }: {
+    status?: string
+    className?: string
+    label: React.ReactNode
+    confirmLabel?: React.ReactNode
+    onClick: () => void
+  }) => {
     const requiresConfirmation = !!confirmLabel
     const [clickedOnce, setClicked] = useState(false)
 
     return (
       <Styles
-        className={`Button ${className} ${status}`}
+        className={classnames("Button", className, status)}
         onClick={() => {
           if (!requiresConfirmation || clickedOnce) {
             onClick()
@@ -103,4 +116,4 @@ const App = observer(
   }
 )
 
-export default App
+export default Button

@@ -1,8 +1,8 @@
-export const lerp = (start, end, position) => {
+export const lerp = (start: number, end: number, position: number) => {
   return (1 - position) * start + position * end
 }
 
-export const remap = (value, min1, max1, min2, max2) => {
+export const remap = (value: number, min1: number, max1: number, min2: number, max2: number) => {
   return min2 + ((value - min1) * (max2 - min2)) / (max1 - min1)
 }
 

@@ -46,7 +46,7 @@ const ExportView = observer(({ theme }) => {
           onChange={(e) => state.ui.setColorspace(e.target.value)}
           value={state.ui.colorspace}
         >
-          {["lch", "hex", "rgb", "hsl"].map((el) => (
+          {["oklch", "hex", "rgb", "hsl"].map((el) => (
             <option value={el}>{el.toUpperCase()}</option>
           ))}
         </select>
