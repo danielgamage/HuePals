@@ -1,19 +1,14 @@
-import React, { useState } from "react"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
-import { applyPatch } from "mobx-state-tree"
-import EditorView from "./EditorView"
-import Preview from "./Preview"
-import ExportView from "./ExportView"
 import ThemePreview from "./ThemePreview"
 import Button from "./Button"
 import { Icon } from "@iconify/react"
-import addIcon from "@iconify-icons/ph/folder-plus-duotone"
-import restoreIcon from "@iconify-icons/ph/clock-counter-clockwise-duotone"
-import heartBold from "@iconify-icons/ph/heart-bold"
-import swatchesBold from "@iconify-icons/ph/swatches-bold"
+import addIcon from "@iconify-icons/solar/folder-2-bold-duotone"
+import restoreIcon from "@iconify-icons/solar/clock-circle-bold-duotone"
+import heartBold from "@iconify-icons/solar/heart-bold"
+import swatchesBold from "@iconify-icons/solar/palette-bold-duotone"
 
 const Styles = styled.div`
   padding: 1rem;
@@ -39,6 +34,7 @@ const App = observer(() => {
     <Styles className="Overview">
       {[
         {
+          key: "favorites",
           label: (
             <>
               <Icon icon={heartBold} /> Favorites
@@ -47,6 +43,7 @@ const App = observer(() => {
           themes: state.themes.filter((theme) => theme.favorite),
         },
         {
+          key: "all",
           label: (
             <>
               <Icon icon={swatchesBold} /> All
@@ -66,17 +63,19 @@ const App = observer(() => {
                   onDoubleClick={() => state.ui.setCurrentTheme(theme)}
                 />
               ))}
-              <Button
-                onClick={() => {
-                  state.addTheme()
-                }}
-                label={
-                  <>
-                    <Icon height={`${1.25 ** 2}em`} icon={addIcon} />
-                    <span>New Theme</span>
-                  </>
-                }
-              />
+              {group.key === "all" && (
+                <Button
+                  onClick={() => {
+                    state.addTheme()
+                  }}
+                  label={
+                    <>
+                      <Icon height={`${1.25 ** 2}em`} icon={addIcon} />
+                      <span>New Theme</span>
+                    </>
+                  }
+                />
+              )}
             </div>
           </>
         ))}

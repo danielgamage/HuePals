@@ -10,13 +10,14 @@ import ExportView from "./ExportView"
 import OverviewView from "./OverviewView"
 import LabeledCheckbox from "./LabeledCheckbox"
 import { Icon } from "@iconify/react"
-import houseIcon from "@iconify-icons/ph/house-line-bold"
-import slidersIcon from "@iconify-icons/ph/sliders-bold"
-import circlesIcon from "@iconify-icons/ph/circles-four-bold"
-import shareBold from "@iconify-icons/ph/share-bold"
-import eyeIcon from "@iconify-icons/ph/eye-duotone"
-import eyeOffIcon from "@iconify-icons/ph/eye-slash-duotone"
-import threeDotsVertical from "@iconify-icons/ph/dots-three-outline-vertical-duotone"
+import houseIcon from "@iconify-icons/solar/home-2-bold-duotone"
+import slidersIcon from "@iconify-icons/solar/pen-new-round-bold-duotone"
+import circlesIcon from "@iconify-icons/solar/widget-3-bold-duotone"
+import shareBold from "@iconify-icons/solar/screen-share-bold-duotone"
+import eyeIcon from "@iconify-icons/solar/eye-bold"
+import eyeOffIcon from "@iconify-icons/solar/eye-closed-bold"
+import chevron from "@iconify-icons/solar/alt-arrow-right-linear"
+import threeDotsVertical from "@iconify-icons/solar/filters-bold-duotone"
 
 const Styles = styled.div`
   display: flex;
@@ -27,33 +28,87 @@ const Styles = styled.div`
   color: var(--fg-1);
   user-select: none;
   font-family: var(--sans);
-  .tabs {
+  .appBar {
     display: flex;
-    height: 3rem;
-    padding: 0 2rem;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--body-background);
     box-shadow: var(--shadow-beveled), var(--shadow-elevated);
     z-index: 100;
+    padding: 0 1rem;
+  }
+  .activeTheme {
+    display: flex;
+    align-items: center;
+  }
+  .activeThemeLabel {
+    font-weight: 700;
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+    align-items: center;
+    padding-inline: 1rem;
+  }
+  .thumbnail {
+    display: flex;
+    width: calc(2rem * 16 / 9);
+    height: 2rem;
+    border-radius: 0.25rem;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    box-shadow: var(--shadow-recessed);
+  }
+  .thumbnailColumn {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
+  .thumbnailSwatch {
+    background: var(--color);
+    flex: 1 1 auto;
+  }
+  .chevron {
+    color: var(--fg-4);
+    height: 1rem;
+    width: 1rem;
+  }
+  .tabs {
+    display: flex;
+    height: 3rem;
+  }
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
   }
   .tab-item {
     display: flex;
     align-items: center;
     line-height: 3rem;
+    position: relative;
     font-size: var(--size-0);
-    padding: 0 0.75rem;
+    padding: 0 0.8rem 0 0.6rem;
+    gap: 0.4rem;
     font-weight: 700;
-    margin: 0 0.75rem 0 -0.75rem;
     &.inactive {
       color: var(--fg-3);
       svg {
         color: var(--fg-4);
       }
     }
-    &.active {
-      box-shadow: 0 -0.15em var(--fg-3) inset;
+    &::after {
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      z-index: -1;
     }
+    &.active,
     &:active {
-      background: var(--fg-5);
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0.5rem 0.25rem;
+        border-radius: 0.25rem;
+        opacity: 1;
+      }
     }
     input {
       opacity: 0;
@@ -63,9 +118,8 @@ const Styles = styled.div`
     }
     svg {
       color: var(--fg-2);
-      /* height: 1.25em; */
-      /* width: 1.25em; */
-      margin-right: 0.4rem;
+      height: 24px;
+      width: 24px;
     }
   }
   .swatch {
@@ -87,7 +141,7 @@ const Styles = styled.div`
   }
   .message {
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--radius);
     box-shadow: 0 2px 8px var(--shadow-color);
 
     &.success {
@@ -131,49 +185,107 @@ const App = observer(() => {
   return (
     <Styles
       className={`App ${
-        state.ui.currentTheme?.backgroundShade?.l >= .49
+        state.ui.currentTheme?.backgroundShade?.l >= 0.49
           ? "theme--light"
           : "theme--dark"
       }`}
       style={{
-        "--body-background":
-          state.ui.currentTheme?.backgroundShade?.oklch,
+        "--body-background": state.ui.currentTheme?.backgroundShade?.oklch,
       }}
     >
-      <div className="tabs">
-        {[
-          { label: "Overview", icon: houseIcon },
-          !!state.ui.currentTheme && { label: "Editor", icon: slidersIcon },
-          !!state.ui.currentTheme && { label: "Preview", icon: circlesIcon },
-          !!state.ui.currentTheme && { label: "Export", icon: shareBold },
-        ]
-          .filter(Boolean)
-          .map((tab) => {
-            const value = tab.label.toLowerCase()
-            return (
-              <label
-                className={`tab-item ${
-                  state.ui.tab === value ? "active" : "inactive"
-                }`}
-                key={value}
-              >
-                <input
-                  type="radio"
-                  checked={state.ui.tab === value}
-                  value={value}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      if (value === "overview") {
-                        state.ui.setCurrentTheme(null)
-                      }
-                      state.ui.setTab(e.target.value)
-                    }
-                  }}
-                />
-                <Icon icon={tab.icon} /> {tab.label}
-              </label>
-            )
-          })}
+      <div className="appBar">
+        <div className="breadcrumbs">
+          <div className="tabs main">
+            {[{ label: "Overview", icon: houseIcon }]
+              .filter(Boolean)
+              .map((tab) => {
+                const value = tab.label.toLowerCase()
+                return (
+                  <label
+                    className={`tab-item ${
+                      state.ui.tab === value ? "active" : "inactive"
+                    }`}
+                    key={value}
+                  >
+                    <input
+                      type="radio"
+                      checked={state.ui.tab === value}
+                      value={value}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (value === "overview") {
+                            state.ui.setCurrentTheme(null)
+                          }
+                          state.ui.setTab(e.target.value)
+                        }
+                      }}
+                    />
+                    <Icon icon={tab.icon} /> {tab.label}
+                  </label>
+                )
+              })}
+          </div>
+          {state.ui.currentTheme && (
+            <>
+              <Icon icon={chevron} className="chevron" />
+              <div className="activeThemeLabel">
+                <div>
+                  <div className="thumbnail">
+                    {state.ui.currentTheme.colors.map((shade) => (
+                      <div className="thumbnailColumn">
+                        {shade.interpolations.map((interpolation) => (
+                          <div
+                            className="thumbnailSwatch"
+                            style={{
+                              "--color": interpolation?.oklch,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {state.ui.currentTheme.name}
+              </div>
+            </>
+          )}
+        </div>
+        {!!state.ui.currentTheme && (
+          <div className="activeTheme">
+            <div className="tabs sub">
+              {[
+                { label: "Editor", icon: slidersIcon },
+                { label: "Preview", icon: circlesIcon },
+                { label: "Export", icon: shareBold },
+              ].map((tab) => {
+                const value = tab.label.toLowerCase()
+                return (
+                  <label
+                    className={`tab-item ${
+                      state.ui.tab === value ? "active" : "inactive"
+                    }`}
+                    key={value}
+                  >
+                    <input
+                      type="radio"
+                      checked={state.ui.tab === value}
+                      value={value}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          if (value === "overview") {
+                            state.ui.setCurrentTheme(null)
+                          }
+                          state.ui.setTab(e.target.value)
+                        }
+                      }}
+                    />
+                    <Icon icon={tab.icon} /> {tab.label}
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
       {(() => {
         switch (state.ui.view) {

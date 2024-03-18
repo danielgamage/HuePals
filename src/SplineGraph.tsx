@@ -10,7 +10,7 @@ const Styles = styled.div`
   position: relative;
   background: var(--body-background);
   /* backdrop-filter: blur(10px); */
-  border-radius: 4px;
+  border-radius: var(--radius);
 
   &.hue {
     --start-saturation: 100%;
@@ -37,7 +37,7 @@ const Styles = styled.div`
     width: 100%;
     height: 100%;
     position: absolute;
-    border-radius: 4px;
+    border-radius: var(--radius);
     z-index: 0;
     opacity: 0.5;
     overflow: hidden;
@@ -77,7 +77,7 @@ const Styles = styled.div`
     height: 100%;
     vector-effect: non-scaling-stroke;
     position: relative;
-    border-radius: 4px;
+    border-radius: var(--radius);
     box-shadow: var(--shadow-beveled), var(--shadow-elevated);
 
     path,
@@ -101,18 +101,16 @@ const Styles = styled.div`
 
       &--oncurve {
         r: 0.07px;
-        stroke: var(--fg-4);
-        fill: var(--bg-1);
+        fill: var(--body-background);
       }
       &--oncurve-2 {
         r: 0.06px;
         stroke: var(--fg-4);
-        stroke-width: 2.5px;
-        fill: var(--body-background);
+        stroke-width: 2px;
         pointer-events: none;
       }
       &--oncurve-sample {
-        r: 0.015px;
+        r: 0.03px;
         pointer-events: none;
         &.start {
           fill: oklch(

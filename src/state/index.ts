@@ -45,6 +45,9 @@ const Shade = types
         get oklch() {
           return self.colorObject.to("oklch").toString({ format: "oklch" })
         },
+        get lch() {
+          return self.colorObject.to("lch").toString({ format: "lch" })
+        },
         get hsl() {
           return self.colorObject.to("hsl").toString({ format: "hsl" })
         },

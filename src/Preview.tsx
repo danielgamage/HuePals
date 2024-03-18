@@ -56,7 +56,7 @@ const Styles = styled.div`
     text-align: left;
     white-space: nowrap;
     align-items: center;
-    border-radius: 4px;
+    border-radius: var(--radius);
     & + .shade {
       margin-top: 1rem;
     }

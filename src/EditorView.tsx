@@ -9,15 +9,16 @@ import LabeledCheckbox from "./LabeledCheckbox"
 import Button from "./Button"
 import ColorInput from "./ColorInput"
 import { Icon } from "@iconify/react"
-import deleteIcon from "@iconify-icons/ph/trash-duotone"
-import warningIcon from "@iconify-icons/ph/warning-duotone"
-import circleHalf from "@iconify-icons/ph/circle-half-duotone"
-import circleHalfFill from "@iconify-icons/ph/circle-half-fill"
-import swatchesIcon from "@iconify-icons/ph/swatches-duotone"
-import copyIcon from "@iconify-icons/ph/copy-duotone"
-import paintBrushBroad from "@iconify-icons/ph/paint-brush-broad-duotone"
-import paintBrushBroadFill from "@iconify-icons/ph/paint-brush-broad-fill"
-import linkIcon from "@iconify-icons/ph/link-bold"
+import deleteIcon from "@iconify-icons/solar/trash-bin-2-bold"
+import warningIcon from "@iconify-icons/solar/danger-triangle-bold-duotone"
+import circleHalf from "@iconify-icons/solar/pin-circle-bold-duotone"
+import circleHalfFill from "@iconify-icons/solar/pin-circle-bold"
+import swatchesIcon from "@iconify-icons/solar/palette-bold-duotone"
+import copyIcon from "@iconify-icons/solar/copy-bold-duotone"
+import paintBrushBroad from "@iconify-icons/solar/paint-roller-bold-duotone"
+import paintBrushBroadFill from "@iconify-icons/solar/paint-roller-bold-duotone"
+import linkIcon from "@iconify-icons/solar/link-minimalistic-2-bold"
+import linkBrokenIcon from "@iconify-icons/solar/link-broken-minimalistic-bold"
 import classNames from "classnames"
 
 const Styles = styled.div`
@@ -97,6 +98,7 @@ const Styles = styled.div`
     display: flex;
     align-items: center;
     margin: 0;
+    height: 2rem;
     gap: 0.8rem;
     color: var(--fg-1);
     --unchecked-icon-color: var(--fg-2);
@@ -106,8 +108,8 @@ const Styles = styled.div`
       width: 100%;
     }
     svg {
-      height: 20px;
-      width: 20px;
+      height: 24px;
+      width: 24px;
     }
     .checkbox {
       cursor: pointer;
@@ -167,6 +169,8 @@ const Styles = styled.div`
       border: none;
       padding: 0;
       cursor: pointer;
+      width: 24px;
+      height: 24px;
     }
     abbr {
       text-decoration: none;
@@ -178,7 +182,7 @@ const Styles = styled.div`
     text-align: left;
     white-space: nowrap;
     align-items: center;
-    border-radius: 4px;
+    border-radius: var(--radius);
     gap: 1rem;
 
     &:first-child,
@@ -192,7 +196,7 @@ const Styles = styled.div`
         right: -1rem;
         bottom: -0.5rem;
         left: -1rem;
-        border-radius: 4px;
+        border-radius: var(--radius);
         background: var(--fg-3);
         opacity: 0;
         z-index: -1;
@@ -463,7 +467,9 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                         color.linkSpline("lightness", !color.lightnessLinked)
                       }
                     >
-                      <Icon icon={linkIcon} />
+                      <Icon
+                        icon={color.lightnessLinked ? linkIcon : linkBrokenIcon}
+                      />
                     </button>
                     <abbr title="lightness">L</abbr>
                   </span>
@@ -478,7 +484,11 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                         color.linkSpline("saturation", !color.saturationLinked)
                       }
                     >
-                      <Icon icon={linkIcon} />
+                      <Icon
+                        icon={
+                          color.saturationLinked ? linkIcon : linkBrokenIcon
+                        }
+                      />
                     </button>
                     <abbr title="chroma">C</abbr>
                   </span>
@@ -491,7 +501,9 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       className={classNames("link-button")}
                       onClick={() => color.linkSpline("hue", !color.hueLinked)}
                     >
-                      <Icon icon={linkIcon} />
+                      <Icon
+                        icon={color.hueLinked ? linkIcon : linkBrokenIcon}
+                      />
                     </button>
                     <abbr title="hue">H</abbr>
                   </span>

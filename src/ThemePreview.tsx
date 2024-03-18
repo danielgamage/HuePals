@@ -1,4 +1,3 @@
-import React, { useState } from "react"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
@@ -6,15 +5,15 @@ import styled from "styled-components"
 import { applyPatch } from "mobx-state-tree"
 import { Icon } from "@iconify/react"
 import Button from "./Button"
-import deleteIcon from "@iconify-icons/ph/trash-duotone"
-import warningIcon from "@iconify-icons/ph/warning-duotone"
-import heartIcon from "@iconify-icons/ph/heart-duotone"
-import heartFilledIcon from "@iconify-icons/ph/heart-fill"
+import deleteIcon from "@iconify-icons/solar/trash-bin-2-bold"
+import warningIcon from "@iconify-icons/solar/danger-triangle-bold-duotone"
+import heartIcon from "@iconify-icons/solar/heart-linear"
+import heartFilledIcon from "@iconify-icons/solar/heart-bold"
 
 const Styles = styled.div`
   position: relative;
   box-shadow: var(--shadow-beveled), var(--shadow-elevated);
-  border-radius: 4px;
+  border-radius: var(--radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -72,7 +71,7 @@ const App = observer(({ theme, onDoubleClick }) => {
         {theme.colors.map((color) => (
           <div className="color">
             {color.shades.map((shade) => (
-              <div className="shade" style={{ "--color": shade.hex }} />
+              <div className="shade" style={{ "--color": shade.oklch }} />
             ))}
           </div>
         ))}

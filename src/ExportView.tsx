@@ -3,7 +3,7 @@ import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
 import { Icon } from "@iconify/react"
-import copyIcon from "@iconify-icons/ph/copy-duotone"
+import copyIcon from "@iconify-icons/solar/clipboard-add-bold-duotone"
 import Button from "./Button"
 
 const Styles = styled.div`
@@ -46,7 +46,7 @@ const ExportView = observer(({ theme }) => {
           onChange={(e) => state.ui.setColorspace(e.target.value)}
           value={state.ui.colorspace}
         >
-          {["oklch", "hex", "rgb", "hsl"].map((el) => (
+          {["oklch", "lch", "hex", "rgb", "hsl"].map((el) => (
             <option value={el}>{el.toUpperCase()}</option>
           ))}
         </select>

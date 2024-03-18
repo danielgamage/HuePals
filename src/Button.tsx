@@ -11,7 +11,7 @@ const Styles = styled.button`
   justify-content: center;
   background: var(--background);
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--radius);
   color: inherit;
   font: inherit;
   font-weight: 700;
@@ -33,6 +33,9 @@ const Styles = styled.button`
   &.secondary {
     --color: var(--fg-2);
     --background: var(--body-background);
+    &:active {
+      --color: var(--fg-1);
+    }
   }
   &.success {
     --color: var(--green-2);
