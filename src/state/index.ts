@@ -38,7 +38,7 @@ const Shade = types
             { value: format(".2f")(self.l), unit: "" },
             { value: format(".2f")(self.s), unit: "" },
             { value: format(".0f")(self.h).padStart(3, "0"), unit: "º" },
-          ].map(el => {
+          ].map((el) => {
             el.parts = separateNumericStringIntoParts(el.value)
             return el
           })
@@ -75,15 +75,15 @@ const Color = types
     name: types.optional(types.string, "Gray"),
     hueSpline: types.optional(
       types.array(types.number),
-      [0, 78, 0.33, 150, 0.66, 170, 1, 174]
+      [0, 389.74, 0.29, 332.3, 0.65, 294.56, 1, 276.51]
     ),
     saturationSpline: types.optional(
       types.array(types.number),
-      [0, 0.3, 0.5, 0.4, 0.8, 0.4, 1, 0.3]
+      [0, 0.05, 0.328125, 0.23, 0.76, 0.25, 1, 0.05]
     ),
     lightnessSpline: types.optional(
       types.array(types.number),
-      [0, 0.45, 0.33, 0.33, 0.66, 0.165, 1, 0.06]
+      [0, 0.9, 0.203, 0.53, 0.58, 0.24, 1, 0.16]
     ),
     hueLinked: types.optional(types.boolean, false),
     saturationLinked: types.optional(types.boolean, true),
@@ -216,7 +216,7 @@ const Color = types
             spline[7],
           ]
           self[`${splineKey}Spline`] = newSpline
-          
+
           if (self[`${splineKey}Linked`]) {
             getParent(self, 2).colors.forEach((color) => {
               if (color.id !== self.id && color[`${splineKey}Linked`]) {
