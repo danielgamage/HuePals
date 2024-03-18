@@ -51,10 +51,10 @@ const App = observer(() => {
           ),
           themes: state.themes.filter((theme) => !theme.favorite),
         },
-      ]
-        .filter((group) => group.themes.length)
-        .map((group) => (
-          <>
+      ].map(
+        (group) => {
+          if (group.key === "favorites" && !group.themes.length) return null
+          return (<>
             <h2 className="themes-header">{group.label}</h2>
             <div className="themes">
               {group.themes.map((theme) => (
@@ -77,8 +77,9 @@ const App = observer(() => {
                 />
               )}
             </div>
-          </>
-        ))}
+          </>)
+        }
+      )}
       <Button
         status="danger"
         onClick={() => {
