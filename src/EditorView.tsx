@@ -260,7 +260,7 @@ const Styles = styled.div`
     font-family: var(--mono);
     color: var(--fg-1);
   }
-  .shade-value-padding {
+  .shade-value-insignificant {
     color: var(--fg-5);
   }
   .shade-value-value {
@@ -553,12 +553,13 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                                   </span>
                                 )}
                                 <span className="shade-value-value">
-                                  <span className="shade-value-padding">
-                                    {Array(
-                                      Math.max(0, 3 - String(v.value).length)
-                                    ).fill("0")}
-                                  </span>
-                                  {v.value}
+                                  {v.parts.map((part) => (
+                                    <span
+                                      className={`shade-value-${part.type}`}
+                                    >
+                                      {part.value}
+                                    </span>
+                                  ))}
                                   <span className="shade-value-unit">
                                     {v.unit}
                                   </span>

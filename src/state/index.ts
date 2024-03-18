@@ -13,6 +13,7 @@ import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase, cloneDeep } from "lodash"
 import ColorJS from "colorjs.io"
 import { easings, lerp } from "../utils/easings"
+import { separateNumericStringIntoParts } from "../utils/string"
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -36,8 +37,11 @@ const Shade = types
           return [
             { value: format(".2f")(self.l), unit: "" },
             { value: format(".2f")(self.s), unit: "" },
-            { value: format(".0f")(self.h), unit: "º" },
-          ]
+            { value: format(".0f")(self.h).padStart(3, "0"), unit: "º" },
+          ].map(el => {
+            el.parts = separateNumericStringIntoParts(el.value)
+            return el
+          })
         },
         get colorObject() {
           return new ColorJS("oklch", [self.l, self.s, self.h])

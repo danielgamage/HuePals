@@ -1,4 +1,5 @@
 import { lerp } from "./easings"
+import { describe, test, expect } from "vitest"
 
 describe("lerp", () => {
   describe("linearly interpolates", () => {
