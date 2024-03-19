@@ -34,6 +34,10 @@ const Styles = styled.div`
     align-items: center;
     margin-bottom: 2rem;
     gap: 1rem;
+    .buttons {
+      display: flex;
+      gap: 1rem;
+    }
   }
   img {
     margin-bottom: 1rem;
@@ -77,39 +81,41 @@ const ExportView = observer(({ theme }) => {
           height="128px"
         />
         <div>
-          <Button
-            onClick={() => {
-              const a = document.createElement("a")
-              a.href = theme.svgURI
-              a.download = theme.name + ".svg"
-              a.click()
-            }}
-            label={
-              <>
-                <Icon height={`${1.25 ** 2}em`} icon={downloadIcon} />
-                <span>Download SVG</span>
-              </>
-            }
-          />
+          <div className="buttons">
+            <Button
+              onClick={() => {
+                const a = document.createElement("a")
+                a.href = theme.svgURI
+                a.download = theme.name + ".svg"
+                a.click()
+              }}
+              label={
+                <>
+                  <Icon height={`${1.25 ** 2}em`} icon={downloadIcon} />
+                  <span>Download SVG</span>
+                </>
+              }
+            />
 
-          <Button
-            onClick={() => {
-              copyText(theme.svgString).then(() => {
-                state.ui.addMessage({
-                  body: "Copied to clipboard",
-                  status: "success",
+            <Button
+              onClick={() => {
+                copyText(theme.svgString).then(() => {
+                  state.ui.addMessage({
+                    body: "Copied to clipboard",
+                    status: "success",
+                  })
                 })
-              })
-            }}
-            label={
-              <>
-                <Icon height={`${1.25 ** 2}em`} icon={copyIcon} />
-                <span>
-                  Copy SVG code
-                </span>
-              </>
-            }
-          />
+              }}
+              label={
+                <>
+                  <Icon height={`${1.25 ** 2}em`} icon={copyIcon} />
+                  <span>
+                    Copy SVG code
+                  </span>
+                </>
+              }
+            />
+          </div>
           <p>
             This SVG can be dragged, copied, or saved and imported in nearly all
             design tools.
