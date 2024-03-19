@@ -16,6 +16,5 @@ export const separateNumericStringIntoParts = (el: string) => {
       break;
     }
   }
-  console.log({el, parts})
   return parts
 }

@@ -1,4 +1,3 @@
-import React from "react"
 import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"

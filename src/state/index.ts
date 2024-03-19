@@ -337,6 +337,39 @@ export const Theme = types
             })
             .join("\n\n")
         },
+        get svgString() {
+          const ui = getRoot(self).ui
+          const width = 128
+          const height = 128
+          const xCount = self.colors.length
+          const yCount = self.colors[0].interpolations.length
+          const svgString = `
+            <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' enable-background='new 0 0 100 100' xml:space='preserve' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'>
+              ${self.colors
+                .map((shade, x) =>
+                  shade.interpolations
+                    .map((interpolation, y) => {
+                      const fill = interpolation[ui.colorspace]
+
+                      return `<rect
+                          x='${(x / xCount) * width}'
+                          y='${(y / yCount) * height}'
+                          width='${width / xCount}'
+                          height='${height / yCount}'
+                          fill='${fill}' />`
+                    })
+                    .join("\n")
+                )
+                .join("\n")}
+            </svg>`
+          return svgString
+        },
+        get svgURI() {
+          return (
+            "data:image/svg+xml;utf8," +
+            encodeURIComponent(self.svgString.replace(/\s+/g, " "))
+          )
+        },
       },
       actions: {
         addColor(options) {

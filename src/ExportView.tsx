@@ -1,10 +1,12 @@
-import React, { useRef } from "react"
+import { useRef } from "react"
 import { observer } from "mobx-react"
 import state from "./state"
 import styled from "styled-components"
 import { Icon } from "@iconify/react"
 import copyIcon from "@iconify-icons/solar/clipboard-add-bold-duotone"
+import downloadIcon from "@iconify-icons/solar/download-minimalistic-bold-duotone"
 import Button from "./Button"
+import {copyText} from "./utils/dom"
 
 const Styles = styled.div`
   height: 100%;
@@ -27,10 +29,25 @@ const Styles = styled.div`
       margin-right: 1rem;
     }
   }
+  .svg {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  img {
+    margin-bottom: 1rem;
+    display: block;
+  }
+  p {
+    color: var(--fg-4);
+    max-width: 36ch;
+  }
 `
 
 const ExportView = observer(({ theme }) => {
   const outputEl = useRef(null)
+
   return (
     <Styles className="ExportView">
       <div className="options">
@@ -52,19 +69,69 @@ const ExportView = observer(({ theme }) => {
         </select>
       </div>
 
+      <div className="svg">
+        <img
+          src={theme.svgURI}
+          alt="The downloadable SVG swatch"
+          width="128px"
+          height="128px"
+        />
+        <div>
+          <Button
+            onClick={() => {
+              const a = document.createElement("a")
+              a.href = theme.svgURI
+              a.download = theme.name + ".svg"
+              a.click()
+            }}
+            label={
+              <>
+                <Icon height={`${1.25 ** 2}em`} icon={downloadIcon} />
+                <span>Download SVG</span>
+              </>
+            }
+          />
+
+          <Button
+            onClick={() => {
+              copyText(theme.svgString).then(() => {
+                state.ui.addMessage({
+                  body: "Copied to clipboard",
+                  status: "success",
+                })
+              })
+            }}
+            label={
+              <>
+                <Icon height={`${1.25 ** 2}em`} icon={copyIcon} />
+                <span>
+                  Copy SVG code
+                </span>
+              </>
+            }
+          />
+          <p>
+            This SVG can be dragged, copied, or saved and imported in nearly all
+            design tools.
+          </p>
+        </div>
+      </div>
+
       <Button
         onClick={() => {
-          outputEl.current.select()
-          document.execCommand("copy")
-          state.ui.addMessage({
-            body: "Copied to clipboard",
-            status: "success",
+          copyText(theme.exportText).then(() => {
+            state.ui.addMessage({
+              body: "Copied to clipboard",
+              status: "success",
+            })
           })
         }}
         label={
           <>
             <Icon height={`${1.25 ** 2}em`} icon={copyIcon} />
-            <span>Copy to clipboard</span>
+            <span>
+              Copy {state.ui.exportLanguage.toUpperCase()}
+            </span>
           </>
         }
       />
