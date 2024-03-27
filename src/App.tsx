@@ -17,6 +17,8 @@ import eyeIcon from "@iconify-icons/solar/eye-bold"
 import eyeOffIcon from "@iconify-icons/solar/eye-closed-bold"
 import chevron from "@iconify-icons/solar/alt-arrow-right-linear"
 import threeDotsVertical from "@iconify-icons/solar/filters-bold-duotone"
+import undo from "@iconify-icons/solar/undo-left-round-bold"
+import redo from "@iconify-icons/solar/undo-right-round-bold"
 
 const Styles = styled.div`
   display: flex;
@@ -172,24 +174,51 @@ const Styles = styled.div`
       gap: 0.5rem;
     }
   }
+  .appFooterSection {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+  }
   .shade-count {
     width: 3rem;
     margin-left: 0.5rem;
     box-shadow: var(--shadow-recessed);
     background-color: var(--shadow-5);
   }
+  .history {
+    display: flex;
+    margin-left: auto;
+    button {
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      &[disabled] {
+        color: var(--fg-4);
+      }
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
 `
 
 const App = observer(() => {
+  const currentTheme = state.ui.currentTheme
   return (
     <Styles
       className={`App ${
-        state.ui.currentTheme?.backgroundShade?.l >= 0.49
+        currentTheme?.backgroundShade?.l >= 0.49
           ? "theme--light"
           : "theme--dark"
       }`}
       style={{
-        "--body-background": state.ui.currentTheme?.backgroundShade?.oklch,
+        "--body-background": currentTheme?.backgroundShade?.oklch,
       }}
     >
       <div className="appBar">
@@ -224,13 +253,13 @@ const App = observer(() => {
                 )
               })}
           </div>
-          {state.ui.currentTheme && (
+          {currentTheme && (
             <>
               <Icon icon={chevron} className="chevron" />
               <div className="activeThemeLabel">
                 <div>
                   <div className="thumbnail">
-                    {state.ui.currentTheme.colors.map((shade) => (
+                    {currentTheme.colors.map((shade) => (
                       <div className="thumbnailColumn">
                         {shade.interpolations.map((interpolation) => (
                           <div
@@ -244,12 +273,12 @@ const App = observer(() => {
                     ))}
                   </div>
                 </div>
-                {state.ui.currentTheme.name}
+                {currentTheme.name}
               </div>
             </>
           )}
         </div>
-        {!!state.ui.currentTheme && (
+        {!!currentTheme && (
           <div className="activeTheme">
             <div className="tabs sub">
               {[
@@ -291,11 +320,11 @@ const App = observer(() => {
           case "overview":
             return <OverviewView />
           case "editor":
-            return <EditorView {...{ theme: state.ui.currentTheme }} />
+            return <EditorView {...{ theme: currentTheme }} />
           case "preview":
-            return <Preview {...{ theme: state.ui.currentTheme }} />
+            return <Preview {...{ theme: currentTheme }} />
           case "export":
-            return <ExportView {...{ theme: state.ui.currentTheme }} />
+            return <ExportView {...{ theme: currentTheme }} />
           default:
             return <OverviewView />
         }
@@ -312,14 +341,14 @@ const App = observer(() => {
               onChange={(e) => {
                 const value = parseInt(e.target.value)
                 if (value >= 3 && value <= 16) {
-                  applyPatch(state.ui.currentTheme, {
+                  applyPatch(currentTheme, {
                     op: "add",
                     path: "./interpolationCount",
                     value: value,
                   })
                 }
               }}
-              value={state.ui.currentTheme.interpolationCount}
+              value={currentTheme.interpolationCount}
             />
           </label>
           <LabeledCheckbox
@@ -342,6 +371,14 @@ const App = observer(() => {
               </>
             }
           />
+          <div className="history">
+            <button onClick={() => {currentTheme?.history.undo()}} disabled={!currentTheme?.history.canUndo}>
+              <Icon icon={undo} />
+            </button>
+            <button onClick={() => {currentTheme?.history.redo()}} disabled={!currentTheme?.history.canRedo}>
+              <Icon icon={redo} />
+            </button>
+          </div>
           <div className="messages">
             {state.ui.visibleMessages.map((message) => (
               <div className={`message ${message.status}`}>{message.body}</div>

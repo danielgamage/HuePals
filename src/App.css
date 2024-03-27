@@ -130,6 +130,15 @@ body,
   height: 40vmin;
 }
 
+button {
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+}
+
 select {
   font: inherit;
   font-weight: 700;

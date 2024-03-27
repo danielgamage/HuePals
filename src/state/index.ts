@@ -6,6 +6,7 @@ import {
   getParent,
   getRoot,
 } from "mobx-state-tree"
+import { UndoManager } from "mst-middlewares";
 import { format } from "d3-format"
 import { hsl, rgb } from "d3-color"
 import { Bezier } from "bezier-js"
@@ -271,6 +272,7 @@ export const Theme = types
     interpolationCount: types.optional(types.number, 10),
     backgroundColorId: types.maybe(types.string),
     backgroundShadeIndex: types.maybe(types.number),
+    history: types.optional(UndoManager, {}),
   })
   .extend((self) => {
     return {
