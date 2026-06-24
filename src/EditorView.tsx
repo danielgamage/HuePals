@@ -1,4 +1,5 @@
 import "./App.css"
+import { useRef, type MutableRefObject } from "react"
 import { Instance } from "mobx-state-tree"
 import { observer } from "mobx-react"
 import state, { Theme } from "./state"
@@ -21,11 +22,60 @@ import linkIcon from "@iconify-icons/solar/link-minimalistic-2-bold"
 import linkBrokenIcon from "@iconify-icons/solar/link-broken-minimalistic-bold"
 import classNames from "classnames"
 
+type SplineKey = "lightness" | "saturation" | "hue"
+
+const splinesEqual = (a: number[], b: number[]) =>
+  a.length === b.length && a.every((n, i) => n === b[i])
+
+const createSplineDragHandlers = (
+  theme: Instance<typeof Theme>,
+  color: Instance<typeof Theme>["colors"][number],
+  key: SplineKey,
+  snapshots: MutableRefObject<Map<string, number[]>>
+) => {
+  const dragKey = `${color.id}-${key}`
+  const splineKey = `${key}Spline` as const
+
+  return {
+    onUpdateStart: () => {
+      snapshots.current.set(dragKey, [...color[splineKey]])
+    },
+    onSplineUpdate: (v: number[]) => {
+      theme.history.withoutUndo(() => color.setSpline(key, v))
+    },
+    onUpdateEnd: () => {
+      const start = snapshots.current.get(dragKey)
+      snapshots.current.delete(dragKey)
+      if (!start) return
+
+      const current = [...color[splineKey]]
+      if (splinesEqual(start, current)) return
+
+      theme.history.withoutUndo(() => color.setSpline(key, start))
+      color.setSpline(key, current)
+    },
+  }
+}
+
 const Styles = styled.div`
   display: flex;
   height: 100%;
   flex-flow: column;
   overflow: auto;
+  scrollbar-color: var(--fg-4) transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--fg-4);
+    border-radius: var(--radius);
+  }
   padding-bottom: 3rem;
   background: var(--body-background);
   .graphs {
@@ -298,6 +348,8 @@ const Styles = styled.div`
 `
 
 const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
+  const dragSnapshots = useRef(new Map<string, number[]>())
+
   return (
     <Styles
       className={`Editor ${
@@ -381,9 +433,12 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       onEasingSelect={(key) => {
                         color.setEasing("lightness", key)
                       }}
-                      onSplineUpdate={(v) => {
-                        color.setSpline("lightness", v)
-                      }}
+                      {...createSplineDragHandlers(
+                        theme,
+                        color,
+                        "lightness",
+                        dragSnapshots
+                      )}
                     />
                   </div>
 
@@ -400,9 +455,12 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       onEasingSelect={(key) => {
                         color.setEasing("saturation", key)
                       }}
-                      onSplineUpdate={(v) => {
-                        color.setSpline("saturation", v)
-                      }}
+                      {...createSplineDragHandlers(
+                        theme,
+                        color,
+                        "saturation",
+                        dragSnapshots
+                      )}
                     />
                   </div>
 
@@ -420,9 +478,12 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                       onEasingSelect={(key) => {
                         color.setEasing("hue", key)
                       }}
-                      onSplineUpdate={(v) => {
-                        color.setSpline("hue", v)
-                      }}
+                      {...createSplineDragHandlers(
+                        theme,
+                        color,
+                        "hue",
+                        dragSnapshots
+                      )}
                     />
                   </div>
                 </div>

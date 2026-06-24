@@ -9,15 +9,15 @@ export const remap = (value: number, min1: number, max1: number, min2: number, m
 export const easings = {
   linear: {
     name: "Linear",
-    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+    handles: [1/3, 1/6, 2/3, 1/2],
   },
   linear2: {
     name: "Linear",
-    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+    handles: [1/3, 1/2, 2/3, 5/6],
   },
   linear3: {
     name: "Linear",
-    handles: [1 / 3, 1 / 3, (1 / 3) * 2, (1 / 3) * 2],
+    handles: [1/3, 1/3, 2/3, 2/3],
   },
   easeInSine: { name: "Sine In", handles: [0.12, 0, 0.39, 0] },
   easeOutSine: { name: "Sine Out", handles: [0.61, 1, 0.88, 1] },

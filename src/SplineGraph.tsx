@@ -1,12 +1,11 @@
-import React, { useRef, useState } from "react"
-import logo from "./logo.svg"
+import { useRef, useState, type RefObject } from "react"
+import { useDrag } from "@use-gesture/react"
 import { observer } from "mobx-react"
-import state from "./state"
 import styled from "styled-components"
 import { scaleLinear } from "d3-scale"
 import { easings } from "./utils/easings"
 
-const Styles = styled.div`
+const Styles = styled.div/* CSS */`
   position: relative;
   background: var(--body-background);
   /* backdrop-filter: blur(10px); */
@@ -98,6 +97,7 @@ const Styles = styled.div`
     .point {
       fill: transparent;
       stroke-width: 2px;
+      touch-action: none;
 
       &--oncurve {
         r: 0.07px;
@@ -178,18 +178,112 @@ const Styles = styled.div`
   }
 `
 
-let isMouseDown = false
-let initialMouse,
-  initial,
-  selectedNode,
-  svgBounds,
-  scaleX,
-  scaleY,
-  scaleYOncurve
+type SplineHandleProps = {
+  index: number
+  cx: number
+  cy: number
+  className: string
+  svgRef: RefObject<SVGSVGElement>
+  min: number
+  max: number
+  spline: number[]
+  onUpdateStart?: () => void
+  onUpdateEnd?: () => void
+  onSplineUpdate: (spline: number[]) => void
+}
+
+const SplineHandle = ({
+  index,
+  cx,
+  cy,
+  className,
+  svgRef,
+  min,
+  max,
+  spline,
+  onUpdateStart,
+  onUpdateEnd,
+  onSplineUpdate,
+}: SplineHandleProps) => {
+  const propsRef = useRef({
+    spline,
+    onUpdateStart,
+    onUpdateEnd,
+    onSplineUpdate,
+  })
+
+  propsRef.current = {
+    spline,
+    onUpdateStart,
+    onUpdateEnd,
+    onSplineUpdate,
+  }
+
+  const updateFromPointer = (x: number, y: number) => {
+    const svg = svgRef.current
+    if (!svg) return
+
+    const bounds = svg.getBoundingClientRect()
+    const scaleX = scaleLinear()
+      .domain([bounds.x, bounds.x + bounds.width])
+      .range([0, 1])
+      .clamp(true)
+    const scaleY = scaleLinear()
+      .domain([bounds.y, bounds.y + bounds.height])
+      .range([max, min])
+    const scaleYOncurve = scaleLinear()
+      .domain([bounds.y, bounds.y + bounds.height])
+      .range([max, min])
+      .clamp(true)
+
+    const { spline: currentSpline, onSplineUpdate: update } = propsRef.current
+    const newSpline = [...currentSpline]
+    const xIndex = index * 2
+    const yIndex = xIndex + 1
+
+    switch (index) {
+      case 0:
+      case 3:
+        newSpline[yIndex] = scaleYOncurve(y)
+        break
+      case 1:
+      case 2:
+        newSpline[xIndex] = scaleX(x)
+        newSpline[yIndex] = scaleY(y)
+        break
+    }
+
+    update(newSpline)
+  }
+
+  const bind = useDrag(
+    ({ xy: [x, y], first, last, event }) => {
+      if ("button" in event && event.button === 2) return
+
+      if (first) {
+        propsRef.current.onUpdateStart?.()
+      }
+
+      updateFromPointer(x, y)
+
+      if (last) {
+        propsRef.current.onUpdateEnd?.()
+      }
+    },
+    {
+      pointer: { capture: true },
+      filterTaps: true,
+    }
+  )
+
+  return <circle className={className} cx={cx} cy={cy} {...bind()} />
+}
 
 const SplineGraph = observer(
   ({
     spline,
+    onUpdateStart,
+    onUpdateEnd,
     onSplineUpdate,
     onEasingSelect,
     max,
@@ -197,68 +291,22 @@ const SplineGraph = observer(
     height = 1,
     attribute,
   }) => {
-    const svgRef = useRef(null)
+    const svgRef = useRef<SVGSVGElement>(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-    const handleMouseDown = (e, index) => {
-      // right click
-      if (e.button === 2) return
-
-      isMouseDown = true
-      selectedNode = index
-      window.addEventListener("mousemove", handleMouseMove)
-      window.addEventListener("mouseup", handleMouseEnd)
-      window.addEventListener("mouseleave", handleMouseEnd)
-
-      initialMouse = { x: e.clientX, y: e.clientY }
-      svgBounds = svgRef.current.getBoundingClientRect()
-      scaleX = scaleLinear()
-        .domain([svgBounds.x, svgBounds.x + svgBounds.width])
-        .range([0, 1])
-        .clamp(true)
-      scaleY = scaleLinear()
-        .domain([svgBounds.y, svgBounds.y + svgBounds.height])
-        .range([max, min])
-      scaleYOncurve = scaleLinear()
-        .domain([svgBounds.y, svgBounds.y + svgBounds.height])
-        .range([max, min])
-        .clamp(true)
-    }
-    const handleMouseMove = (e) => {
-      if (isMouseDown) {
-        const mouse = { x: e.clientX, y: e.clientY }
-        let newSpline = [...spline]
-
-        const xIndex = selectedNode * 2
-        const yIndex = xIndex + 1
-
-        switch (selectedNode) {
-          case 0: // first
-          case 3: // last
-            newSpline[yIndex] = scaleYOncurve(mouse.y)
-            break
-          case 1: // first offcurve
-          case 2: // last offcurve
-            newSpline[xIndex] = scaleX(mouse.x)
-            newSpline[yIndex] = scaleY(mouse.y)
-            break
-          default:
-            break
-        }
-
-        onSplineUpdate(newSpline)
-      }
-    }
-    const handleMouseEnd = (e) => {
-      isMouseDown = false
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("mouseup", handleMouseEnd)
-      window.removeEventListener("mouseleave", handleMouseEnd)
-    }
 
     const graphScaleY = scaleLinear().domain([min, max]).range([height, 0])
 
     const scaledS = spline.map((el, i) => (i % 2 === 0 ? el : graphScaleY(el)))
+
+    const handleProps = {
+      svgRef,
+      min,
+      max,
+      spline,
+      onUpdateStart,
+      onUpdateEnd,
+      onSplineUpdate,
+    }
 
     return (
       <Styles className={`SplineGraph ${attribute} ${isMenuOpen && "menu-open"}`} height={height}>
@@ -275,13 +323,12 @@ const SplineGraph = observer(
             x2={scaledS[2]}
             y2={scaledS[3]}
           />
-          <circle
-            className="point point--offcurve"
+          <SplineHandle
+            {...handleProps}
+            index={1}
             cx={scaledS[2]}
             cy={scaledS[3]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 1)
-            }}
+            className="point point--offcurve"
           />
           <circle
             className="point point--offcurve-2"
@@ -300,13 +347,12 @@ const SplineGraph = observer(
             x2={scaledS[6]}
             y2={scaledS[7]}
           />
-          <circle
-            className="point point--offcurve"
+          <SplineHandle
+            {...handleProps}
+            index={2}
             cx={scaledS[4]}
             cy={scaledS[5]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 2)
-            }}
+            className="point point--offcurve"
           />
           <circle
             className="point point--offcurve-2"
@@ -328,13 +374,12 @@ const SplineGraph = observer(
             `}
           />
 
-          <circle
-            className="point point--oncurve"
+          <SplineHandle
+            {...handleProps}
+            index={0}
             cx={scaledS[0]}
             cy={scaledS[1]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 0)
-            }}
+            className="point point--oncurve"
           />
           <circle
             className="point point--oncurve-2"
@@ -347,13 +392,12 @@ const SplineGraph = observer(
             cy={scaledS[1]}
           />
 
-          <circle
-            className="point point--oncurve"
+          <SplineHandle
+            {...handleProps}
+            index={3}
             cx={scaledS[6]}
             cy={scaledS[7]}
-            onMouseDown={(e) => {
-              handleMouseDown(e, 3)
-            }}
+            className="point point--oncurve"
           />
           <circle
             className="point point--oncurve-2"

@@ -152,13 +152,9 @@ const Styles = styled.div`
   }
   .app-footer {
     padding: 1rem;
-    position: absolute;
     display: flex;
     align-items: center;
     gap: 1rem;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     height: 3rem;
     padding: 0 2rem;
     background: var(--bg-2);
