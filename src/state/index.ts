@@ -221,7 +221,7 @@ const Color = types
           if (self[`${splineKey}Linked`]) {
             getParent(self, 2).colors.forEach((color) => {
               if (color.id !== self.id && color[`${splineKey}Linked`]) {
-                color[splineKey + "Spline"] = cloneDeep(newSpline)
+                color.setSpline(splineKey, cloneDeep(newSpline), false)
               }
             })
           }
