@@ -121,7 +121,7 @@ body,
   margin: 0;
 }
 @mixin rounded {
-  border-radius: 4px;
+  border-radius: 12px;
   @supports (corner-shape: superellipse(2)) {
     corner-shape: superellipse(2);
     border-radius: 28px;
@@ -1004,42 +1004,73 @@ input[type="number"] {
     }
   }
 
-  & .rainbow {
+  & .viz {
     width: 100%;
     height: 100%;
     position: absolute;
     z-index: 0;
-    opacity: 0.5;
+    opacity: 0.1;
     overflow: hidden;
-    &::before,
-    &::after {
-      content: "";
-      width: 2px;
-      height: 100%;
-      position: absolute;
-      background: linear-gradient(
-        to bottom,
-        oklch(.7 .4 480),
-        oklch(.7 .4 440),
-        oklch(.7 .4 400),
-        oklch(.7 .4 360),
-        oklch(.7 .4 320),
-        oklch(.7 .4 280),
-        oklch(.7 .4 240),
-        oklch(.7 .4 200),
-        oklch(.7 .4 160),
-        oklch(.7 .4 120),
-        oklch(.7 .4 80),
-        oklch(.7 .4 40),
-        oklch(.7 .4 0)
-      );
+    transition: opacity 0.5s ease-out;
+    mask-image: linear-gradient(to right,
+      RGB(from black r g b / calc(1 - 0.034)) 0%,
+      RGB(from black r g b / calc(1 - 0.357)) 6.25%,
+      RGB(from black r g b / calc(1 - 0.599)) 12.5%,
+      RGB(from black r g b / calc(1 - 0.771)) 18.75%,
+      RGB(from black r g b / calc(1 - 0.885)) 25%,
+      RGB(from black r g b / calc(1 - 0.953)) 31.25%,
+      RGB(from black r g b / calc(1 - 0.986)) 37.5%,
+      RGB(from black r g b / calc(1 - 0.998)) 43.75%,
+      RGB(from black r g b / calc(1 - 1.000)) 50%,
+      RGB(from black r g b / calc(1 - 0.998)) 56.25%,
+      RGB(from black r g b / calc(1 - 0.986)) 62.5%,
+      RGB(from black r g b / calc(1 - 0.953)) 68.75%,
+      RGB(from black r g b / calc(1 - 0.885)) 75%,
+      RGB(from black r g b / calc(1 - 0.771)) 81.25%,
+      RGB(from black r g b / calc(1 - 0.599)) 87.5%,
+      RGB(from black r g b / calc(1 - 0.357)) 93.75%,
+      RGB(from black r g b / calc(1 - 0.034)) 100%,
+    );
+    &.saturation {
+      background: 
+        linear-gradient(
+          to bottom,
+          oklch(var(--start-lightness) 0.5 var(--start-hue)),
+          oklch(var(--start-lightness) 0 var(--start-hue))
+        );
     }
-    &::before {
-      left: 0;
+    &.lightness {
+      background: 
+        linear-gradient(
+          to bottom,
+          oklch(1 0 0),
+          oklch(0 0 0),
+        );
     }
-    &::after {
-      right: 0;
+    &.rainbow {
+      background: 
+        linear-gradient(
+          to bottom,
+          oklch(.7 .4 480),
+          oklch(.7 .4 440),
+          oklch(.7 .4 400),
+          oklch(.7 .4 360),
+          oklch(.7 .4 320),
+          oklch(.7 .4 280),
+          oklch(.7 .4 240),
+          oklch(.7 .4 200),
+          oklch(.7 .4 160),
+          oklch(.7 .4 120),
+          oklch(.7 .4 80),
+          oklch(.7 .4 40),
+          oklch(.7 .4 0)
+        );
     }
+  }
+  &:hover .viz {
+    opacity: 0.5;
+    transition: opacity 0.1s var(--ease-out);
+
   }
   & .splineGraph {
     overflow: visible;

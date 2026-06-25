@@ -136,7 +136,9 @@ const SplineGraph = observer(
 
     return (
       <div className={`SplineGraph rounded ${attribute} ${isMenuOpen && "menu-open"}`}>
-        {attribute === "hue" && <div className="rainbow rounded" />}
+        {attribute === "hue" && <div className="viz rainbow rounded" />}
+        {attribute === "saturation" && <div className="viz saturation rounded" />}
+        {attribute === "lightness" && <div className="viz lightness rounded" />}
         <svg
           className="splineGraph rounded"
           viewBox={`0 0 1 ${height}`}

@@ -39,7 +39,7 @@ const App = observer(() => {
               {group.themes.map((theme) => (
                 <ThemePreview
                   theme={theme}
-                  onDoubleClick={() => state.ui.setCurrentTheme(theme)}
+                  onClick={() => state.ui.setCurrentTheme(theme)}
                 />
               ))}
               {group.key === "all" && (

@@ -7,14 +7,17 @@ import warningIcon from "@iconify-icons/solar/danger-triangle-bold-duotone"
 import heartIcon from "@iconify-icons/solar/heart-linear"
 import heartFilledIcon from "@iconify-icons/solar/heart-bold"
 
-const App = observer(({ theme, onDoubleClick }) => {
+const ThemePreview = observer(({ theme, onClick }) => {
   return (
-    <div className="ThemePreview rounded" onDoubleClick={onDoubleClick}>
+    <div className="ThemePreview rounded" onClick={onClick}>
       <h2 className="title">
         <input
           className="rounded"
           type="text"
           value={theme.name}
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
           onInput={(e) => {
             applyPatch(theme, {
               op: "add",
@@ -50,4 +53,4 @@ const App = observer(({ theme, onDoubleClick }) => {
   )
 })
 
-export default App
+export default ThemePreview
