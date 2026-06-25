@@ -1,7 +1,5 @@
-import "./App.css"
 import { observer } from "mobx-react"
 import state from "./state"
-import styled from "styled-components"
 import ThemePreview from "./ThemePreview"
 import Button from "./Button"
 import { Icon } from "@iconify/react"
@@ -10,28 +8,9 @@ import restoreIcon from "@iconify-icons/solar/clock-circle-bold-duotone"
 import heartBold from "@iconify-icons/solar/heart-bold"
 import swatchesBold from "@iconify-icons/solar/palette-bold-duotone"
 
-const Styles = styled.div`
-  padding: 1rem;
-  overflow: auto;
-  .themes-header {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: var(--size-1);
-    line-height: 1;
-  }
-  .themes {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-    grid-auto-rows: 12rem;
-    margin-bottom: 1rem;
-    grid-gap: 1rem;
-  }
-`
-
 const App = observer(() => {
   return (
-    <Styles className="Overview">
+    <div className="Overview">
       {[
         {
           key: "favorites",
@@ -98,7 +77,7 @@ const App = observer(() => {
           </>
         }
       />
-    </Styles>
+    </div>
   )
 })
 

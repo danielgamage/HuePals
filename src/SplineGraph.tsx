@@ -1,182 +1,8 @@
 import { useRef, useState, type RefObject } from "react"
 import { useDrag } from "@use-gesture/react"
 import { observer } from "mobx-react"
-import styled from "styled-components"
 import { scaleLinear } from "d3-scale"
 import { easings } from "./utils/easings"
-
-const Styles = styled.div/* CSS */`
-  position: relative;
-  background: var(--body-background);
-  /* backdrop-filter: blur(10px); */
-  border-radius: var(--radius);
-
-  &.hue {
-    --start-saturation: 100%;
-    --end-saturation: 100%;
-    --start-lightness: 50%;
-    --end-lightness: 50%;
-  }
-  &.saturation {
-    --start-lightness: 50%;
-    --end-lightness: 50%;
-  }
-  &.lightness {
-  }
-  &.menu-open {
-    .splineGraph {
-      opacity: 0;
-    }
-    .easing-menu {
-      display: grid;
-    }
-  }
-
-  .rainbow {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    border-radius: var(--radius);
-    z-index: 0;
-    opacity: 0.5;
-    overflow: hidden;
-    &::before,
-    &::after {
-      content: "";
-      width: 2px;
-      height: 100%;
-      position: absolute;
-      background: linear-gradient(
-        to bottom,
-        oklch(.7 .4 480),
-        oklch(.7 .4 440),
-        oklch(.7 .4 400),
-        oklch(.7 .4 360),
-        oklch(.7 .4 320),
-        oklch(.7 .4 280),
-        oklch(.7 .4 240),
-        oklch(.7 .4 200),
-        oklch(.7 .4 160),
-        oklch(.7 .4 120),
-        oklch(.7 .4 80),
-        oklch(.7 .4 40),
-        oklch(.7 .4 0)
-      );
-    }
-    &::before {
-      left: 0;
-    }
-    &::after {
-      right: 0;
-    }
-  }
-  .splineGraph {
-    overflow: visible;
-    width: 8rem;
-    height: 100%;
-    vector-effect: non-scaling-stroke;
-    position: relative;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-beveled), var(--shadow-elevated);
-
-    path,
-    line,
-    circle {
-      stroke-width: 2px;
-      fill: none;
-      vector-effect: non-scaling-stroke;
-      stroke-linecap: round;
-    }
-    line {
-      stroke: var(--fg-4);
-    }
-    path {
-      stroke: var(--fg-1);
-      pointer-events: none;
-    }
-    .point {
-      fill: transparent;
-      stroke-width: 2px;
-      touch-action: none;
-
-      &--oncurve {
-        r: 0.07px;
-        fill: var(--body-background);
-      }
-      &--oncurve-2 {
-        r: 0.06px;
-        stroke: var(--fg-4);
-        stroke-width: 2px;
-        pointer-events: none;
-      }
-      &--oncurve-sample {
-        r: 0.03px;
-        pointer-events: none;
-        &.start {
-          fill: oklch(
-            var(--start-lightness) 
-            var(--start-saturation) 
-            var(--start-hue)
-          );
-        }
-        &.end {
-          fill: oklch(
-            var(--end-lightness) 
-            var(--end-saturation) 
-            var(--end-hue)
-          );
-        }
-      }
-      &--offcurve {
-        fill: var(--body-background);
-        r: 0.07px;
-      }
-      &--offcurve-2 {
-        r: 0.06px;
-        stroke: var(--fg-4);
-        stroke-width: 2.5px;
-        pointer-events: none;
-      }
-      &--offcurve-3 {
-        fill: var(--fg-4);
-        r: 0.015px;
-        pointer-events: none;
-      }
-    }
-  }
-  .easing-menu {
-    display: none;
-    position: absolute;
-    inset: 0;
-    grid-template-columns: 1fr 1fr 1fr;
-    overflow: auto;
-    box-shadow: var(--shadow-beveled), var(--shadow-elevated);
-  }
-  .easing-option {
-    display: flex;
-    background: none;
-    border: none;
-    padding: 0.5rem;
-    &:hover,
-    &:focus {
-      path {
-        stroke: var(--fg-2);
-      }
-    }
-    svg {
-      overflow: visible;
-      height: 100%;
-      width: 100%;
-    }
-    path {
-      stroke: var(--fg-4);
-      fill: none;
-      vector-effect: non-scaling-stroke;
-      stroke-width: 2px;
-      stroke-linecap: round;
-    }
-  }
-`
 
 type SplineHandleProps = {
   index: number
@@ -309,10 +135,10 @@ const SplineGraph = observer(
     }
 
     return (
-      <Styles className={`SplineGraph ${attribute} ${isMenuOpen && "menu-open"}`} height={height}>
-        {attribute === "hue" && <div className="rainbow" />}
+      <div className={`SplineGraph rounded ${attribute} ${isMenuOpen && "menu-open"}`}>
+        {attribute === "hue" && <div className="rainbow rounded" />}
         <svg
-          className="splineGraph"
+          className="splineGraph rounded"
           viewBox={`0 0 1 ${height}`}
           ref={svgRef}
           onContextMenu={(e)=>{e.preventDefault(); setIsMenuOpen(true)}}
@@ -433,7 +259,7 @@ const SplineGraph = observer(
               </button>
             ))}
           </div>
-      </Styles>
+      </div>
     )
   }
 )

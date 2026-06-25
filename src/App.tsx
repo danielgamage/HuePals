@@ -1,7 +1,6 @@
-import "./App.css"
+import "./App.scss"
 import { observer } from "mobx-react"
 import state from "./state"
-import styled from "styled-components"
 import { applyPatch } from "mobx-state-tree"
 import EditorView from "./EditorView"
 import Preview from "./Preview"
@@ -20,194 +19,10 @@ import threeDotsVertical from "@iconify-icons/solar/filters-bold-duotone"
 import undo from "@iconify-icons/solar/undo-left-round-bold"
 import redo from "@iconify-icons/solar/undo-right-round-bold"
 
-const Styles = styled.div`
-  display: flex;
-  height: 100%;
-  flex-flow: column;
-  background: var(--body-background);
-  background-color: var(--body-background);
-  color: var(--fg-1);
-  user-select: none;
-  font-family: var(--sans);
-  .appBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--body-background);
-    box-shadow: var(--shadow-beveled), var(--shadow-elevated);
-    z-index: 100;
-    padding: 0 1rem;
-  }
-  .activeTheme {
-    display: flex;
-    align-items: center;
-  }
-  .activeThemeLabel {
-    font-weight: 700;
-    display: flex;
-    gap: 0.5rem;
-    height: 100%;
-    align-items: center;
-    padding-inline: 1rem;
-  }
-  .thumbnail {
-    display: flex;
-    width: calc(2rem * 16 / 9);
-    height: 2rem;
-    border-radius: 0.25rem;
-    background: rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    box-shadow: var(--shadow-recessed);
-  }
-  .thumbnailColumn {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-  }
-  .thumbnailSwatch {
-    background: var(--color);
-    flex: 1 1 auto;
-  }
-  .chevron {
-    color: var(--fg-4);
-    height: 1rem;
-    width: 1rem;
-  }
-  .tabs {
-    display: flex;
-    height: 3rem;
-  }
-  .breadcrumbs {
-    display: flex;
-    align-items: center;
-  }
-  .tab-item {
-    display: flex;
-    align-items: center;
-    line-height: 3rem;
-    position: relative;
-    font-size: var(--size-0);
-    padding: 0 0.8rem 0 0.6rem;
-    gap: 0.4rem;
-    font-weight: 700;
-    &.inactive {
-      color: var(--fg-3);
-      svg {
-        color: var(--fg-4);
-      }
-    }
-    &::after {
-      background: rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      z-index: -1;
-    }
-    &.active,
-    &:active {
-      &::after {
-        content: "";
-        position: absolute;
-        inset: 0.5rem 0.25rem;
-        border-radius: 0.25rem;
-        opacity: 1;
-      }
-    }
-    input {
-      opacity: 0;
-      position: absolute;
-      width: 0;
-      height: 0;
-    }
-    svg {
-      color: var(--fg-2);
-      height: 24px;
-      width: 24px;
-    }
-  }
-  .swatch {
-    width: 2rem;
-    height: 2rem;
-    position: relative;
-    border-radius: 1rem;
-    background: linear-gradient(
-      to right,
-      var(--base-color, var(--color)),
-      var(--base-color, var(--color)) 49%,
-      var(--color) 51%
-    );
-    flex: 0 0 auto;
-    overflow: hidden;
-  }
-  .messages {
-    margin-left: auto;
-  }
-  .message {
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    box-shadow: 0 2px 8px var(--shadow-color);
-
-    &.success {
-      background: var(--green-8);
-      color: var(--green-1);
-    }
-  }
-  .app-footer {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: 3rem;
-    padding: 0 2rem;
-    background: var(--bg-2);
-    z-index: 1;
-    transition: 0.3s var(--ease-out) height;
-    background-color: var(--body-background);
-    box-shadow: var(--shadow-beveled), var(--shadow-elevated);
-    --unchecked-icon-color: var(--fg-4);
-    --checked-icon-color: var(--fg-2);
-    label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-  }
-  .appFooterSection {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3rem;
-  }
-  .shade-count {
-    width: 3rem;
-    margin-left: 0.5rem;
-    box-shadow: var(--shadow-recessed);
-    background-color: var(--shadow-5);
-  }
-  .history {
-    display: flex;
-    margin-left: auto;
-    button {
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      &[disabled] {
-        color: var(--fg-4);
-      }
-      svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-  }
-`
-
 const App = observer(() => {
   const currentTheme = state.ui.currentTheme
   return (
-    <Styles
+    <div
       className={`App ${
         currentTheme?.backgroundShade?.l >= 0.49
           ? "theme--light"
@@ -254,7 +69,7 @@ const App = observer(() => {
               <Icon icon={chevron} className="chevron" />
               <div className="activeThemeLabel">
                 <div>
-                  <div className="thumbnail">
+                  <div className="thumbnail rounded">
                     {currentTheme.colors.map((shade) => (
                       <div className="thumbnailColumn">
                         {shade.interpolations.map((interpolation) => (
@@ -331,7 +146,7 @@ const App = observer(() => {
             <Icon icon={threeDotsVertical} />
             Shades:
             <input
-              className="shade-count"
+              className="shade-count rounded"
               type="number"
               min="3"
               onChange={(e) => {
@@ -377,12 +192,12 @@ const App = observer(() => {
           </div>
           <div className="messages">
             {state.ui.visibleMessages.map((message) => (
-              <div className={`message ${message.status}`}>{message.body}</div>
+              <div className={`message rounded ${message.status}`}>{message.body}</div>
             ))}
           </div>
         </footer>
       )}
-    </Styles>
+    </div>
   )
 })
 

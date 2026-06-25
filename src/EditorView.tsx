@@ -1,9 +1,7 @@
-import "./App.css"
 import { useRef, type MutableRefObject } from "react"
 import { Instance } from "mobx-state-tree"
 import { observer } from "mobx-react"
 import state, { Theme } from "./state"
-import styled from "styled-components"
 import SplineGraph from "./SplineGraph"
 import { applyPatch } from "mobx-state-tree"
 import LabeledCheckbox from "./LabeledCheckbox"
@@ -57,301 +55,11 @@ const createSplineDragHandlers = (
   }
 }
 
-const Styles = styled.div`
-  display: flex;
-  height: 100%;
-  flex-flow: column;
-  overflow: auto;
-  scrollbar-color: var(--fg-4) transparent;
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--fg-4);
-    border-radius: var(--radius);
-  }
-  padding-bottom: 3rem;
-  background: var(--body-background);
-  .graphs {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-areas:
-      "l h"
-      "c h";
-    padding: 1rem 0;
-    margin-bottom: -1rem;
-    background: var(--body-background);
-  }
-  .graph {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-  }
-  .graph-hue {
-    grid-area: h;
-  }
-  .graph-lightness,
-  .graph-saturation {
-    h3 {
-      top: auto;
-      bottom: 0.5rem;
-    }
-  }
-  .graph-lightness {
-    grid-area: l;
-  }
-  .graph-saturation {
-    grid-area: c;
-  }
-  h3 {
-    position: absolute;
-    pointer-events: none;
-    color: var(--fg-3);
-    line-height: 1;
-    margin: 0;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 1;
-    abbr {
-      text-decoration: none;
-    }
-  }
-  .colors {
-    display: flex;
-    flex: 1 1 auto;
-    padding: 0 2rem 3rem;
-    width: min-content;
-  }
-  .color {
-    padding: 1rem 0 0;
-    width: 17rem;
-    flex: 0 0 auto;
-    text-overflow: ellipsis;
-    & + .color {
-      margin-left: 2rem;
-    }
-    &.values-hidden {
-      width: 128px;
-    }
-  }
-  .title-line {
-    font-size: var(--size-1);
-    display: flex;
-    align-items: center;
-    margin: 0;
-    height: 2rem;
-    gap: 0.8rem;
-    color: var(--fg-1);
-    --unchecked-icon-color: var(--fg-2);
-    --checked-icon-color: var(--fg-1);
-    input[type="text"] {
-      all: unset;
-      width: 100%;
-    }
-    svg {
-      height: 24px;
-      width: 24px;
-    }
-    .checkbox {
-      cursor: pointer;
-      input {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      input:checked + svg {
-        color: var(--fg-1);
-      }
-    }
-  }
-  .list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  &.graphs-hidden .list-header {
-    top: 0;
-  }
-  &.graphs-visible .list-header {
-    top: 20rem;
-  }
-  .list-header {
-    position: sticky;
-    display: flex;
-    padding-left: 5rem;
-    font-family: var(--mono);
-    font-size: var(--size-0);
-    color: var(--fg-5);
-    z-index: 1;
-    background: var(--body-background);
-    box-shadow: 0 7px 10px -7px var(--shadow-color);
-    .list-heading {
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-      width: 3rem;
-      text-align: right;
-      padding-right: 1.1rem;
-      color: var(--fg-3);
-      svg {
-        color: var(--fg-5);
-      }
-      &.active {
-        svg {
-          color: var(--fg-3);
-        }
-      }
-    }
-    .link-button {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      width: 24px;
-      height: 24px;
-    }
-    abbr {
-      text-decoration: none;
-    }
-  }
-  .shade {
-    position: relative;
-    display: flex;
-    text-align: left;
-    white-space: nowrap;
-    align-items: center;
-    border-radius: var(--radius);
-    gap: 1rem;
-
-    &:first-child,
-    &:last-child {
-      cursor: pointer;
-      &::before {
-        content: "";
-        position: absolute;
-        display: block;
-        top: -0.5rem;
-        right: -1rem;
-        bottom: -0.5rem;
-        left: -1rem;
-        border-radius: var(--radius);
-        background: var(--fg-3);
-        opacity: 0;
-        z-index: -1;
-      }
-      &:hover {
-        &::before {
-          opacity: 1;
-        }
-      }
-    }
-  }
-  .shade-text {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: baseline;
-    margin: 0;
-    gap: 1rem;
-  }
-  .shade-background-field {
-    flex: 0 0 auto;
-    color: var(--fg-4);
-    width: 1rem;
-    position: relative;
-    &::after {
-      content: "";
-      opacity: 0.2;
-      position: absolute;
-      width: 1.6rem;
-      height: 1.6rem;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &.active {
-      color: var(--fg-1);
-    }
-
-    input {
-      opacity: 0;
-      position: absolute;
-      clip: rect(0 0 0 0);
-      clip-path: inset(50%);
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      position: absolute;
-    }
-  }
-  .shade-title {
-    margin: 0;
-    font-size: var(--size-0);
-    color: var(--fg-5);
-  }
-  .shade-title-padding {
-    color: var(--fg-5);
-  }
-  .shade-value {
-    display: flex;
-    margin: 0;
-    font-size: var(--size-0);
-    font-family: var(--mono);
-    color: var(--fg-1);
-  }
-  .shade-value-insignificant {
-    color: var(--fg-5);
-  }
-  .shade-value-value {
-    display: inline-block;
-    width: 2.5em;
-    text-align: right;
-  }
-  .shade-value-unit {
-    color: var(--fg-4);
-  }
-  .shade-value-separator {
-    display: inline-block;
-    color: var(--fg-5);
-    opacity: 0;
-  }
-  .add-button-container {
-    flex: 0 0 auto;
-    width: 256px;
-    margin: 1rem 0 1rem 2rem;
-  }
-  .add-button {
-    width: 100%;
-    font: inherit;
-    font-size: var(--size-1);
-    font-weight: 400;
-    position: sticky;
-    top: 1rem;
-  }
-  .remove-button {
-    line-height: 0.5;
-    z-index: 11;
-    padding-inline: 0;
-    font-size: var(--size-1);
-  }
-`
-
 const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
   const dragSnapshots = useRef(new Map<string, number[]>())
 
   return (
-    <Styles
+    <div
       className={`Editor ${
         state.ui.isGraphVisible ? "graphs-visible" : "graphs-hidden"
       }`}
@@ -374,6 +82,7 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
             >
               <h2 className="title-line">
                 <input
+                  className="rounded"
                   type="text"
                   value={color.name}
                   onInput={(e) => {
@@ -580,7 +289,7 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                   ).fill("0")
                   return (
                     <label
-                      className={`shade`}
+                      className="shade rounded"
                       style={{ "--color": shade.oklch }}
                     >
                       <ColorInput
@@ -682,7 +391,7 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
           />
         </div>
       </div>
-    </Styles>
+    </div>
   )
 })
 
