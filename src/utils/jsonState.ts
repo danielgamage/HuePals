@@ -1,8 +1,31 @@
 import { getSnapshot, IAnyStateTreeNode } from "mobx-state-tree"
 import { saveState } from "../state/localStorage"
 
+const stripThemeHistory = <T extends Record<string, unknown>>(theme: T) => {
+  const { history: _history, ...rest } = theme
+  return rest
+}
+
+const stripExportHistory = (snapshot: unknown): unknown => {
+  if (!snapshot || typeof snapshot !== "object") return snapshot
+
+  if (Array.isArray((snapshot as { themes?: unknown }).themes)) {
+    const store = snapshot as { themes: Record<string, unknown>[] }
+    return {
+      ...store,
+      themes: store.themes.map(stripThemeHistory),
+    }
+  }
+
+  if (Array.isArray((snapshot as { colors?: unknown }).colors)) {
+    return stripThemeHistory(snapshot as Record<string, unknown>)
+  }
+
+  return snapshot
+}
+
 export const serializeSnapshot = (node: IAnyStateTreeNode) =>
-  JSON.stringify(getSnapshot(node), null, 2)
+  JSON.stringify(stripExportHistory(getSnapshot(node)), null, 2)
 
 export const downloadJson = (filename: string, content: string) => {
   const url = URL.createObjectURL(
