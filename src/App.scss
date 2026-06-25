@@ -501,6 +501,12 @@ input[type="number"] {
     margin-bottom: 1rem;
     grid-gap: 1rem;
   }
+  & .data-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 /* ThemePreview */
@@ -553,6 +559,16 @@ input[type="number"] {
   user-select: text;
   padding: 2rem;
 
+  .methods {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+    gap: 1rem;
+  }
+
   & textarea {
     width: 0;
     height: 0;
@@ -566,7 +582,8 @@ input[type="number"] {
       margin-right: 1rem;
     }
   }
-  & .svg {
+  & .svg,
+  & .json {
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
