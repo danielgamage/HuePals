@@ -1049,12 +1049,20 @@ input[type="number"] {
       RGB(from black r g b / calc(1 - 0.034)) 100%,
     );
     &.saturation {
-      background: 
+      background:
         linear-gradient(
           to bottom,
           oklch(var(--start-lightness) 0.5 var(--start-hue)),
           oklch(var(--start-lightness) 0 var(--start-hue))
+        ),
+        linear-gradient(
+          to bottom,
+          oklch(var(--end-lightness) 0.5 var(--end-hue)),
+          oklch(var(--end-lightness) 0 var(--end-hue))
         );
+      background-size: 50% 100%, 50% 100%;
+      background-position: left, right;
+      background-repeat: no-repeat;
     }
     &.lightness {
       background: 
