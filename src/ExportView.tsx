@@ -138,7 +138,7 @@ const ExportView = observer(({ theme }) => {
           </>
         }
       />
-      <textarea ref={outputEl}>{theme.exportText}</textarea>
+      <textarea ref={outputEl} value={theme.exportText} readOnly />
       <pre>{theme.exportText}</pre>
     </div>
   )

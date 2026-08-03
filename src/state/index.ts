@@ -5,16 +5,52 @@ import {
   applySnapshot,
   getParent,
   getRoot,
+  isAlive,
 } from "mobx-state-tree"
 import { UndoManager } from "mst-middlewares";
 import { format } from "d3-format"
-import { hsl, rgb } from "d3-color"
 import { Bezier } from "bezier-js"
 import { loadState, saveState } from "./localStorage"
 import { kebabCase, camelCase, cloneDeep } from "lodash"
 import ColorJS from "colorjs.io"
 import { easings, lerp } from "../utils/easings"
 import { separateNumericStringIntoParts } from "../utils/string"
+import { stripHistoryForPersistence } from "../utils/jsonState"
+
+const migrateHslSplinesToOklch = (snapshot: {
+  themes?: Array<{
+    colors?: Array<{
+      lightnessSpline?: number[]
+      saturationSpline?: number[]
+    }>
+  }>
+}) => {
+  const themes = snapshot.themes ?? []
+  const needsMigration = themes.some((theme) =>
+    (theme.colors ?? []).some(
+      (color) =>
+        color.lightnessSpline?.some((v, i) => i % 2 === 1 && v > 1) ||
+        color.saturationSpline?.some((v, i) => i % 2 === 1 && v > 0.5)
+    )
+  )
+  if (!needsMigration) return snapshot
+
+  return {
+    ...snapshot,
+    themes: themes.map((theme) => ({
+      ...theme,
+      colors: (theme.colors ?? []).map((color) => ({
+        ...color,
+        lightnessSpline: color.lightnessSpline?.map((v, i) =>
+          i % 2 === 1 ? v / 100 : v
+        ),
+        saturationSpline: color.saturationSpline?.map((v, i) =>
+          i % 2 === 1 ? v / 100 : v
+        ),
+      })),
+    })),
+  }
+}
 
 // clone does... just that, and does not update `id`
 const cloneWithNewId = (node, id) =>
@@ -108,9 +144,20 @@ const Color = types
               max: 1,
             },
           }
+          const clamp = (value, key) =>
+            Math.min(Math.max(value, bounds[key].min), bounds[key].max)
+
           const getYAtX = (position, key) => {
-            position = Math.min(position, 0.999999)
+            position = Math.min(Math.max(position, 0), 0.999999)
             const spline = self[`${key}Spline`]
+            if (!spline || spline.length < 8) {
+              for (let i = 1; i < (spline?.length ?? 0); i += 2) {
+                if (typeof spline[i] === "number") {
+                  return clamp(spline[i], key)
+                }
+              }
+              return bounds[key].min
+            }
             const bezierPoints = [
               { x: spline[0], y: spline[1] },
               { x: spline[2], y: spline[3] },
@@ -123,21 +170,20 @@ const Color = types
               p2: { x: position, y: 1000 },
             }
             const intersect = curve.intersects(line)[0]
+            if (intersect === undefined) {
+              return clamp(spline[1], key)
+            }
             const intersectY = curve.get(intersect).y
-            const output = Math.min(
-              Math.max(intersectY, bounds[key].min),
-              bounds[key].max
-            )
-            return output
+            return clamp(intersectY, key)
           }
 
-          return Array(getParent(self, 2).interpolationCount)
+          const count = getParent(self, 2).interpolationCount
+          return Array(count)
             .fill()
             .map((_el, i) => {
-              const position =
-                Math.max(i, 0.00001) /
-                (getParent(self, 2).interpolationCount - 1)
+              const position = count <= 1 ? 0 : i / (count - 1)
               return Shade.create({
+                id: `${self.id}-shade-${i}`,
                 h: getYAtX(position, "hue"),
                 s: getYAtX(position, "saturation"),
                 l: getYAtX(position, "lightness"),
@@ -192,12 +238,12 @@ const Color = types
           self[linkKey] = value
         },
         setHex(startOrEnd, v) {
-          const newValue = hsl(v)
+          const [l, c, h] = new ColorJS(v).to("oklch").coords
           const index = startOrEnd === "start" ? 1 : 7
 
-          self.hueSpline[index] = newValue.h || 0
-          self.saturationSpline[index] = newValue.s * 100
-          self.lightnessSpline[index] = newValue.l * 100
+          self.hueSpline[index] = h || 0
+          self.saturationSpline[index] = c || 0
+          self.lightnessSpline[index] = l || 0
         },
         setEasing(splineKey, easingKey) {
           const spline = self[`${splineKey}Spline`]
@@ -251,10 +297,13 @@ export const Message = types
   .actions((self) => ({
     afterCreate() {
       setTimeout(() => {
-        self.dismiss()
+        if (isAlive(self)) {
+          self.dismiss()
+        }
       }, 5000)
     },
     dismiss() {
+      if (!isAlive(self)) return
       self.visible = false
     },
   }))
@@ -344,6 +393,9 @@ export const Theme = types
           const width = 128
           const height = 128
           const xCount = self.colors.length
+          if (xCount === 0) {
+            return `<svg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'></svg>`
+          }
           const yCount = self.colors[0].interpolations.length
           const svgString = `
             <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' enable-background='new 0 0 100 100' xml:space='preserve' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'>
@@ -378,7 +430,10 @@ export const Theme = types
           self.colors.push(options || {})
         },
         removeColor(item) {
-          self.colors.splice(self.colors.indexOf(item), 1)
+          if (self.colors.length <= 1) return
+          const index = self.colors.indexOf(item)
+          if (index === -1) return
+          self.colors.splice(index, 1)
         },
         toggleFavorite() {
           self.favorite = !self.favorite
@@ -395,6 +450,10 @@ export const Theme = types
         setBackgroundShade(colorId, value) {
           self.backgroundColorId = colorId
           self.backgroundShadeIndex = value
+        },
+        clearBackgroundShade() {
+          self.backgroundColorId = undefined
+          self.backgroundShadeIndex = undefined
         },
       },
     }
@@ -451,10 +510,12 @@ export const UIStore = types
           self.tab = value
         },
         setCurrentTheme(theme) {
+          const previous = self.currentTheme
           self.currentTheme = theme
           self.tab = "editor"
-          self.backgroundShadeIndex = undefined
-          self.backgroundColorId = undefined
+          if (previous && previous !== theme) {
+            previous.clearBackgroundShade()
+          }
         },
       },
     }
@@ -484,12 +545,12 @@ export const RootStore = types
         applySnapshot(self, defaultState)
       },
       loadState(snapshot) {
-        if (self.version) {
-          if (self.version == "1.0") {
-            // convert from hsl to oklch
-          }
-          applySnapshot(self, snapshot)
-        }
+        if (!snapshot) return
+        const next =
+          self.version == "1.0"
+            ? migrateHslSplinesToOklch(cloneDeep(snapshot))
+            : snapshot
+        applySnapshot(self, next)
       },
       removeTheme(item) {
         self.themes.splice(self.themes.indexOf(item), 1)
@@ -509,7 +570,7 @@ window.addEventListener("beforeunload", function (e) {
   // e.preventDefault()
   // e.returnValue = '';
   // console.log(JSON.parse(JSON.stringify(store)))
-  saveState(getSnapshot(store))
+  saveState(stripHistoryForPersistence(getSnapshot(store)))
 })
 
 window.STATE = store

@@ -1,19 +1,30 @@
 import { observer } from "mobx-react"
 
 const App = observer(({ theme }) => {
+  const firstColor = theme.colors[0]
+  if (!firstColor) {
+    return <div className="Preview" />
+  }
+
   return (
     <div className="Preview">
       <div className="colors">
         <div className="row-labels">
-          {theme.colors[0].shades.map((_color, i) => (
-            <div className="row-label">{i + 1}</div>
+          {firstColor.shades.map((_color, i) => (
+            <div className="row-label" key={i}>
+              {i + 1}
+            </div>
           ))}
         </div>
         {theme.colors.map((color) => (
-          <div className="color">
+          <div className="color" key={color.id}>
             <div className="column-label">{color.name}</div>
             {color.shades.map((shade, i) => (
-              <div className="shade rounded" style={{ "--color": shade.hsl }}>
+              <div
+                className="shade rounded"
+                key={i}
+                style={{ "--color": shade.hsl }}
+              >
                 <div
                   className="swatch"
                   style={{

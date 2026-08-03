@@ -119,13 +119,15 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                   onClick={() => color.duplicate()}
                   label={<Icon icon={copyIcon} />}
                 />
-                <Button
-                  status="text danger"
-                  className="remove-button"
-                  onClick={() => color.remove()}
-                  label={<Icon icon={deleteIcon} />}
-                  confirmLabel={<Icon icon={warningIcon} />}
-                />
+                {theme.colors.length > 1 && (
+                  <Button
+                    status="text danger"
+                    className="remove-button"
+                    onClick={() => color.remove()}
+                    label={<Icon icon={deleteIcon} />}
+                    confirmLabel={<Icon icon={warningIcon} />}
+                  />
+                )}
               </h2>
               {state.ui.isGraphVisible && (
                 <div className="graphs">
@@ -288,16 +290,16 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                     arr.length.toString().length - name.toString().length
                   ).fill("0")
                   return (
-                    <label
+                    <div
                       className="shade rounded"
                       style={{ "--color": shade.oklch }}
                     >
                       <ColorInput
                         disabled={!isExtreme}
                         type="color"
-                        value={shade.oklch}
+                        value={shade.hex}
                         baseColor={
-                          theme.baseColor && theme.baseColor.shades[i].oklch
+                          theme.baseColor && theme.baseColor.shades[i].hex
                         }
                         onInput={(e) =>
                           color.setHex(
@@ -367,7 +369,7 @@ const App = observer(({ theme }: { theme: Instance<typeof Theme> }) => {
                           }}
                         />
                       </label>
-                    </label>
+                    </div>
                   )
                 })}
               </div>

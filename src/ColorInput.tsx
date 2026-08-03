@@ -7,7 +7,7 @@ const ColorInput = observer(({ baseColor, ...props }) => {
         className="swatch"
         style={{ "--color": props.value, "--base-color": baseColor }}
       />
-      <input type="color" {...{ props }} />
+      <input type="color" {...props} />
     </label>
   )
 })
